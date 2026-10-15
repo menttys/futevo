@@ -123,7 +123,7 @@ export function PointEntryScreen() {
                     setScoringPlayerId((current) => (current === player.id ? undefined : player.id))
                   }
                 >
-                  <PlayerAvatar player={player} selected={scoringPlayerId === player.id} />
+                  <PlayerAvatar name={player.name} selected={scoringPlayerId === player.id} />
                   <Text style={styles.playerName}>{player.name}</Text>
                 </TouchableOpacity>
               ))}

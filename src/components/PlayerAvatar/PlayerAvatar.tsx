@@ -1,6 +1,4 @@
-import { Text, View } from "react-native"
-
-import { useUnistyles } from "react-native-unistyles"
+import { Image, Text, View } from "react-native"
 
 import type { PlayerAvatarProps } from "./PlayerAvatar.d"
 import { styles } from "./PlayerAvatar.styles"
@@ -12,13 +10,14 @@ function getInitials(name: string): string {
   return (first + second).toUpperCase()
 }
 
-export function PlayerAvatar({ player, size = 40, selected = false, style }: PlayerAvatarProps) {
-  const { theme } = useUnistyles()
-  const backgroundColor = player.color ?? theme.colors.primary
-
+export function PlayerAvatar({ name, photoUri, size = 40, selected = false, style }: PlayerAvatarProps) {
   return (
-    <View style={[styles.circle(size, selected), { backgroundColor }, style]}>
-      <Text style={styles.initials(size)}>{getInitials(player.name)}</Text>
+    <View style={[styles.circle(size, selected), style]}>
+      {photoUri ? (
+        <Image source={{ uri: photoUri }} style={styles.photo(size)} />
+      ) : (
+        <Text style={styles.initials(size)}>{getInitials(name)}</Text>
+      )}
     </View>
   )
 }

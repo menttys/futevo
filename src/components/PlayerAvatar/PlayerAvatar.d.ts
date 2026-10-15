@@ -1,9 +1,8 @@
 import type { StyleProp, ViewStyle } from "react-native"
 
-import type { Player } from "@/@types/futevo"
-
 export type PlayerAvatarProps = {
-  player: Player
+  name: string
+  photoUri?: string
   size?: number
   selected?: boolean
   style?: StyleProp<ViewStyle>

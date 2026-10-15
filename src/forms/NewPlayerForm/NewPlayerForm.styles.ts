@@ -17,18 +17,6 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
   },
-  swatchRow: {
-    flexDirection: "row",
-    gap: theme.spacing.sm,
-  },
-  swatch: (color: string, selected: boolean) => ({
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: color,
-    borderWidth: selected ? 3 : 0,
-    borderColor: theme.colors.dark,
-  }),
   submitButton: (enabled: boolean) => ({
     backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
     borderRadius: theme.radius.md,

@@ -24,7 +24,7 @@ export function PlayersScreen() {
   const renderItem = useCallback(
     ({ item }: { item: Player }) => (
       <View style={styles.row}>
-        <PlayerAvatar player={item} />
+        <PlayerAvatar name={item.name} />
         <Text style={styles.name} numberOfLines={1}>
           {item.name}
         </Text>

@@ -1,0 +1,137 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "all": "All",
+    "none": "None",
+    "team": "Team",
+    "teamWithSide": "Team {{side}}",
+    "teamFallback": "Team",
+    "and": "&",
+    "vs": "vs",
+    "unknownPlayer": "?",
+    "optional": "optional"
+  },
+  "app": {
+    "name": "Futevo",
+    "wordmark": "FUTEVO"
+  },
+  "tabs": {
+    "dashboard": "Dashboard",
+    "matches": "Matches",
+    "players": "Players",
+    "settings": "Settings",
+    "newMatch": "New match"
+  },
+  "screens": {
+    "newMatch": "New match",
+    "match": "Match",
+    "tournament": "Tournament",
+    "players": "Players",
+    "settings": "Settings"
+  },
+  "attackTypes": {
+    "pingo": "Pingo",
+    "loby": "Loby",
+    "shark": "Shark"
+  },
+  "auth": {
+    "title": "Track every point",
+    "subtitle": "Live score, court zones, and attack types — in one tap.",
+    "continueWithGoogle": "Continue with Google"
+  },
+  "splash": {
+    "tagline": "Score. Track. Replay."
+  },
+  "offline": {
+    "syncing": "Syncing changes…",
+    "offline": "You're offline — changes will sync later."
+  },
+  "errors": {
+    "crashCaught": "Crash caught:"
+  },
+  "matches": {
+    "title": "Matches",
+    "emptyTitle": "No matches yet",
+    "emptySubtitle": "Start a new match to begin tracking scores and court zones.",
+    "inProgress": "in progress",
+    "matchInProgress": "Match in progress",
+    "tapToResume": "{{score}} · tap to resume",
+    "scoreSeparator": "—"
+  },
+  "players": {
+    "emptyTitle": "No players yet",
+    "emptySubtitle": "Add your first player above to start building match rosters.",
+    "namePlaceholder": "Player name",
+    "add": "Add player"
+  },
+  "newMatch": {
+    "pickPlayers": "Pick 4 players — first two are Team A, next two are Team B",
+    "addPlayersFirst": "Add players in the Players tab first.",
+    "targetScore": "Target score",
+    "tournamentOptional": "Tournament (optional)",
+    "newTournament": "+ New",
+    "tournamentName": "Tournament name",
+    "locationOptional": "Location (optional)",
+    "dateFormat": "Date (YYYY-MM-DD)",
+    "roundPlaceholder": "Round (e.g. Final, Group A)",
+    "clubOptional": "{{team}} club (optional)",
+    "clubLocked": "{{team}}: {{club}} (locked)",
+    "noClub": "No club",
+    "pickFourForClubs": "Pick the 4 players to set the club of each dupla.",
+    "start": "Start match"
+  },
+  "tournament": {
+    "duplasAndClubs": "Duplas & clubs",
+    "duplasEmpty": "Duplas appear here once they play a match.",
+    "clubPlaceholder": "Club (optional)",
+    "matches": "Matches",
+    "noMatches": "No matches yet."
+  },
+  "match": {
+    "firstTo": "First to {{target}}, win by {{winBy}}",
+    "undo": "Undo",
+    "finish": "Finish",
+    "finishTitle": "Finish match?",
+    "finishMessage": "This ends the match with the current score.",
+    "finishConfirm": "Finish",
+    "deleteTitle": "Delete match?",
+    "deleteMessage": "This can't be undone.",
+    "deleteConfirm": "Delete",
+    "won": "{{team}} won",
+    "attackTypes": "Attack types",
+    "pointLog": "Point log",
+    "pointLogEntry": "#{{number}} · Team {{side}} · {{where}}",
+    "ballOut": "Ball out",
+    "zone": "Zone {{zone}}",
+    "tapToScore": "Tap to score"
+  },
+  "point": {
+    "title": "Point for Team {{team}}",
+    "whereLanded": "Where did it land on Team {{team}}'s court?",
+    "ballOut": "Ball out",
+    "attackType": "Type of attack",
+    "whoScored": "Who scored?",
+    "confirm": "Confirm point"
+  },
+  "court": {
+    "net": "NET",
+    "zoneLabel": "Team {{side}} court zone {{zone}}"
+  },
+  "heatMap": {
+    "title": "Court heat map",
+    "player": "Player",
+    "pointType": "Point type",
+    "summary": {
+      "one": "{{count}} point on court",
+      "other": "{{count}} points on court"
+    },
+    "ballOut": "{{count}} ball out"
+  },
+  "settings": {
+    "signOut": "Sign out",
+    "language": "Language",
+    "defaultName": "Player",
+    "defaultYou": "You"
+  }
+}

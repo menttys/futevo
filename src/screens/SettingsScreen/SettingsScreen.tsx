@@ -20,10 +20,7 @@ export function SettingsScreen() {
     <View style={styles.root}>
       {user ? (
         <View style={styles.profileRow}>
-          <PlayerAvatar
-            player={{ id: user.id, userId: user.id, name: user.displayName ?? t("settings.defaultYou") }}
-            size={56}
-          />
+          <PlayerAvatar name={user.displayName ?? t("settings.defaultYou")} size={56} />
           <View>
             <Text style={styles.name}>{user.displayName ?? t("settings.defaultName")}</Text>
             {user.email ? <Text style={styles.email}>{user.email}</Text> : null}

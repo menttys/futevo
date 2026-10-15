@@ -1,0 +1,137 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "all": "Todos",
+    "none": "Nenhum",
+    "team": "Dupla",
+    "teamWithSide": "Dupla {{side}}",
+    "teamFallback": "Dupla",
+    "and": "&",
+    "vs": "x",
+    "unknownPlayer": "?",
+    "optional": "opcional"
+  },
+  "app": {
+    "name": "Futevo",
+    "wordmark": "FUTEVO"
+  },
+  "tabs": {
+    "dashboard": "Painel",
+    "matches": "Partidas",
+    "players": "Jogadores",
+    "settings": "Ajustes",
+    "newMatch": "Nova partida"
+  },
+  "screens": {
+    "newMatch": "Nova partida",
+    "match": "Partida",
+    "tournament": "Torneio",
+    "players": "Jogadores",
+    "settings": "Ajustes"
+  },
+  "attackTypes": {
+    "pingo": "Pingo",
+    "loby": "Loby",
+    "shark": "Shark"
+  },
+  "auth": {
+    "title": "Registre cada ponto",
+    "subtitle": "Placar ao vivo, zonas da quadra e tipos de ataque — em um toque.",
+    "continueWithGoogle": "Continuar com o Google"
+  },
+  "splash": {
+    "tagline": "Marque. Registre. Reveja."
+  },
+  "offline": {
+    "syncing": "Sincronizando alterações…",
+    "offline": "Você está offline — as alterações serão sincronizadas depois."
+  },
+  "errors": {
+    "crashCaught": "Falha detectada:"
+  },
+  "matches": {
+    "title": "Partidas",
+    "emptyTitle": "Nenhuma partida ainda",
+    "emptySubtitle": "Inicie uma nova partida para registrar placares e zonas da quadra.",
+    "inProgress": "em andamento",
+    "matchInProgress": "Partida em andamento",
+    "tapToResume": "{{score}} · toque para retomar",
+    "scoreSeparator": "—"
+  },
+  "players": {
+    "emptyTitle": "Nenhum jogador ainda",
+    "emptySubtitle": "Adicione seu primeiro jogador acima para montar as duplas.",
+    "namePlaceholder": "Nome do jogador",
+    "add": "Adicionar jogador"
+  },
+  "newMatch": {
+    "pickPlayers": "Escolha 4 jogadores — os dois primeiros são a Dupla A, os dois seguintes a Dupla B",
+    "addPlayersFirst": "Adicione jogadores na aba Jogadores primeiro.",
+    "targetScore": "Pontuação alvo",
+    "tournamentOptional": "Torneio (opcional)",
+    "newTournament": "+ Novo",
+    "tournamentName": "Nome do torneio",
+    "locationOptional": "Local (opcional)",
+    "dateFormat": "Data (AAAA-MM-DD)",
+    "roundPlaceholder": "Fase (ex.: Final, Grupo A)",
+    "clubOptional": "Clube da {{team}} (opcional)",
+    "clubLocked": "{{team}}: {{club}} (fixo)",
+    "noClub": "Sem clube",
+    "pickFourForClubs": "Escolha os 4 jogadores para definir o clube de cada dupla.",
+    "start": "Iniciar partida"
+  },
+  "tournament": {
+    "duplasAndClubs": "Duplas e clubes",
+    "duplasEmpty": "As duplas aparecem aqui depois de jogarem uma partida.",
+    "clubPlaceholder": "Clube (opcional)",
+    "matches": "Partidas",
+    "noMatches": "Nenhuma partida ainda."
+  },
+  "match": {
+    "firstTo": "Primeiro a {{target}}, com {{winBy}} de diferença",
+    "undo": "Desfazer",
+    "finish": "Encerrar",
+    "finishTitle": "Encerrar partida?",
+    "finishMessage": "Isso encerra a partida com o placar atual.",
+    "finishConfirm": "Encerrar",
+    "deleteTitle": "Excluir partida?",
+    "deleteMessage": "Esta ação não pode ser desfeita.",
+    "deleteConfirm": "Excluir",
+    "won": "{{team}} venceu",
+    "attackTypes": "Tipos de ataque",
+    "pointLog": "Histórico de pontos",
+    "pointLogEntry": "#{{number}} · Dupla {{side}} · {{where}}",
+    "ballOut": "Bola fora",
+    "zone": "Zona {{zone}}",
+    "tapToScore": "Toque para pontuar"
+  },
+  "point": {
+    "title": "Ponto da Dupla {{team}}",
+    "whereLanded": "Onde a bola caiu na quadra da Dupla {{team}}?",
+    "ballOut": "Bola fora",
+    "attackType": "Tipo de ataque",
+    "whoScored": "Quem pontuou?",
+    "confirm": "Confirmar ponto"
+  },
+  "court": {
+    "net": "REDE",
+    "zoneLabel": "Dupla {{side}}, zona {{zone}} da quadra"
+  },
+  "heatMap": {
+    "title": "Mapa de calor da quadra",
+    "player": "Jogador",
+    "pointType": "Tipo de ponto",
+    "summary": {
+      "one": "{{count}} ponto na quadra",
+      "other": "{{count}} pontos na quadra"
+    },
+    "ballOut": "{{count}} bola fora"
+  },
+  "settings": {
+    "signOut": "Sair",
+    "language": "Idioma",
+    "defaultName": "Jogador",
+    "defaultYou": "Você"
+  }
+}

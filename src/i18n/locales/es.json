@@ -1,0 +1,137 @@
+{
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "all": "Todos",
+    "none": "Ninguno",
+    "team": "Equipo",
+    "teamWithSide": "Equipo {{side}}",
+    "teamFallback": "Equipo",
+    "and": "&",
+    "vs": "vs",
+    "unknownPlayer": "?",
+    "optional": "opcional"
+  },
+  "app": {
+    "name": "Futevo",
+    "wordmark": "FUTEVO"
+  },
+  "tabs": {
+    "dashboard": "Panel",
+    "matches": "Partidos",
+    "players": "Jugadores",
+    "settings": "Ajustes",
+    "newMatch": "Nuevo partido"
+  },
+  "screens": {
+    "newMatch": "Nuevo partido",
+    "match": "Partido",
+    "tournament": "Torneo",
+    "players": "Jugadores",
+    "settings": "Ajustes"
+  },
+  "attackTypes": {
+    "pingo": "Pingo",
+    "loby": "Loby",
+    "shark": "Shark"
+  },
+  "auth": {
+    "title": "Registra cada punto",
+    "subtitle": "Marcador en vivo, zonas de la cancha y tipos de ataque — en un toque.",
+    "continueWithGoogle": "Continuar con Google"
+  },
+  "splash": {
+    "tagline": "Anota. Registra. Repite."
+  },
+  "offline": {
+    "syncing": "Sincronizando cambios…",
+    "offline": "Estás sin conexión — los cambios se sincronizarán después."
+  },
+  "errors": {
+    "crashCaught": "Error detectado:"
+  },
+  "matches": {
+    "title": "Partidos",
+    "emptyTitle": "Aún no hay partidos",
+    "emptySubtitle": "Inicia un nuevo partido para registrar marcadores y zonas de la cancha.",
+    "inProgress": "en curso",
+    "matchInProgress": "Partido en curso",
+    "tapToResume": "{{score}} · toca para continuar",
+    "scoreSeparator": "—"
+  },
+  "players": {
+    "emptyTitle": "Aún no hay jugadores",
+    "emptySubtitle": "Agrega tu primer jugador arriba para armar los equipos.",
+    "namePlaceholder": "Nombre del jugador",
+    "add": "Agregar jugador"
+  },
+  "newMatch": {
+    "pickPlayers": "Elige 4 jugadores — los dos primeros son el Equipo A, los dos siguientes el Equipo B",
+    "addPlayersFirst": "Primero agrega jugadores en la pestaña Jugadores.",
+    "targetScore": "Puntaje objetivo",
+    "tournamentOptional": "Torneo (opcional)",
+    "newTournament": "+ Nuevo",
+    "tournamentName": "Nombre del torneo",
+    "locationOptional": "Lugar (opcional)",
+    "dateFormat": "Fecha (AAAA-MM-DD)",
+    "roundPlaceholder": "Fase (ej.: Final, Grupo A)",
+    "clubOptional": "Club del {{team}} (opcional)",
+    "clubLocked": "{{team}}: {{club}} (fijo)",
+    "noClub": "Sin club",
+    "pickFourForClubs": "Elige los 4 jugadores para definir el club de cada dupla.",
+    "start": "Iniciar partido"
+  },
+  "tournament": {
+    "duplasAndClubs": "Duplas y clubes",
+    "duplasEmpty": "Las duplas aparecen aquí cuando juegan un partido.",
+    "clubPlaceholder": "Club (opcional)",
+    "matches": "Partidos",
+    "noMatches": "Aún no hay partidos."
+  },
+  "match": {
+    "firstTo": "Primero a {{target}}, con {{winBy}} de diferencia",
+    "undo": "Deshacer",
+    "finish": "Terminar",
+    "finishTitle": "¿Terminar el partido?",
+    "finishMessage": "Esto termina el partido con el marcador actual.",
+    "finishConfirm": "Terminar",
+    "deleteTitle": "¿Eliminar el partido?",
+    "deleteMessage": "Esta acción no se puede deshacer.",
+    "deleteConfirm": "Eliminar",
+    "won": "{{team}} ganó",
+    "attackTypes": "Tipos de ataque",
+    "pointLog": "Historial de puntos",
+    "pointLogEntry": "#{{number}} · Equipo {{side}} · {{where}}",
+    "ballOut": "Balón afuera",
+    "zone": "Zona {{zone}}",
+    "tapToScore": "Toca para anotar"
+  },
+  "point": {
+    "title": "Punto del Equipo {{team}}",
+    "whereLanded": "¿Dónde cayó el balón en la cancha del Equipo {{team}}?",
+    "ballOut": "Balón afuera",
+    "attackType": "Tipo de ataque",
+    "whoScored": "¿Quién anotó?",
+    "confirm": "Confirmar punto"
+  },
+  "court": {
+    "net": "RED",
+    "zoneLabel": "Equipo {{side}}, zona {{zone}} de la cancha"
+  },
+  "heatMap": {
+    "title": "Mapa de calor de la cancha",
+    "player": "Jugador",
+    "pointType": "Tipo de punto",
+    "summary": {
+      "one": "{{count}} punto en la cancha",
+      "other": "{{count}} puntos en la cancha"
+    },
+    "ballOut": "{{count}} balón afuera"
+  },
+  "settings": {
+    "signOut": "Cerrar sesión",
+    "language": "Idioma",
+    "defaultName": "Jugador",
+    "defaultYou": "Tú"
+  }
+}

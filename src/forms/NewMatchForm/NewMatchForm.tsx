@@ -116,7 +116,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   onPress={() => togglePlayer(player.id)}
                 >
                   <View>
-                    <PlayerAvatar player={player} selected={selected} />
+                    <PlayerAvatar name={player.name} selected={selected} />
                     {selected ? (
                       <View
                         style={styles.badge(index < 2 ? theme.colors.teamA : theme.colors.teamB)}

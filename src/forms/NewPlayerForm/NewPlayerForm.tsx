@@ -11,15 +11,13 @@ import { useLanguage } from "@/i18n"
 export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
-  const palette = theme.colors.playerPalette
   const [name, setName] = useState("")
-  const [color, setColor] = useState(palette[0])
 
   const canSubmit = name.trim().length > 0
 
   const handleSubmit = () => {
     if (!canSubmit) return
-    onSubmit({ name: name.trim(), color })
+    onSubmit({ name: name.trim() })
     setName("")
   }
 
@@ -34,15 +32,6 @@ export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
       />
-      <View style={styles.swatchRow}>
-        {palette.map((swatch) => (
-          <TouchableOpacity
-            key={swatch}
-            style={styles.swatch(swatch, swatch === color)}
-            onPress={() => setColor(swatch)}
-          />
-        ))}
-      </View>
       <TouchableOpacity
         style={styles.submitButton(canSubmit)}
         onPress={handleSubmit}
