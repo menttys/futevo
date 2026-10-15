@@ -1,0 +1,18 @@
+{
+  "version": "0.2",
+  "language": "en,pt",
+  "import": [
+    "@cspell/dict-pt-br/cspell-ext.json"
+  ],
+  "words": [
+    "futevo",
+    "futevolei",
+    "pingo",
+    "loby",
+    "firestore",
+    "MMKV",
+    "unistyles",
+    "zustand",
+    "expo"
+  ]
+}

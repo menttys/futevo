@@ -1,0 +1,29 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.env.local
+
+# Firebase config — kept out of the repo; supplied locally or via EAS env vars
+GoogleService-Info.plist
+*GoogleService-Info*.plist
+google-services.json
+
+# @generated expo-cli sync
+expo-env.d.ts
+# @end expo-cli
+/ios
+/android

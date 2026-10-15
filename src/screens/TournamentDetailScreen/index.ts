@@ -1,0 +1,1 @@
+export { TournamentDetailScreen } from "./TournamentDetailScreen"
