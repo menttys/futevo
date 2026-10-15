@@ -12,6 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { OfflineBanner } from "@/components/OfflineBanner"
 import { useNetworkState } from "@/hooks/useNetworkState"
+import { linking } from "@/navigation/linking"
 import { RootNavigator } from "@/navigation/RootNavigator"
 import { theme } from "@/styles/theme"
 
@@ -54,7 +55,11 @@ export default function App() {
       <SafeAreaProvider>
         <KeyboardProvider>
           <ErrorBoundary>
-            <NavigationContainer theme={NAV_THEME}>
+            <NavigationContainer
+              theme={NAV_THEME}
+              linking={linking}
+              documentTitle={{ formatter: () => "Futevo" }}
+            >
               <RootNavigator />
             </NavigationContainer>
             <OfflineBanner />

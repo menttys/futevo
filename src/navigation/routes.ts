@@ -4,6 +4,7 @@ export enum RootRoutes {
 }
 
 export enum TabRoutes {
+  DASHBOARD = "Dashboard",
   MATCHES = "Matches",
   PLAYERS = "Players",
   SETTINGS = "Settings",

@@ -54,14 +54,14 @@ src/
 
 ### Where new files go
 
-| What                | Where              |
-| ------------------- | ------------------ |
-| Screen component    | `src/screens/`     |
-| Shared UI component | `src/components/`  |
-| Custom hook         | `src/hooks/`       |
-| Zustand store       | `src/store/`       |
-| Form component      | `src/forms/`       |
-| Utility function    | `src/utils/`       |
+| What                | Where                  |
+| ------------------- | ---------------------- |
+| Screen component    | `src/screens/`         |
+| Shared UI component | `src/components/`      |
+| Custom hook         | `src/hooks/`           |
+| Zustand store       | `src/store/`           |
+| Form component      | `src/forms/`           |
+| Utility function    | `src/utils/`           |
 | TypeScript types    | `src/@types/futevo.ts` |
 
 After adding a new screen, register it in the appropriate stack under `src/navigation/`.

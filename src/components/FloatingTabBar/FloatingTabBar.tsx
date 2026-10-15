@@ -14,7 +14,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   const { theme } = useUnistyles()
 
   const onNewMatch = () => {
-    navigation.navigate(TabRoutes.MATCHES, { screen: MatchesRoutes.NEW_MATCH })
+    navigation.navigate(TabRoutes.DASHBOARD, { screen: MatchesRoutes.NEW_MATCH })
   }
 
   const newMatchButton = (

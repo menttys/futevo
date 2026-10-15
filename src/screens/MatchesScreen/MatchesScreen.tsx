@@ -61,10 +61,6 @@ export function MatchesScreen() {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Futevo</Text>
-      </View>
-
       {activeMatch ? (
         <TouchableOpacity
           style={styles.activeBanner}

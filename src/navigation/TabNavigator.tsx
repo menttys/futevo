@@ -5,7 +5,8 @@ import { useUnistyles } from "react-native-unistyles"
 
 import { FloatingTabBar } from "@/components/FloatingTabBar"
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
-import { LayoutDashboard, Settings as SettingsIcon, Users } from "@/lib/icons"
+import { LayoutDashboard, Settings as SettingsIcon, Trophy, Users } from "@/lib/icons"
+import { MatchesListScreen } from "@/screens/MatchesListScreen"
 
 import { MatchesStack } from "./MatchesStack"
 import { PlayersStack } from "./PlayersStack"
@@ -29,11 +30,19 @@ export function TabNavigator() {
       }}
     >
       <Tab.Screen
-        name={TabRoutes.MATCHES}
+        name={TabRoutes.DASHBOARD}
         component={MatchesStack}
         options={{
           tabBarLabel: "Dashboard",
           tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
+        }}
+      />
+      <Tab.Screen
+        name={TabRoutes.MATCHES}
+        component={MatchesListScreen}
+        options={{
+          tabBarLabel: "Matches",
+          tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
         }}
       />
       <Tab.Screen

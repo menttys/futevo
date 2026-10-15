@@ -20,7 +20,8 @@ export type SettingsStackParamList = {
 }
 
 export type TabParamList = {
-  Matches: NavigatorScreenParams<MatchesStackParamList>
+  Dashboard: NavigatorScreenParams<MatchesStackParamList>
+  Matches: undefined
   Players: NavigatorScreenParams<PlayersStackParamList>
   Settings: NavigatorScreenParams<SettingsStackParamList>
 }
