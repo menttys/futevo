@@ -1,65 +1,101 @@
 import { StyleSheet } from "react-native-unistyles"
 
-export const styles = StyleSheet.create((theme) => ({
+import { IS_WEB, WEB_CONTENT, WEB_SIDE_BAR_MIN_WIDTH } from "@/constants/Platform"
+
+// Same hues as the heat-map scale, deepened so they read as text.
+const SCORE_GREEN = "#2E9E62"
+const SCORE_RED = "#DD524A"
+
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  header: {
+  searchWrapper: {
+    ...WEB_CONTENT,
+    padding: theme.spacing.md,
+  },
+  searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: theme.spacing.lg,
-    paddingBottom: theme.spacing.md,
+    gap: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.lg,
   },
-  title: {
-    fontFamily: "Sora-Bold",
-    fontSize: theme.typography.size.xxl,
+  searchInput: {
+    flex: 1,
+    paddingVertical: theme.spacing.sm,
+    fontFamily: "Sora-Regular",
+    fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
-  activeBanner: {
-    marginHorizontal: theme.spacing.lg,
-    marginBottom: theme.spacing.md,
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius.lg,
-    padding: theme.spacing.md,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  activeBannerText: {
-    fontFamily: "Sora-Bold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.dark,
-  },
-  activeBannerSub: {
-    fontFamily: "Sora-Regular",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.dark + "CC",
+  listWrapper: {
+    ...WEB_CONTENT,
+    flex: 1,
+    // FlashList ignores its content padding on web; phone-width web needs a gutter.
+    paddingHorizontal: IS_WEB && rt.screen.width < WEB_SIDE_BAR_MIN_WIDTH ? theme.spacing.md : 0,
   },
   listContent: {
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
+  },
+  separator: {
+    height: theme.spacing.sm,
   },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radius.lg,
     padding: theme.spacing.md,
-    gap: theme.spacing.xs,
+    gap: theme.spacing.sm,
   },
-  cardTeams: {
-    fontFamily: "Sora-SemiBold",
+  teamRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.md,
+  },
+  teamInfo: {
+    flex: 1,
+    gap: 2,
+  },
+  club: {
+    fontFamily: "Sora-Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
-  cardScore: {
+  players: (winner: boolean) => ({
+    fontFamily: winner ? "Sora-Bold" : "Sora-Regular",
+    fontSize: theme.typography.size.sm,
+    color: winner ? theme.colors.text : theme.colors.textMuted,
+  }),
+  score: (result: "lead" | "trail" | "tie") => ({
     fontFamily: "Sora-Bold",
-    fontSize: theme.typography.size.lg,
-    color: theme.colors.primary,
+    fontSize: theme.typography.size.xl,
+    color:
+      result === "lead" ? SCORE_GREEN : result === "trail" ? SCORE_RED : theme.colors.textMuted,
+  }),
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingTop: theme.spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.grey600,
   },
-  cardDate: {
+  date: {
     fontFamily: "Sora-Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
+  },
+  badge: {
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 2,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.primary,
+  },
+  badgeText: {
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.xs,
+    color: theme.colors.dark,
   },
 }))

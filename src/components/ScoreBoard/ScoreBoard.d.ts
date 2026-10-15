@@ -5,6 +5,8 @@ export type ScoreBoardProps = {
   teamBPlayers: Player[]
   scoreA: number
   scoreB: number
+  clubA?: string
+  clubB?: string
   onScorePoint: (team: TeamSide) => void
   disabled?: boolean
 }

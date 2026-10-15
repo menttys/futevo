@@ -11,6 +11,9 @@ export type NewMatchFormSubmit = {
   // Only set for a dupla that has no club yet in the tournament (otherwise locked).
   clubA?: string
   clubB?: string
+  // Team names for a friendly match (in a tournament the club is the name).
+  teamNameA?: string
+  teamNameB?: string
 }
 
 export type NewMatchFormProps = {

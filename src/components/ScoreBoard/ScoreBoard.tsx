@@ -18,6 +18,8 @@ export function ScoreBoard({
   teamBPlayers,
   scoreA,
   scoreB,
+  clubA,
+  clubB,
   onScorePoint,
   disabled = false,
 }: ScoreBoardProps) {
@@ -32,7 +34,10 @@ export function ScoreBoard({
         disabled={disabled}
         activeOpacity={0.85}
       >
-        <Text style={styles.names}>{teamNames(teamAPlayers, t("common.teamFallback"))}</Text>
+        {clubA ? <Text style={styles.club}>{clubA}</Text> : null}
+        <Text style={clubA ? styles.namesSmall : styles.names}>
+          {teamNames(teamAPlayers, t("common.teamFallback"))}
+        </Text>
         <Text style={styles.score(theme.colors.teamA)}>{scoreA}</Text>
         <Text style={styles.hint}>{t("match.tapToScore")}</Text>
       </TouchableOpacity>
@@ -43,7 +48,10 @@ export function ScoreBoard({
         disabled={disabled}
         activeOpacity={0.85}
       >
-        <Text style={styles.names}>{teamNames(teamBPlayers, t("common.teamFallback"))}</Text>
+        {clubB ? <Text style={styles.club}>{clubB}</Text> : null}
+        <Text style={clubB ? styles.namesSmall : styles.names}>
+          {teamNames(teamBPlayers, t("common.teamFallback"))}
+        </Text>
         <Text style={styles.score(theme.colors.teamB)}>{scoreB}</Text>
         <Text style={styles.hint}>{t("match.tapToScore")}</Text>
       </TouchableOpacity>

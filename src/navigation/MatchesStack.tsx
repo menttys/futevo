@@ -5,7 +5,6 @@ import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import { LiveMatchScreen } from "@/screens/LiveMatchScreen"
 import { MatchDetailScreen } from "@/screens/MatchDetailScreen"
-import { MatchesScreen } from "@/screens/MatchesScreen"
 import { NewMatchScreen } from "@/screens/NewMatchScreen"
 import { PointEntryScreen } from "@/screens/PointEntryScreen"
 import { TournamentDetailScreen } from "@/screens/TournamentDetailScreen"
@@ -17,23 +16,23 @@ import { MatchesStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<MatchesStackParamList>()
 
-const HEADER_OPTS = {
-  headerShown: !IS_WEB,
-  headerStyle: { backgroundColor: theme.colors.primary },
+const HEADER_OPTS = ({ navigation }: { navigation: { canGoBack: () => boolean } }) => ({
+  // On web the root screen has no header; nested screens get one with a back button.
+  headerShown: !IS_WEB || navigation.canGoBack(),
+  // On web the header is just a bare back arrow: no title, no yellow bar.
+  headerStyle: IS_WEB
+    ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
+    : { backgroundColor: theme.colors.primary },
+  headerTitle: IS_WEB ? "" : undefined,
   headerTintColor: theme.colors.dark,
   headerTitleStyle: { color: theme.colors.dark },
   cardStyle: { backgroundColor: theme.colors.background },
-} as const
+})
 
 export function MatchesStack() {
   const { t } = useLanguage()
   return (
     <Stack.Navigator detachInactiveScreens={DETACH_INACTIVE_SCREENS} screenOptions={HEADER_OPTS}>
-      <Stack.Screen
-        name={MatchesRoutes.MATCHES_HOME}
-        component={MatchesScreen}
-        options={{ headerShown: false }}
-      />
       <Stack.Screen
         name={MatchesRoutes.NEW_MATCH}
         component={NewMatchScreen}
@@ -56,7 +55,7 @@ export function MatchesStack() {
       <Stack.Screen
         name={MatchesRoutes.MATCH_DETAIL}
         component={MatchDetailScreen}
-        options={{ title: t("screens.match") }}
+        options={{ title: t("screens.match"), headerShown: true }}
       />
       <Stack.Screen
         name={MatchesRoutes.TOURNAMENT_DETAIL}

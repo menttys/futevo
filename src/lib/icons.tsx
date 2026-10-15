@@ -12,6 +12,7 @@ import {
   Pencil as _Pencil,
   Plus as _Plus,
   RotateCcw as _RotateCcw,
+  Search as _Search,
   Settings as _Settings,
   Trash2 as _Trash2,
   Trophy as _Trophy,
@@ -42,6 +43,7 @@ export const LogOut = wrap(_LogOut)
 export const Pencil = wrap(_Pencil)
 export const Plus = wrap(_Plus)
 export const RotateCcw = wrap(_RotateCcw)
+export const Search = wrap(_Search)
 export const Settings = wrap(_Settings)
 export const Trash2 = wrap(_Trash2)
 export const Trophy = wrap(_Trophy)

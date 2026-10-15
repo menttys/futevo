@@ -1,3 +1,8 @@
 export type NewPlayerFormProps = {
-  onSubmit: (params: { name: string }) => void
+  onSubmit: (params: {
+    name: string
+    photoUri?: string
+    birthCountry?: string
+    residencyCountry?: string
+  }) => void
 }

@@ -1,9 +1,19 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { IS_WEB, WEB_CONTENT } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  content: {
+    ...WEB_CONTENT,
+    padding: theme.spacing.lg,
+  },
+  card: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.lg,
     padding: theme.spacing.lg,
     gap: theme.spacing.lg,
   },
@@ -50,7 +60,9 @@ export const styles = StyleSheet.create((theme) => ({
     borderRadius: theme.radius.md,
     borderWidth: 1,
     borderColor: theme.colors.danger,
-    paddingVertical: theme.spacing.md,
+    paddingVertical: IS_WEB ? theme.spacing.sm : theme.spacing.md,
+    paddingHorizontal: IS_WEB ? theme.spacing.md : 0,
+    alignSelf: IS_WEB ? "flex-start" : "stretch",
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "center",

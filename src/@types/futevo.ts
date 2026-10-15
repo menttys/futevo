@@ -2,6 +2,7 @@ export const ATTACK_TYPES = [
   { id: "pingo", label: "Pingo" },
   { id: "loby", label: "Loby" },
   { id: "shark", label: "Shark" },
+  { id: "ace", label: "Ace" },
 ] as const
 
 export type AttackTypeId = (typeof ATTACK_TYPES)[number]["id"]
@@ -11,6 +12,11 @@ export type Player = {
   userId: string
   name: string
   color?: string
+  // Empty string means "cleared" (merge-writes can't drop a field when undefined is stripped).
+  photoUri?: string
+  // ISO 3166-1 alpha-2 codes
+  birthCountry?: string
+  residencyCountry?: string
 }
 
 export type TeamSide = "A" | "B"
@@ -42,6 +48,7 @@ export type MatchStatus = "in_progress" | "completed"
 export type Match = {
   id: string
   userId: string
+  // Tuple order is the side played: [0] = left, [1] = right.
   teamA: [Player["id"], Player["id"]]
   teamB: [Player["id"], Player["id"]]
   targetScore: number
@@ -55,6 +62,9 @@ export type Match = {
   // tournament's entries, never stored on the match, so it can't drift.
   tournamentId?: string
   round?: string
+  // Optional team names for friendly matches; tournament matches use the club.
+  teamNameA?: string
+  teamNameB?: string
   notes?: string
   createdAt: string
   completedAt?: string

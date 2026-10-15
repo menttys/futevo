@@ -10,7 +10,8 @@
     "and": "&",
     "vs": "x",
     "unknownPlayer": "?",
-    "optional": "opcional"
+    "optional": "opcional",
+    "close": "Fechar"
   },
   "app": {
     "name": "Futevo",
@@ -28,12 +29,15 @@
     "match": "Partida",
     "tournament": "Torneio",
     "players": "Jogadores",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "playerProfile": "Perfil do jogador",
+    "addPlayer": "Adicionar jogador"
   },
   "attackTypes": {
     "pingo": "Pingo",
     "loby": "Loby",
-    "shark": "Shark"
+    "shark": "Shark",
+    "ace": "Ace"
   },
   "auth": {
     "title": "Registre cada ponto",
@@ -57,16 +61,42 @@
     "inProgress": "em andamento",
     "matchInProgress": "Partida em andamento",
     "tapToResume": "{{score}} · toque para retomar",
-    "scoreSeparator": "—"
+    "scoreSeparator": "—",
+    "searchPlaceholder": "Buscar time, jogador ou data",
+    "noResultsTitle": "Nenhuma partida encontrada",
+    "noResultsSubtitle": "Tente outro time, jogador ou data."
   },
   "players": {
     "emptyTitle": "Nenhum jogador ainda",
-    "emptySubtitle": "Adicione seu primeiro jogador acima para montar as duplas.",
+    "emptySubtitle": "Toque em + para adicionar seu primeiro jogador e montar os times.",
     "namePlaceholder": "Nome do jogador",
-    "add": "Adicionar jogador"
+    "add": "Adicionar jogador",
+    "profile": {
+      "photo": "Foto",
+      "choosePhoto": "Escolher foto",
+      "changePhoto": "Trocar foto",
+      "removePhoto": "Remover foto",
+      "birthCountry": "País de nascimento",
+      "residencyCountry": "País de residência",
+      "noCountry": "Não informado",
+      "searchCountry": "Buscar país",
+      "selectCountry": "Selecionar país",
+      "clear": "Limpar",
+      "save": "Salvar",
+      "saved": "Salvo",
+      "optional": "Opcional",
+      "name": "Nome",
+      "delete": "Excluir jogador",
+      "deleteTitle": "Excluir jogador?",
+      "deleteMessage": "Isso não pode ser desfeito."
+    },
+    "searchPlaceholder": "Buscar jogadores",
+    "filterAll": "Todos",
+    "added": "O jogador foi adicionado",
+    "noResults": "Nenhum jogador corresponde à busca"
   },
   "newMatch": {
-    "pickPlayers": "Escolha 4 jogadores — os dois primeiros são a Dupla A, os dois seguintes a Dupla B",
+    "pickPlayers": "Escolha os jogadores de cada dupla",
     "addPlayersFirst": "Adicione jogadores na aba Jogadores primeiro.",
     "targetScore": "Pontuação alvo",
     "tournamentOptional": "Torneio (opcional)",
@@ -79,7 +109,16 @@
     "clubLocked": "{{team}}: {{club}} (fixo)",
     "noClub": "Sem clube",
     "pickFourForClubs": "Escolha os 4 jogadores para definir o clube de cada dupla.",
-    "start": "Iniciar partida"
+    "start": "Iniciar partida",
+    "selectPlayers": "Selecionar jogadores",
+    "done": "Concluir",
+    "selectTeamPlayers": "Selecionar jogadores da {{team}}",
+    "left": "Esquerda",
+    "right": "Direita",
+    "leftShort": "E",
+    "rightShort": "D",
+    "selectSidePlayer": "Selecionar jogador da {{team}} · {{side}}",
+    "selectPlayer": "Selecionar"
   },
   "tournament": {
     "duplasAndClubs": "Duplas e clubes",
@@ -91,6 +130,9 @@
   "match": {
     "firstTo": "Primeiro a {{target}}, com {{winBy}} de diferença",
     "undo": "Desfazer",
+    "undoTitle": "Desfazer o último ponto?",
+    "undoMessage": "O último ponto será removido e o placar recalculado.",
+    "undoConfirm": "Desfazer",
     "finish": "Encerrar",
     "finishTitle": "Encerrar partida?",
     "finishMessage": "Isso encerra a partida com o placar atual.",
@@ -104,7 +146,15 @@
     "pointLogEntry": "#{{number}} · Dupla {{side}} · {{where}}",
     "ballOut": "Bola fora",
     "zone": "Zona {{zone}}",
-    "tapToScore": "Toque para pontuar"
+    "tapToScore": "Toque para pontuar",
+    "tabs": {
+      "players": "Jogadores",
+      "pointLog": "Pontos"
+    },
+    "stats": {
+      "pointsScored": "Pontos feitos"
+    },
+    "defaultAttack": "Ataque"
   },
   "point": {
     "title": "Ponto da Dupla {{team}}",
@@ -119,14 +169,23 @@
     "zoneLabel": "Dupla {{side}}, zona {{zone}} da quadra"
   },
   "heatMap": {
-    "title": "Mapa de calor da quadra",
+    "title": "Onde os pontos caíram",
     "player": "Jogador",
     "pointType": "Tipo de ponto",
     "summary": {
       "one": "{{count}} ponto na quadra",
       "other": "{{count}} pontos na quadra"
     },
-    "ballOut": "{{count}} bola fora"
+    "ballOut": "{{count}} bola fora",
+    "subtitle": "Cada lado mostra a quadra de quem recebeu o ponto",
+    "total": "Total: {{count}}",
+    "legend": {
+      "zero": "0",
+      "low": "Baixo",
+      "medium": "Médio",
+      "high": "Alto",
+      "max": "Máx"
+    }
   },
   "settings": {
     "signOut": "Sair",

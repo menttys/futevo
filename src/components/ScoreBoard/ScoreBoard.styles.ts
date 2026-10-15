@@ -1,7 +1,10 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { WEB_CONTENT } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   row: {
+    ...WEB_CONTENT,
     flexDirection: "row",
     gap: theme.spacing.md,
   },
@@ -19,6 +22,20 @@ export const styles = StyleSheet.create((theme) => ({
     fontFamily: "Sora-SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
+    textAlign: "center",
+    paddingHorizontal: theme.spacing.sm,
+  },
+  club: {
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.lg,
+    color: theme.colors.text,
+    textAlign: "center",
+    paddingHorizontal: theme.spacing.sm,
+  },
+  namesSmall: {
+    fontFamily: "Sora-Regular",
+    fontSize: theme.typography.size.xs,
+    color: theme.colors.textMuted,
     textAlign: "center",
     paddingHorizontal: theme.spacing.sm,
   },

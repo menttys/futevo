@@ -1,14 +1,20 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { WEB_CONTENT } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
   content: {
+    ...WEB_CONTENT,
     padding: theme.spacing.lg,
     paddingBottom: theme.spacing.xxl,
     gap: theme.spacing.lg,
+  },
+  backButton: {
+    paddingHorizontal: theme.spacing.md,
   },
   winnerBanner: {
     flexDirection: "row",
@@ -24,23 +30,52 @@ export const styles = StyleSheet.create((theme) => ({
     fontSize: theme.typography.size.md,
     color: theme.colors.dark,
   },
-  scoreRow: {
+  resultCard: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: theme.spacing.lg,
+    gap: theme.spacing.md,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.grey200,
+    padding: theme.spacing.lg,
   },
+  tabBar: {
+    flexDirection: "row",
+    backgroundColor: theme.colors.grey200,
+    borderRadius: theme.radius.full,
+    padding: theme.spacing.xs,
+  },
+  tab: (selected: boolean) => ({
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.radius.full,
+    backgroundColor: selected ? theme.colors.card : "transparent",
+  }),
+  tabLabel: (selected: boolean) => ({
+    fontFamily: "Sora-SemiBold",
+    fontSize: theme.typography.size.sm,
+    color: selected ? theme.colors.text : theme.colors.textMuted,
+  }),
   teamColumn: {
     alignItems: "center",
     gap: theme.spacing.xs,
     flex: 1,
   },
-  teamNames: {
-    fontFamily: "Sora-SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.text,
+  clubName: (color: string) => ({
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.lg,
+    color,
     textAlign: "center",
-  },
+  }),
+  teamNames: (color: string, hasClub = false) => ({
+    fontFamily: hasClub ? "Sora-Regular" : "Sora-Bold",
+    fontSize: hasClub ? theme.typography.size.xs : theme.typography.size.sm,
+    color: hasClub ? theme.colors.textMuted : color,
+    textAlign: "center",
+  }),
   teamScore: (color: string) => ({
     fontFamily: "Sora-Bold",
     fontSize: 48,
@@ -66,23 +101,5 @@ export const styles = StyleSheet.create((theme) => ({
     fontFamily: "Sora-SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.text,
-  },
-  pointRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: theme.spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.grey700,
-  },
-  pointLabel: {
-    fontFamily: "Sora-Regular",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.text,
-  },
-  pointScore: {
-    fontFamily: "Sora-SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
   },
 }))

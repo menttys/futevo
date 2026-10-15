@@ -15,11 +15,13 @@ export function findEntry(tournament: Tournament | undefined, players: [string, 
 }
 
 // A match's club for one side is looked up from the tournament, so editing it
-// in one place updates every match of that dupla.
+// in one place updates every match of that dupla. Friendly matches fall back to
+// the team name typed when the match was created.
 export function clubForSide(
-  match: Pick<Match, "teamA" | "teamB">,
+  match: Pick<Match, "teamA" | "teamB"> & Partial<Pick<Match, "teamNameA" | "teamNameB">>,
   tournament: Tournament | undefined,
   side: TeamSide
 ): string | undefined {
-  return findEntry(tournament, side === "A" ? match.teamA : match.teamB)?.club
+  const club = findEntry(tournament, side === "A" ? match.teamA : match.teamB)?.club
+  return club ?? (side === "A" ? match.teamNameA : match.teamNameB)
 }

@@ -3,16 +3,17 @@ import { NavigatorScreenParams } from "@react-navigation/native"
 import type { TeamSide } from "@/@types/futevo"
 
 export type MatchesStackParamList = {
-  MatchesHome: undefined
   NewMatch: undefined
   LiveMatch: { matchId: string }
   PointEntry: { matchId: string; team: TeamSide }
-  MatchDetail: { matchId: string }
+  MatchDetail: { matchId: string; from?: "Matches" }
   TournamentDetail: { tournamentId: string }
 }
 
 export type PlayersStackParamList = {
   PlayersHome: undefined
+  PlayerProfile: { playerId: string }
+  AddPlayer: undefined
 }
 
 export type SettingsStackParamList = {
@@ -20,8 +21,9 @@ export type SettingsStackParamList = {
 }
 
 export type TabParamList = {
-  Dashboard: NavigatorScreenParams<MatchesStackParamList>
+  MatchFlow: NavigatorScreenParams<MatchesStackParamList>
   Matches: undefined
+  Dashboard: undefined
   Players: NavigatorScreenParams<PlayersStackParamList>
   Settings: NavigatorScreenParams<SettingsStackParamList>
 }

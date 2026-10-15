@@ -61,12 +61,12 @@ export function TournamentDetailScreen() {
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.content}>
-      <View>
+      <View style={styles.card}>
         <Text style={styles.name}>{tournament.name}</Text>
         {meta ? <Text style={styles.meta}>{meta}</Text> : null}
       </View>
 
-      <View>
+      <View style={styles.card}>
         <Text style={styles.sectionLabel}>{t("tournament.duplasAndClubs")}</Text>
         {tournament.entries.length === 0 ? (
           <Text style={styles.hint}>{t("tournament.duplasEmpty")}</Text>
@@ -90,7 +90,7 @@ export function TournamentDetailScreen() {
         )}
       </View>
 
-      <View>
+      <View style={styles.card}>
         <Text style={styles.sectionLabel}>{t("tournament.matches")}</Text>
         {tournamentMatches.length === 0 ? (
           <Text style={styles.hint}>{t("tournament.noMatches")}</Text>

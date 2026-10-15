@@ -12,13 +12,17 @@ import { SettingsStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<SettingsStackParamList>()
 
-const HEADER_OPTS = {
-  headerShown: !IS_WEB,
-  headerStyle: { backgroundColor: theme.colors.primary },
+const HEADER_OPTS = ({ navigation }: { navigation: { canGoBack: () => boolean } }) => ({
+  // On web the root screen has no header; nested screens get one with a back button.
+  headerShown: !IS_WEB || navigation.canGoBack(),
+  headerStyle: IS_WEB
+    ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
+    : { backgroundColor: theme.colors.primary },
+  headerTitle: IS_WEB ? "" : undefined,
   headerTintColor: theme.colors.dark,
   headerTitleStyle: { color: theme.colors.dark },
   cardStyle: { backgroundColor: theme.colors.background },
-} as const
+})
 
 export function SettingsStack() {
   const { t } = useLanguage()

@@ -1,15 +1,20 @@
-import React, { useLayoutEffect, useMemo } from "react"
+import React, { useLayoutEffect, useMemo, useState } from "react"
 import { ScrollView, Text, TouchableOpacity, View } from "react-native"
 
+import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { useUnistyles } from "react-native-unistyles"
 
 import { ATTACK_TYPES, Player } from "@/@types/futevo"
 import { CourtHeatMap } from "@/components/CourtHeatMap"
+import { PlayerStatsList } from "@/components/PlayerStatsList"
+import { PointLog } from "@/components/PointLog"
+import { IS_WEB } from "@/constants/Platform"
 import { useMatches } from "@/hooks/useMatches"
-import { Trash2, Trophy } from "@/lib/icons"
-import { MatchesStackParamList } from "@/navigation/types"
+import { ChevronLeft, Trash2, Trophy } from "@/lib/icons"
+import { TabRoutes } from "@/navigation/routes"
+import { MatchesStackParamList, TabParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
@@ -34,15 +39,37 @@ export function MatchDetailScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
-  const { matchId } = useRoute<MatchDetailRouteProp>().params
+  const { matchId, from } = useRoute<MatchDetailRouteProp>().params
   const players = usePlayerStore((s) => s.players) ?? []
   const match = useMatchStore((s) => s.matches?.find((m) => m.id === matchId))
   const tournament = useTournamentStore((s) =>
     s.tournaments?.find((t) => t.id === match?.tournamentId)
   )
   const { deleteMatch } = useMatches()
+  const [tab, setTab] = useState<"players" | "log">("players")
 
   useLayoutEffect(() => {
+    const goBack = () => {
+      if (from === "Matches" || !navigation.canGoBack()) {
+        // Opened from the Matches tab: return there instead of the match-flow stack.
+        navigation.getParent<BottomTabNavigationProp<TabParamList>>()?.navigate(TabRoutes.MATCHES)
+      } else {
+        navigation.goBack()
+      }
+    }
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={goBack}
+          hitSlop={theme.hitSlop.md}
+          accessibilityRole="button"
+          style={styles.backButton}
+        >
+          <ChevronLeft size={26} color={theme.colors.dark} />
+        </TouchableOpacity>
+      ),
+    })
+    if (IS_WEB) return
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
@@ -63,7 +90,7 @@ export function MatchDetailScreen() {
         </TouchableOpacity>
       ),
     })
-  }, [navigation, deleteMatch, matchId, theme, t])
+  }, [navigation, deleteMatch, matchId, from, theme, t])
 
   const tally = useMemo(() => {
     if (!match) return []
@@ -108,58 +135,66 @@ export function MatchDetailScreen() {
         </TouchableOpacity>
       ) : null}
 
-      <View style={styles.scoreRow}>
+      <View style={styles.resultCard}>
         <View style={styles.teamColumn}>
-          <Text style={styles.teamNames}>{teamNames(teamAPlayers, teamFallback)}</Text>
-          {clubA ? <Text style={styles.sectionLabel}>{clubA}</Text> : null}
+          {clubA ? (
+            <Text style={styles.clubName(theme.colors.teamA)} numberOfLines={2}>
+              {clubA}
+            </Text>
+          ) : null}
+          <Text style={styles.teamNames(theme.colors.teamA, !!clubA)} numberOfLines={2}>
+            {teamNames(teamAPlayers, teamFallback)}
+          </Text>
           <Text style={styles.teamScore(theme.colors.teamA)}>{match.scoreA}</Text>
         </View>
+        <Trophy size={28} color={theme.colors.primary} />
         <View style={styles.teamColumn}>
-          <Text style={styles.teamNames}>{teamNames(teamBPlayers, teamFallback)}</Text>
-          {clubB ? <Text style={styles.sectionLabel}>{clubB}</Text> : null}
-          <Text style={styles.teamScore(theme.colors.teamB)}>{match.scoreB}</Text>
-        </View>
-      </View>
-
-      <View>
-        <Text style={styles.sectionLabel}>{t("match.attackTypes")}</Text>
-        <View style={[styles.tallyRow, { marginTop: theme.spacing.sm }]}>
-          {tally.map((t) => (
-            <View key={t.label} style={styles.tallyChip}>
-              <Text style={styles.tallyText}>
-                {t.label}: {t.count}
-              </Text>
-            </View>
-          ))}
+          {clubB ? (
+            <Text style={styles.clubName(theme.colors.purple)} numberOfLines={2}>
+              {clubB}
+            </Text>
+          ) : null}
+          <Text style={styles.teamNames(theme.colors.purple, !!clubB)} numberOfLines={2}>
+            {teamNames(teamBPlayers, teamFallback)}
+          </Text>
+          <Text style={styles.teamScore(theme.colors.purple)}>{match.scoreB}</Text>
         </View>
       </View>
 
       <CourtHeatMap points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
 
-      <View>
-        <Text style={styles.sectionLabel}>{t("match.pointLog")}</Text>
-        {[...match.points].reverse().map((point, index) => {
-          const teamPlayers = point.team === "A" ? teamAPlayers : teamBPlayers
-          const scorer = teamPlayers.find((p) => p.id === point.scoringPlayerId)
-          const attackLabel = point.attackType ? t(`attackTypes.${point.attackType}`) : undefined
-          return (
-            <View key={point.id} style={styles.pointRow}>
-              <Text style={styles.pointLabel}>
-                {t("match.pointLogEntry", {
-                  number: match.points.length - index,
-                  side: point.team,
-                  where: point.ballOut ? t("match.ballOut") : t("match.zone", { zone: point.zone }),
-                })}
-                {attackLabel ? ` · ${attackLabel}` : ""}
-                {scorer ? ` · ${scorer.name}` : ""}
-              </Text>
-              <Text style={styles.pointScore}>
-                {point.scoreAAfter}-{point.scoreBAfter}
-              </Text>
-            </View>
-          )
-        })}
+      <View style={styles.tabBar}>
+        {(["players", "log"] as const).map((key) => (
+          <TouchableOpacity
+            key={key}
+            style={styles.tab(tab === key)}
+            onPress={() => setTab(key)}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: tab === key }}
+          >
+            <Text style={styles.tabLabel(tab === key)}>
+              {key === "players" ? t("match.tabs.players") : t("match.tabs.pointLog")}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
+
+      {tab === "players" ? (
+        <View style={{ gap: theme.spacing.lg }}>
+          <View style={styles.tallyRow}>
+            {tally.map((item) => (
+              <View key={item.label} style={styles.tallyChip}>
+                <Text style={styles.tallyText}>
+                  {item.label}: {item.count}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <PlayerStatsList points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
+        </View>
+      ) : (
+        <PointLog points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
+      )}
     </ScrollView>
   )
 }

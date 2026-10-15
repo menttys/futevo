@@ -10,7 +10,8 @@
     "and": "&",
     "vs": "vs",
     "unknownPlayer": "?",
-    "optional": "opcional"
+    "optional": "opcional",
+    "close": "Cerrar"
   },
   "app": {
     "name": "Futevo",
@@ -28,12 +29,15 @@
     "match": "Partido",
     "tournament": "Torneo",
     "players": "Jugadores",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "playerProfile": "Perfil del jugador",
+    "addPlayer": "Añadir jugador"
   },
   "attackTypes": {
     "pingo": "Pingo",
     "loby": "Loby",
-    "shark": "Shark"
+    "shark": "Shark",
+    "ace": "Ace"
   },
   "auth": {
     "title": "Registra cada punto",
@@ -57,16 +61,42 @@
     "inProgress": "en curso",
     "matchInProgress": "Partido en curso",
     "tapToResume": "{{score}} · toca para continuar",
-    "scoreSeparator": "—"
+    "scoreSeparator": "—",
+    "searchPlaceholder": "Buscar equipo, jugador o fecha",
+    "noResultsTitle": "No se encontraron partidos",
+    "noResultsSubtitle": "Prueba con otro equipo, jugador o fecha."
   },
   "players": {
     "emptyTitle": "Aún no hay jugadores",
-    "emptySubtitle": "Agrega tu primer jugador arriba para armar los equipos.",
+    "emptySubtitle": "Toca + para añadir tu primer jugador y armar los equipos.",
     "namePlaceholder": "Nombre del jugador",
-    "add": "Agregar jugador"
+    "add": "Agregar jugador",
+    "profile": {
+      "photo": "Foto",
+      "choosePhoto": "Elegir foto",
+      "changePhoto": "Cambiar foto",
+      "removePhoto": "Quitar foto",
+      "birthCountry": "País de nacimiento",
+      "residencyCountry": "País de residencia",
+      "noCountry": "Sin definir",
+      "searchCountry": "Buscar país",
+      "selectCountry": "Seleccionar país",
+      "clear": "Borrar",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "optional": "Opcional",
+      "name": "Nombre",
+      "delete": "Eliminar jugador",
+      "deleteTitle": "¿Eliminar jugador?",
+      "deleteMessage": "Esta acción no se puede deshacer."
+    },
+    "searchPlaceholder": "Buscar jugadores",
+    "filterAll": "Todos",
+    "added": "El jugador ha sido añadido",
+    "noResults": "Ningún jugador coincide con tu búsqueda"
   },
   "newMatch": {
-    "pickPlayers": "Elige 4 jugadores — los dos primeros son el Equipo A, los dos siguientes el Equipo B",
+    "pickPlayers": "Elige los jugadores de cada equipo",
     "addPlayersFirst": "Primero agrega jugadores en la pestaña Jugadores.",
     "targetScore": "Puntaje objetivo",
     "tournamentOptional": "Torneo (opcional)",
@@ -79,7 +109,16 @@
     "clubLocked": "{{team}}: {{club}} (fijo)",
     "noClub": "Sin club",
     "pickFourForClubs": "Elige los 4 jugadores para definir el club de cada dupla.",
-    "start": "Iniciar partido"
+    "start": "Iniciar partido",
+    "selectPlayers": "Seleccionar jugadores",
+    "done": "Listo",
+    "selectTeamPlayers": "Seleccionar jugadores de {{team}}",
+    "left": "Izquierda",
+    "right": "Derecha",
+    "leftShort": "I",
+    "rightShort": "D",
+    "selectSidePlayer": "Seleccionar jugador de {{team}} · {{side}}",
+    "selectPlayer": "Seleccionar"
   },
   "tournament": {
     "duplasAndClubs": "Duplas y clubes",
@@ -91,6 +130,9 @@
   "match": {
     "firstTo": "Primero a {{target}}, con {{winBy}} de diferencia",
     "undo": "Deshacer",
+    "undoTitle": "¿Deshacer el último punto?",
+    "undoMessage": "Se eliminará el último punto y se recalculará el marcador.",
+    "undoConfirm": "Deshacer",
     "finish": "Terminar",
     "finishTitle": "¿Terminar el partido?",
     "finishMessage": "Esto termina el partido con el marcador actual.",
@@ -104,7 +146,15 @@
     "pointLogEntry": "#{{number}} · Equipo {{side}} · {{where}}",
     "ballOut": "Balón afuera",
     "zone": "Zona {{zone}}",
-    "tapToScore": "Toca para anotar"
+    "tapToScore": "Toca para anotar",
+    "tabs": {
+      "players": "Jugadores",
+      "pointLog": "Puntos"
+    },
+    "stats": {
+      "pointsScored": "Puntos hechos"
+    },
+    "defaultAttack": "Ataque"
   },
   "point": {
     "title": "Punto del Equipo {{team}}",
@@ -119,14 +169,23 @@
     "zoneLabel": "Equipo {{side}}, zona {{zone}} de la cancha"
   },
   "heatMap": {
-    "title": "Mapa de calor de la cancha",
+    "title": "Dónde cayeron los puntos",
     "player": "Jugador",
     "pointType": "Tipo de punto",
     "summary": {
       "one": "{{count}} punto en la cancha",
       "other": "{{count}} puntos en la cancha"
     },
-    "ballOut": "{{count}} balón afuera"
+    "ballOut": "{{count}} balón afuera",
+    "subtitle": "Cada lado muestra la cancha de quien recibió el punto",
+    "total": "Total: {{count}}",
+    "legend": {
+      "zero": "0",
+      "low": "Bajo",
+      "medium": "Medio",
+      "high": "Alto",
+      "max": "Máx"
+    }
   },
   "settings": {
     "signOut": "Cerrar sesión",

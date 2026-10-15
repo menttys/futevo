@@ -47,7 +47,7 @@ export function NewMatchScreen() {
   }
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
       <View>
         <NewMatchForm players={players} tournaments={tournaments} onSubmit={handleSubmit} />
       </View>

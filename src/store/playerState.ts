@@ -3,6 +3,9 @@ import { createJSONStorage, persist } from "zustand/middleware"
 
 import type { Player } from "@/@types/futevo"
 import { zustandStorage } from "@/store/userState"
+import { capitalizeName } from "@/utils/capitalizeName"
+
+const normalize = (player: Player): Player => ({ ...player, name: capitalizeName(player.name) })
 
 type PlayerState = {
   players: Player[] | null
@@ -17,13 +20,16 @@ export const usePlayerStore = create<PlayerState>()(
   persist(
     (set) => ({
       players: null,
-      setPlayers: (players) => set({ players, isLoadingPlayers: false }),
-      upsertPlayer: (player) =>
-        set((state) => ({
-          players: (state.players ?? []).some((p) => p.id === player.id)
-            ? (state.players ?? []).map((p) => (p.id === player.id ? { ...p, ...player } : p))
-            : [...(state.players ?? []), player],
-        })),
+      setPlayers: (players) => set({ players: players.map(normalize), isLoadingPlayers: false }),
+      upsertPlayer: (raw) =>
+        set((state) => {
+          const player = normalize(raw)
+          return {
+            players: (state.players ?? []).some((p) => p.id === player.id)
+              ? (state.players ?? []).map((p) => (p.id === player.id ? { ...p, ...player } : p))
+              : [...(state.players ?? []), player],
+          }
+        }),
       removePlayer: (playerId) =>
         set((state) => ({
           players: (state.players ?? []).filter((p) => p.id !== playerId),
@@ -37,6 +43,7 @@ export const usePlayerStore = create<PlayerState>()(
       onRehydrateStorage: () => (state) => {
         if (state?.players) {
           state.isLoadingPlayers = false
+          state.players = state.players.map(normalize)
         }
       },
     }

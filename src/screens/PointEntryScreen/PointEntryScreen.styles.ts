@@ -1,17 +1,28 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { IS_WEB, WEB_CONTENT } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
   closeRow: {
+    ...WEB_CONTENT,
     flexDirection: "row",
     justifyContent: "flex-end",
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.md,
   },
   content: {
+    ...WEB_CONTENT,
+    padding: theme.spacing.lg,
+  },
+  card: {
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.grey200,
     padding: theme.spacing.lg,
   },
   title: {
@@ -30,21 +41,31 @@ export const styles = StyleSheet.create((theme) => ({
     maxWidth: 320,
     alignSelf: "center",
     width: "100%",
+    flexShrink: 1,
   },
-  ballOutButton: (active: boolean, disabled: boolean) => ({
-    marginTop: theme.spacing.md,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: active ? theme.colors.primary : theme.colors.grey400,
-    backgroundColor: active ? theme.colors.primary : "transparent",
-    paddingVertical: theme.spacing.md,
-    alignItems: "center",
-    opacity: disabled ? 0.4 : 1,
+  courtRow: (wide: boolean) => ({
+    flexDirection: wide ? "row" : "column",
+    alignItems: wide ? "stretch" : "center",
+    justifyContent: "center",
+    gap: theme.spacing.md,
   }),
-  ballOutLabel: (active: boolean, disabled: boolean) => ({
+  // Mirrors a court cell, but sits outside the court boundary.
+  outCell: (active: boolean, wide: boolean) => ({
+    width: wide ? 110 : "100%",
+    maxWidth: wide ? undefined : 320,
+    minHeight: 56,
+    borderRadius: theme.radius.sm,
+    borderWidth: 2,
+    borderStyle: "dashed",
+    borderColor: active ? theme.colors.dark : theme.colors.grey400,
+    backgroundColor: active ? theme.colors.primary : "transparent",
+    alignItems: "center",
+    justifyContent: "center",
+  }),
+  ballOutLabel: (active: boolean) => ({
     fontFamily: "Sora-SemiBold",
     fontSize: theme.typography.size.md,
-    color: active ? theme.colors.dark : disabled ? theme.colors.textMuted : theme.colors.text,
+    color: active ? theme.colors.dark : theme.colors.text,
   }),
   sectionSpacer: {
     height: theme.spacing.lg,
@@ -66,6 +87,8 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
     borderRadius: theme.radius.md,
     paddingVertical: theme.spacing.md,
+    paddingHorizontal: IS_WEB ? theme.spacing.xl : 0,
+    alignSelf: IS_WEB ? "flex-start" : "stretch",
     alignItems: "center",
   }),
   confirmLabel: (enabled: boolean) => ({

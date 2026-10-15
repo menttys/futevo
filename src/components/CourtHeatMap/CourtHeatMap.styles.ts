@@ -1,13 +1,24 @@
 import { StyleSheet } from "react-native-unistyles"
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     gap: theme.spacing.md,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.grey200,
+    padding: theme.spacing.lg,
   },
   title: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.lg,
+    color: theme.colors.text,
+  },
+  subtitle: {
+    fontFamily: "Sora-Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
+    marginTop: theme.spacing.xs,
   },
   filterGroup: {
     gap: theme.spacing.xs,
@@ -35,52 +46,102 @@ export const styles = StyleSheet.create((theme) => ({
     fontSize: theme.typography.size.xs,
     color: selected ? theme.colors.dark : theme.colors.text,
   }),
-  courtWrap: {
-    width: "100%",
-    maxWidth: 200,
-    alignSelf: "center",
+  courts: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: theme.spacing.sm,
   },
+  side: {
+    flex: 1,
+    gap: theme.spacing.sm,
+  },
+  sideTitle: (side: "A" | "B") => ({
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.sm,
+    textAlign: "center",
+    color: side === "A" ? theme.colors.teamA : theme.colors.purple,
+  }),
   court: {
     aspectRatio: 1,
     borderWidth: 2,
-    borderColor: theme.colors.dark,
-    borderRadius: 4,
-    overflow: "hidden",
-    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.grey200,
+    borderRadius: theme.radius.lg,
+    padding: theme.spacing.xs,
+    gap: theme.spacing.xs,
   },
   row: {
     flex: 1,
     flexDirection: "row",
+    gap: theme.spacing.xs,
   },
-  cell: {
+  cell: (color: string) => ({
     flex: 1,
-    borderWidth: 1,
-    borderColor: theme.colors.grey300,
+    borderRadius: theme.radius.sm,
     alignItems: "center",
     justifyContent: "center",
-  },
-  heat: (intensity: number) => ({
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    backgroundColor: theme.colors.secondary,
-    opacity: intensity,
+    backgroundColor: color,
   }),
-  count: {
-    fontFamily: "Sora-Bold",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.dark,
+  count: (filled: boolean) => ({
+    fontFamily: "Sora-SemiBold",
+    fontSize: rt.screen.width < 400 ? theme.typography.size.xs : theme.typography.size.sm,
+    color: filled ? "#5C5750" : theme.colors.grey400,
+  }),
+  total: {
+    fontFamily: "Sora-Regular",
+    fontSize: theme.typography.size.sm,
+    color: theme.colors.textMuted,
+    textAlign: "center",
   },
   net: {
-    height: 2,
-    backgroundColor: theme.colors.dark,
+    width: 20,
+    marginTop: theme.spacing.lg + theme.spacing.xs,
+    marginBottom: theme.spacing.lg + theme.spacing.xs,
+    borderRadius: theme.radius.full,
+    alignItems: "stretch",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
+  netBand: (color: string) => ({
+    flex: 1,
+    backgroundColor: color,
+  }),
+  netLabel: {
+    position: "absolute",
+    alignSelf: "center",
+    fontFamily: "Sora-Bold",
+    fontSize: 10,
+    letterSpacing: 1,
+    color: theme.colors.textMuted,
+    width: 40,
+    textAlign: "center",
+    transform: [{ rotate: "90deg" }],
   },
   summary: {
     fontFamily: "Sora-Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
     textAlign: "center",
+  },
+  legend: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    gap: theme.spacing.md,
+  },
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: theme.spacing.xs,
+  },
+  legendSwatch: (color: string) => ({
+    width: 14,
+    height: 14,
+    borderRadius: 4,
+    backgroundColor: color,
+  }),
+  legendLabel: {
+    fontFamily: "Sora-Regular",
+    fontSize: theme.typography.size.xs,
+    color: theme.colors.textMuted,
   },
 }))

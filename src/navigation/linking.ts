@@ -11,10 +11,9 @@ export const linking: LinkingOptions<RootStackParamList> = {
       [RootRoutes.MAIN]: {
         path: "",
         screens: {
-          [TabRoutes.DASHBOARD]: {
+          [TabRoutes.MATCH_FLOW]: {
             path: "",
             screens: {
-              [MatchesRoutes.MATCHES_HOME]: "",
               [MatchesRoutes.NEW_MATCH]: "new",
               [MatchesRoutes.LIVE_MATCH]: "live/:matchId",
               [MatchesRoutes.POINT_ENTRY]: "live/:matchId/point/:team",
@@ -23,9 +22,14 @@ export const linking: LinkingOptions<RootStackParamList> = {
             },
           },
           [TabRoutes.MATCHES]: "matches",
+          [TabRoutes.DASHBOARD]: "dashboard",
           [TabRoutes.PLAYERS]: {
             path: "players",
-            screens: { [PlayersRoutes.PLAYERS_HOME]: "" },
+            screens: {
+              [PlayersRoutes.PLAYERS_HOME]: "",
+              [PlayersRoutes.ADD_PLAYER]: "new",
+              [PlayersRoutes.PLAYER_PROFILE]: ":playerId",
+            },
           },
           [TabRoutes.SETTINGS]: {
             path: "settings",

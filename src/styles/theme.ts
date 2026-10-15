@@ -38,7 +38,7 @@ export const theme = {
     primaryDark: palette.sunDeep,
 
     // utility
-    black: "#000000",
+    black: palette.ink, // never pure black
     white: palette.white,
 
     // danger

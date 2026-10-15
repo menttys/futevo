@@ -1,8 +1,13 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { IS_WEB } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   container: {
     gap: theme.spacing.lg,
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.radius.lg,
   },
   sectionLabel: {
     fontFamily: "Sora-SemiBold",
@@ -10,15 +15,95 @@ export const styles = StyleSheet.create((theme) => ({
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
   },
-  playersGrid: {
+  teams: (sideBySide: boolean) => ({
+    flexDirection: sideBySide ? "row" : "column",
+    alignItems: sideBySide ? "center" : "stretch",
+    justifyContent: "center",
+    gap: sideBySide ? theme.spacing.lg : theme.spacing.md,
+  }),
+  teamCard: (sideBySide: boolean) => ({
+    gap: theme.spacing.xs,
+    flex: sideBySide ? 1 : undefined,
+    alignItems: sideBySide ? "center" : "stretch",
+  }),
+  // Fixed height shared by the title and its input so editing never shifts the layout.
+  titleRow: (editing: boolean) => ({
+    height: 28,
+    justifyContent: "center",
+    zIndex: editing ? 10 : 0,
+  }),
+  titleBox: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.md,
-  },
-  playerOption: {
     alignItems: "center",
     gap: theme.spacing.xs,
-    width: 72,
+    height: 28,
+    // Padding offset by a negative margin keeps the text at the same x in both states.
+    paddingHorizontal: theme.spacing.sm,
+    marginHorizontal: -theme.spacing.sm,
+    borderRadius: theme.radius.sm,
+  },
+  teamNameInput: (color: string) => ({
+    width: 180,
+    height: 28,
+    paddingHorizontal: theme.spacing.sm,
+    marginHorizontal: -theme.spacing.sm,
+    paddingVertical: 0,
+    borderRadius: theme.radius.sm,
+    backgroundColor: theme.colors.background,
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.md,
+    color,
+    outlineWidth: 0,
+  }),
+  suggestions: {
+    position: "absolute",
+    top: 32,
+    left: -theme.spacing.sm,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.xs,
+    width: 240,
+    padding: theme.spacing.sm,
+    backgroundColor: theme.colors.card,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.grey200,
+  },
+  versus: {
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.xl,
+    color: theme.colors.textMuted,
+  },
+  teamTitle: (color: string) => ({
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.md,
+    color,
+  }),
+  slotsGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.sm,
+  },
+  slot: (filled: boolean) => ({
+    alignItems: "center",
+    gap: theme.spacing.xs,
+    width: 88,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.xs,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.radius.lg,
+    borderWidth: 2,
+    borderColor: filled ? theme.colors.primary : "transparent",
+  }),
+  slotEmpty: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: theme.colors.grey600,
+    alignItems: "center",
+    justifyContent: "center",
   },
   playerName: {
     fontFamily: "Sora-Regular",
@@ -28,18 +113,19 @@ export const styles = StyleSheet.create((theme) => ({
   },
   badge: (color: string) => ({
     position: "absolute",
-    top: -4,
-    right: -4,
+    top: theme.spacing.xs,
+    right: theme.spacing.xs,
     backgroundColor: color,
     borderRadius: theme.radius.full,
     paddingHorizontal: 6,
     paddingVertical: 2,
   }),
-  badgeText: {
+  // Light text on Team A's dark badge, dark text on Team B's yellow one.
+  badgeText: (side: "A" | "B") => ({
     fontFamily: "Sora-Bold",
     fontSize: 10,
-    color: theme.colors.dark,
-  },
+    color: side === "A" ? theme.colors.white : theme.colors.dark,
+  }),
   scoreRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -49,7 +135,7 @@ export const styles = StyleSheet.create((theme) => ({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -77,7 +163,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   chip: (selected: boolean) => ({
-    backgroundColor: selected ? theme.colors.primary : theme.colors.surface,
+    backgroundColor: selected ? theme.colors.primary : theme.colors.background,
     borderRadius: theme.radius.full,
     paddingVertical: theme.spacing.xs,
     paddingHorizontal: theme.spacing.md,
@@ -93,6 +179,7 @@ export const styles = StyleSheet.create((theme) => ({
     color: theme.colors.text,
     borderWidth: 1,
     borderColor: theme.colors.grey600,
+    backgroundColor: theme.colors.background,
     borderRadius: theme.radius.md,
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
@@ -111,6 +198,8 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
     borderRadius: theme.radius.md,
     paddingVertical: theme.spacing.md,
+    paddingHorizontal: IS_WEB ? theme.spacing.xl : 0,
+    alignSelf: IS_WEB ? "flex-start" : "stretch",
     alignItems: "center",
   }),
   submitLabel: (enabled: boolean) => ({

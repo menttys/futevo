@@ -4,14 +4,14 @@ export enum RootRoutes {
 }
 
 export enum TabRoutes {
-  DASHBOARD = "Dashboard",
+  MATCH_FLOW = "MatchFlow",
   MATCHES = "Matches",
+  DASHBOARD = "Dashboard",
   PLAYERS = "Players",
   SETTINGS = "Settings",
 }
 
 export enum MatchesRoutes {
-  MATCHES_HOME = "MatchesHome",
   NEW_MATCH = "NewMatch",
   LIVE_MATCH = "LiveMatch",
   POINT_ENTRY = "PointEntry",
@@ -21,6 +21,8 @@ export enum MatchesRoutes {
 
 export enum PlayersRoutes {
   PLAYERS_HOME = "PlayersHome",
+  PLAYER_PROFILE = "PlayerProfile",
+  ADD_PLAYER = "AddPlayer",
 }
 
 export enum SettingsRoutes {

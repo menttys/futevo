@@ -10,7 +10,8 @@
     "and": "&",
     "vs": "vs",
     "unknownPlayer": "?",
-    "optional": "optional"
+    "optional": "optional",
+    "close": "Close"
   },
   "app": {
     "name": "Futevo",
@@ -28,12 +29,15 @@
     "match": "Match",
     "tournament": "Tournament",
     "players": "Players",
-    "settings": "Settings"
+    "settings": "Settings",
+    "playerProfile": "Player profile",
+    "addPlayer": "Add player"
   },
   "attackTypes": {
     "pingo": "Pingo",
     "loby": "Loby",
-    "shark": "Shark"
+    "shark": "Shark",
+    "ace": "Ace"
   },
   "auth": {
     "title": "Track every point",
@@ -57,16 +61,42 @@
     "inProgress": "in progress",
     "matchInProgress": "Match in progress",
     "tapToResume": "{{score}} · tap to resume",
-    "scoreSeparator": "—"
+    "scoreSeparator": "—",
+    "searchPlaceholder": "Search team, player or date",
+    "noResultsTitle": "No matches found",
+    "noResultsSubtitle": "Try a different team, player or date."
   },
   "players": {
     "emptyTitle": "No players yet",
-    "emptySubtitle": "Add your first player above to start building match rosters.",
+    "emptySubtitle": "Tap + to add your first player and start building match rosters.",
     "namePlaceholder": "Player name",
-    "add": "Add player"
+    "add": "Add player",
+    "profile": {
+      "photo": "Photo",
+      "choosePhoto": "Choose photo",
+      "changePhoto": "Change photo",
+      "removePhoto": "Remove photo",
+      "birthCountry": "Birth country",
+      "residencyCountry": "Residency country",
+      "noCountry": "Not set",
+      "searchCountry": "Search country",
+      "selectCountry": "Select country",
+      "clear": "Clear",
+      "save": "Save",
+      "saved": "Saved",
+      "optional": "Optional",
+      "name": "Name",
+      "delete": "Delete player",
+      "deleteTitle": "Delete player?",
+      "deleteMessage": "This can't be undone."
+    },
+    "searchPlaceholder": "Search players",
+    "filterAll": "All",
+    "added": "Player has been added",
+    "noResults": "No players match your search"
   },
   "newMatch": {
-    "pickPlayers": "Pick 4 players — first two are Team A, next two are Team B",
+    "pickPlayers": "Choose the players for Team A and Team B",
     "addPlayersFirst": "Add players in the Players tab first.",
     "targetScore": "Target score",
     "tournamentOptional": "Tournament (optional)",
@@ -79,7 +109,16 @@
     "clubLocked": "{{team}}: {{club}} (locked)",
     "noClub": "No club",
     "pickFourForClubs": "Pick the 4 players to set the club of each dupla.",
-    "start": "Start match"
+    "start": "Start match",
+    "selectPlayers": "Select players",
+    "done": "Done",
+    "selectTeamPlayers": "Select {{team}} players",
+    "left": "Left",
+    "right": "Right",
+    "leftShort": "L",
+    "rightShort": "R",
+    "selectSidePlayer": "Select {{team}} · {{side}} player",
+    "selectPlayer": "Select"
   },
   "tournament": {
     "duplasAndClubs": "Duplas & clubs",
@@ -91,6 +130,9 @@
   "match": {
     "firstTo": "First to {{target}}, win by {{winBy}}",
     "undo": "Undo",
+    "undoTitle": "Undo last point?",
+    "undoMessage": "The last point will be removed and the score recalculated.",
+    "undoConfirm": "Undo",
     "finish": "Finish",
     "finishTitle": "Finish match?",
     "finishMessage": "This ends the match with the current score.",
@@ -104,7 +146,15 @@
     "pointLogEntry": "#{{number}} · Team {{side}} · {{where}}",
     "ballOut": "Ball out",
     "zone": "Zone {{zone}}",
-    "tapToScore": "Tap to score"
+    "tapToScore": "Tap to score",
+    "tabs": {
+      "players": "Players",
+      "pointLog": "Point log"
+    },
+    "stats": {
+      "pointsScored": "Points scored"
+    },
+    "defaultAttack": "Attack"
   },
   "point": {
     "title": "Point for Team {{team}}",
@@ -119,14 +169,23 @@
     "zoneLabel": "Team {{side}} court zone {{zone}}"
   },
   "heatMap": {
-    "title": "Court heat map",
+    "title": "Where the points landed",
     "player": "Player",
     "pointType": "Point type",
     "summary": {
       "one": "{{count}} point on court",
       "other": "{{count}} points on court"
     },
-    "ballOut": "{{count}} ball out"
+    "ballOut": "{{count}} ball out",
+    "subtitle": "Each side shows the court of the team that conceded the point",
+    "total": "Total: {{count}}",
+    "legend": {
+      "zero": "0",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "max": "Max"
+    }
   },
   "settings": {
     "signOut": "Sign out",

@@ -4,10 +4,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { useUnistyles } from "react-native-unistyles"
 
 import { FloatingTabBar } from "@/components/FloatingTabBar"
-import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
-import { LayoutDashboard, Settings as SettingsIcon, Trophy, Users } from "@/lib/icons"
-import { MatchesListScreen } from "@/screens/MatchesListScreen"
+import { DETACH_INACTIVE_SCREENS } from "@/constants/Platform"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
+import { LayoutDashboard, Settings as SettingsIcon, Trophy, Users } from "@/lib/icons"
+import { DashboardScreen } from "@/screens/DashboardScreen"
+import { MatchesListScreen } from "@/screens/MatchesListScreen"
 
 import { MatchesStack } from "./MatchesStack"
 import { PlayersStack } from "./PlayersStack"
@@ -20,20 +22,24 @@ const Tab = createBottomTabNavigator<TabParamList>()
 export function TabNavigator() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
+  const sideBar = useSideTabBar()
 
   return (
     <Tab.Navigator
+      initialRouteName={TabRoutes.MATCHES}
       detachInactiveScreens={DETACH_INACTIVE_SCREENS}
       tabBar={(props) => <FloatingTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        tabBarPosition: IS_WEB ? "left" : "bottom",
-        sceneStyle: { backgroundColor: theme.colors.background },
+        tabBarPosition: sideBar ? "left" : "bottom",
+        sceneStyle: {
+          backgroundColor: theme.colors.background,
+        },
       }}
     >
       <Tab.Screen
         name={TabRoutes.DASHBOARD}
-        component={MatchesStack}
+        component={DashboardScreen}
         options={{
           tabBarLabel: t("tabs.dashboard"),
           tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
@@ -47,6 +53,7 @@ export function TabNavigator() {
           tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
         }}
       />
+      <Tab.Screen name={TabRoutes.MATCH_FLOW} component={MatchesStack} />
       <Tab.Screen
         name={TabRoutes.PLAYERS}
         component={PlayersStack}

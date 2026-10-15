@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native"
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
@@ -26,6 +26,9 @@ export function PointEntryScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const insets = useSafeAreaInsets()
+  const { width } = useWindowDimensions()
+  // Wide screens put the "out" square beside the court, phones put it below.
+  const wide = width >= 600
   const navigation = useNavigation<NavigationProp>()
   const { matchId, team } = useRoute<PointEntryRouteProp>().params
   const allPlayers = usePlayerStore((s) => s.players) ?? []
@@ -46,19 +49,22 @@ export function PointEntryScreen() {
 
   // The point is decided on the opposing half, so that's the only court shown.
   const opponent: TeamSide = team === "A" ? "B" : "A"
+  // Attack type is optional: without one the point is logged as a plain attack.
   // A scorer is required for in-court points whenever the team has known players.
   const needsPlayer = teamPlayers.length > 0
   const canConfirm =
     ballOut ||
-    (zone !== undefined && attackType !== undefined && (!needsPlayer || !!scoringPlayerId))
+    (zone !== undefined && (!needsPlayer || !!scoringPlayerId))
 
   const handleSelectZone = (nextZone: CourtZone) => {
     setBallOut(false)
-    // Tapping the selected zone again clears it, re-enabling "Ball out".
+    // Tapping the selected zone again clears it.
     setZone((current) => (current === nextZone ? undefined : nextZone))
   }
 
   const handleToggleBallOut = () => {
+    // Choosing "out" discards any selected court zone.
+    setZone(undefined)
     setBallOut((current) => !current)
     setAttackType(undefined)
     setScoringPlayerId(undefined)
@@ -67,7 +73,14 @@ export function PointEntryScreen() {
   const handleConfirm = () => {
     if (!canConfirm) return
     addPoint(match.id, team, ballOut ? { ballOut: true } : { zone, attackType, scoringPlayerId })
-    navigation.goBack()
+    // Always land on the live match (navigate pops back to it, or opens it when this
+    // screen was the entry point, e.g. a deep link). A finishing point goes to the result.
+    const updated = useMatchStore.getState().matches?.find((m) => m.id === match.id)
+    if (updated?.status === "completed") {
+      navigation.navigate("MatchDetail", { matchId: match.id })
+    } else {
+      navigation.navigate("LiveMatch", { matchId: match.id })
+    }
   }
 
   return (
@@ -87,26 +100,32 @@ export function PointEntryScreen() {
       >
         <Text style={styles.title}>{t("point.title", { team })}</Text>
 
-        <Text style={styles.sectionLabel}>{t("point.whereLanded", { team: opponent })}</Text>
-        <View style={styles.courtWrapper}>
-          <CourtGrid side={opponent} selectedZone={zone} onSelectZone={handleSelectZone} />
+        <View style={styles.card}>
+          <Text style={styles.sectionLabel}>{t("point.whereLanded", { team: opponent })}</Text>
+          <View style={styles.courtRow(wide)}>
+            <View style={styles.courtWrapper}>
+              <CourtGrid side={opponent} selectedZone={zone} onSelectZone={handleSelectZone} />
+            </View>
+            <TouchableOpacity
+              style={styles.outCell(ballOut, wide)}
+              onPress={handleToggleBallOut}
+              activeOpacity={0.85}
+              accessibilityRole="button"
+            >
+              <Text style={styles.ballOutLabel(ballOut)}>{t("point.ballOut")}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <TouchableOpacity
-          style={styles.ballOutButton(ballOut, zone !== undefined)}
-          onPress={handleToggleBallOut}
-          disabled={zone !== undefined}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.ballOutLabel(ballOut, zone !== undefined)}>{t("point.ballOut")}</Text>
-        </TouchableOpacity>
 
         <View style={styles.sectionSpacer} />
 
         {ballOut ? null : (
           <>
             <Text style={styles.sectionLabel}>{t("point.attackType")}</Text>
-            <AttackTypePicker selected={attackType} onSelect={setAttackType} />
+            <AttackTypePicker
+              selected={attackType}
+              onSelect={(next) => setAttackType((current) => (current === next ? undefined : next))}
+            />
           </>
         )}
 

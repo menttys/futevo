@@ -19,6 +19,8 @@ type StartMatchParams = {
   winBy?: number
   tournamentId?: string
   round?: string
+  teamNameA?: string
+  teamNameB?: string
 }
 
 export const useMatches = () => {
@@ -39,6 +41,8 @@ export const useMatches = () => {
       winBy = DEFAULT_WIN_BY,
       tournamentId,
       round,
+      teamNameA,
+      teamNameB,
     }: StartMatchParams): Match => {
       const match: Match = {
         id: generateDocId(Collections.MATCH),
@@ -49,6 +53,8 @@ export const useMatches = () => {
         winBy,
         tournamentId,
         round,
+        teamNameA,
+        teamNameB,
         status: "in_progress",
         scoreA: 0,
         scoreB: 0,

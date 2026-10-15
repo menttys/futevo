@@ -1,11 +1,13 @@
 import { StyleSheet } from "react-native-unistyles"
 
+import { WEB_CONTENT } from "@/constants/Platform"
+
 export const styles = StyleSheet.create((theme) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
     padding: theme.spacing.lg,
-    justifyContent: "space-between",
+    gap: theme.spacing.md,
   },
   targetLabel: {
     fontFamily: "Sora-SemiBold",
@@ -13,27 +15,45 @@ export const styles = StyleSheet.create((theme) => ({
     color: theme.colors.textMuted,
     textAlign: "center",
   },
-  footer: {
+  actions: {
+    ...WEB_CONTENT,
     flexDirection: "row",
-    gap: theme.spacing.md,
+    justifyContent: "center",
+    gap: theme.spacing.sm,
   },
-  footerButton: {
-    flex: 1,
+  actionButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: theme.spacing.sm,
     borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.surface,
   },
-  footerButtonDisabled: {
+  actionButtonDisabled: {
     opacity: 0.4,
   },
-  footerButtonLabel: {
+  actionButtonLabel: {
     fontFamily: "Sora-SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
+  },
+  logHeader: {
+    ...WEB_CONTENT,
+    marginTop: theme.spacing.sm,
+  },
+  logTitle: {
+    fontFamily: "Sora-SemiBold",
+    fontSize: theme.typography.size.sm,
+    color: theme.colors.textMuted,
+  },
+  logScroll: {
+    flex: 1,
+  },
+  logContent: {
+    ...WEB_CONTENT,
+    paddingBottom: theme.spacing.xl,
   },
   finishButton: {
     backgroundColor: theme.colors.danger + "22",

@@ -3,7 +3,7 @@ import { Pressable, View } from "react-native"
 
 import { useUnistyles } from "react-native-unistyles"
 
-import { IS_WEB } from "@/constants/Platform"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { Plus } from "@/lib/icons"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
 import { useLanguage } from "@/i18n"
@@ -14,9 +14,10 @@ import { styles } from "./FloatingTabBar.styles"
 export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
+  const sideBar = useSideTabBar()
 
   const onNewMatch = () => {
-    navigation.navigate(TabRoutes.DASHBOARD, { screen: MatchesRoutes.NEW_MATCH })
+    navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
   }
 
   const newMatchButton = (
@@ -33,8 +34,16 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   )
 
   const tabs = state.routes.map((route, index) => {
+    // The match-flow stack has no tab of its own.
+    if (route.name === TabRoutes.MATCH_FLOW) return null
     const { options } = descriptors[route.key]
-    const focused = state.index === index
+    // Match detail lives in the match-flow stack, but belongs to the Matches tab.
+    const activeTab = state.routes[state.index]
+    const nested = activeTab.state?.routes[activeTab.state.index ?? 0]?.name
+    const inMatch = activeTab.name === TabRoutes.MATCH_FLOW && nested === MatchesRoutes.MATCH_DETAIL
+    const focused = inMatch
+      ? route.name === TabRoutes.MATCHES
+      : state.index === index
     const color = focused ? theme.colors.dark : theme.colors.grey300
 
     const onPress = () => {
@@ -43,7 +52,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
         target: route.key,
         canPreventDefault: true,
       })
-      if (!focused && !event.defaultPrevented) {
+      if ((!focused || state.index !== index) && !event.defaultPrevented) {
         navigation.navigate(route.name, route.params)
       }
     }
@@ -65,10 +74,19 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   })
 
   return (
-    <View style={[styles.wrapper, IS_WEB && styles.wrapperWeb]}>
-      <View style={[styles.bar, IS_WEB && styles.barWeb]}>
-        <View style={[styles.group, IS_WEB && styles.groupWeb]}>{tabs}</View>
-        {newMatchButton}
+    <View style={[styles.wrapper, sideBar && styles.wrapperWeb]}>
+      <View style={[styles.bar, sideBar && styles.barWeb]}>
+        {sideBar ? (
+          <>
+            <View style={[styles.group, styles.groupWeb]}>{tabs}</View>
+            {newMatchButton}
+          </>
+        ) : (
+          <>
+            {tabs}
+            {newMatchButton}
+          </>
+        )}
       </View>
     </View>
   )
