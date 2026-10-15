@@ -6,12 +6,14 @@ import { useUnistyles } from "react-native-unistyles"
 import { IS_WEB } from "@/constants/Platform"
 import { Plus } from "@/lib/icons"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
+import { useLanguage } from "@/i18n"
 
 import type { FloatingTabBarProps } from "./FloatingTabBar.d"
 import { styles } from "./FloatingTabBar.styles"
 
 export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
 
   const onNewMatch = () => {
     navigation.navigate(TabRoutes.DASHBOARD, { screen: MatchesRoutes.NEW_MATCH })
@@ -20,7 +22,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   const newMatchButton = (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="New match"
+      accessibilityLabel={t("tabs.newMatch")}
       onPress={onNewMatch}
       style={styles.center}
     >

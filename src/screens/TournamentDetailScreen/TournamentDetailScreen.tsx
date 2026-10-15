@@ -12,6 +12,7 @@ import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { duplaKey } from "@/utils/tournament"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./TournamentDetailScreen.styles"
 
@@ -20,6 +21,7 @@ type TournamentRouteProp = RouteProp<MatchesStackParamList, "TournamentDetail">
 
 export function TournamentDetailScreen() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const { tournamentId } = useRoute<TournamentRouteProp>().params
   const tournament = useTournamentStore((s) => s.tournaments?.find((t) => t.id === tournamentId))
@@ -30,8 +32,8 @@ export function TournamentDetailScreen() {
   const [drafts, setDrafts] = useState<Record<string, string>>({})
 
   const playerName = useCallback(
-    (id: string) => players?.find((p) => p.id === id)?.name ?? "?",
-    [players]
+    (id: string) => players?.find((p) => p.id === id)?.name ?? t("common.unknownPlayer"),
+    [players, t]
   )
   const duplaName = useCallback(
     (ids: [string, string]) => `${playerName(ids[0])} & ${playerName(ids[1])}`,
@@ -65,9 +67,9 @@ export function TournamentDetailScreen() {
       </View>
 
       <View>
-        <Text style={styles.sectionLabel}>Duplas & clubs</Text>
+        <Text style={styles.sectionLabel}>{t("tournament.duplasAndClubs")}</Text>
         {tournament.entries.length === 0 ? (
-          <Text style={styles.hint}>Duplas appear here once they play a match.</Text>
+          <Text style={styles.hint}>{t("tournament.duplasEmpty")}</Text>
         ) : (
           tournament.entries.map((entry) => {
             const key = duplaKey(entry.players)
@@ -79,7 +81,7 @@ export function TournamentDetailScreen() {
                   value={drafts[key] ?? entry.club ?? ""}
                   onChangeText={(value) => setDrafts((d) => ({ ...d, [key]: value }))}
                   onBlur={() => commitClub(entry)}
-                  placeholder="Club (optional)"
+                  placeholder={t("tournament.clubPlaceholder")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
               </View>
@@ -89,9 +91,9 @@ export function TournamentDetailScreen() {
       </View>
 
       <View>
-        <Text style={styles.sectionLabel}>Matches</Text>
+        <Text style={styles.sectionLabel}>{t("tournament.matches")}</Text>
         {tournamentMatches.length === 0 ? (
-          <Text style={styles.hint}>No matches yet.</Text>
+          <Text style={styles.hint}>{t("tournament.noMatches")}</Text>
         ) : (
           tournamentMatches.map((match) => (
             <TouchableOpacity
@@ -101,7 +103,7 @@ export function TournamentDetailScreen() {
             >
               <Text style={styles.matchLabel} numberOfLines={2}>
                 {match.round ? `${match.round} · ` : ""}
-                {duplaName(match.teamA)} vs {duplaName(match.teamB)}
+                {duplaName(match.teamA)} {t("common.vs")} {duplaName(match.teamB)}
               </Text>
               <Text style={styles.matchScore}>
                 {match.scoreA}—{match.scoreB}

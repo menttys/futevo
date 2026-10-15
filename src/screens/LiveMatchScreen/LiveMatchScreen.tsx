@@ -14,6 +14,7 @@ import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { confirmAction } from "@/utils/confirmAction"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./LiveMatchScreen.styles"
 
@@ -26,6 +27,7 @@ function playersById(players: Player[], ids: string[]): Player[] {
 
 export function LiveMatchScreen() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<LiveMatchRouteProp>().params
@@ -46,9 +48,9 @@ export function LiveMatchScreen() {
 
   const handleFinish = () => {
     confirmAction({
-      title: "Finish match?",
-      message: "This ends the match with the current score.",
-      confirmLabel: "Finish",
+      title: t("match.finishTitle"),
+      message: t("match.finishMessage"),
+      confirmLabel: t("match.finishConfirm"),
       onConfirm: () => finishMatch(match.id),
     })
   }
@@ -59,7 +61,7 @@ export function LiveMatchScreen() {
     <View style={[styles.root, { paddingTop: insets.top + theme.spacing.md }]}>
       <View>
         <Text style={styles.targetLabel}>
-          First to {match.targetScore}, win by {match.winBy}
+          {t("match.firstTo", { target: match.targetScore, winBy: match.winBy })}
         </Text>
       </View>
 
@@ -79,7 +81,7 @@ export function LiveMatchScreen() {
           activeOpacity={0.85}
         >
           <RotateCcw size={18} color={theme.colors.text} />
-          <Text style={styles.footerButtonLabel}>Undo</Text>
+          <Text style={styles.footerButtonLabel}>{t("match.undo")}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.footerButton, styles.finishButton]}
@@ -87,7 +89,7 @@ export function LiveMatchScreen() {
           activeOpacity={0.85}
         >
           <Trophy size={18} color={theme.colors.danger} />
-          <Text style={[styles.footerButtonLabel, styles.finishLabel]}>Finish</Text>
+          <Text style={[styles.footerButtonLabel, styles.finishLabel]}>{t("match.finish")}</Text>
         </TouchableOpacity>
       </View>
     </View>

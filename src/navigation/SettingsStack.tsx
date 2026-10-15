@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack"
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import { SettingsScreen } from "@/screens/SettingsScreen"
 import { theme } from "@/styles/theme"
+import { useLanguage } from "@/i18n"
 
 import { SettingsRoutes } from "./routes"
 import { SettingsStackParamList } from "./types/navigation"
@@ -20,12 +21,13 @@ const HEADER_OPTS = {
 } as const
 
 export function SettingsStack() {
+  const { t } = useLanguage()
   return (
     <Stack.Navigator detachInactiveScreens={DETACH_INACTIVE_SCREENS} screenOptions={HEADER_OPTS}>
       <Stack.Screen
         name={SettingsRoutes.SETTINGS_HOME}
         component={SettingsScreen}
-        options={{ title: "Settings" }}
+        options={{ title: t("screens.settings") }}
       />
     </Stack.Navigator>
   )

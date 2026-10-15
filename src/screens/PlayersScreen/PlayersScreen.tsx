@@ -11,11 +11,13 @@ import { NewPlayerForm } from "@/forms/NewPlayerForm"
 import { usePlayers } from "@/hooks/usePlayers"
 import { Trash2, Users } from "@/lib/icons"
 import { usePlayerStore } from "@/store/playerState"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./PlayersScreen.styles"
 
 export function PlayersScreen() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const players = usePlayerStore((s) => s.players) ?? []
   const { savePlayer, deletePlayer } = usePlayers()
 
@@ -48,8 +50,8 @@ export function PlayersScreen() {
         ListEmptyComponent={
           <EmptyState
             icon={Users}
-            title="No players yet"
-            subtitle="Add your first player above to start building match rosters."
+            title={t("players.emptyTitle")}
+            subtitle={t("players.emptySubtitle")}
           />
         }
       />

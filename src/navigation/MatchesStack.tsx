@@ -10,6 +10,7 @@ import { NewMatchScreen } from "@/screens/NewMatchScreen"
 import { PointEntryScreen } from "@/screens/PointEntryScreen"
 import { TournamentDetailScreen } from "@/screens/TournamentDetailScreen"
 import { theme } from "@/styles/theme"
+import { useLanguage } from "@/i18n"
 
 import { MatchesRoutes } from "./routes"
 import { MatchesStackParamList } from "./types/navigation"
@@ -25,6 +26,7 @@ const HEADER_OPTS = {
 } as const
 
 export function MatchesStack() {
+  const { t } = useLanguage()
   return (
     <Stack.Navigator detachInactiveScreens={DETACH_INACTIVE_SCREENS} screenOptions={HEADER_OPTS}>
       <Stack.Screen
@@ -35,7 +37,7 @@ export function MatchesStack() {
       <Stack.Screen
         name={MatchesRoutes.NEW_MATCH}
         component={NewMatchScreen}
-        options={{ title: "New match" }}
+        options={{ title: t("screens.newMatch") }}
       />
       <Stack.Screen
         name={MatchesRoutes.LIVE_MATCH}
@@ -54,12 +56,12 @@ export function MatchesStack() {
       <Stack.Screen
         name={MatchesRoutes.MATCH_DETAIL}
         component={MatchDetailScreen}
-        options={{ title: "Match" }}
+        options={{ title: t("screens.match") }}
       />
       <Stack.Screen
         name={MatchesRoutes.TOURNAMENT_DETAIL}
         component={TournamentDetailScreen}
-        options={{ title: "Tournament" }}
+        options={{ title: t("screens.tournament") }}
       />
     </Stack.Navigator>
   )

@@ -15,6 +15,7 @@ import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
 import { clubForSide } from "@/utils/tournament"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./MatchDetailScreen.styles"
 
@@ -25,12 +26,13 @@ function playersById(players: Player[], ids: string[]): Player[] {
   return ids.map((id) => players.find((p) => p.id === id)).filter((p): p is Player => !!p)
 }
 
-function teamNames(players: Player[]): string {
-  return players.map((p) => p.name).join(" & ") || "Team"
+function teamNames(players: Player[], fallback: string): string {
+  return players.map((p) => p.name).join(" & ") || fallback
 }
 
 export function MatchDetailScreen() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<MatchDetailRouteProp>().params
   const players = usePlayerStore((s) => s.players) ?? []
@@ -46,9 +48,9 @@ export function MatchDetailScreen() {
         <TouchableOpacity
           onPress={() => {
             confirmAction({
-              title: "Delete match?",
-              message: "This can't be undone.",
-              confirmLabel: "Delete",
+              title: t("match.deleteTitle"),
+              message: t("match.deleteMessage"),
+              confirmLabel: t("match.deleteConfirm"),
               onConfirm: () => {
                 deleteMatch(matchId)
                 navigation.goBack()
@@ -61,7 +63,7 @@ export function MatchDetailScreen() {
         </TouchableOpacity>
       ),
     })
-  }, [navigation, deleteMatch, matchId, theme])
+  }, [navigation, deleteMatch, matchId, theme, t])
 
   const tally = useMemo(() => {
     if (!match) return []
@@ -71,15 +73,16 @@ export function MatchDetailScreen() {
       counts.set(point.attackType, (counts.get(point.attackType) ?? 0) + 1)
     })
     return ATTACK_TYPES.map((attack) => ({
-      label: attack.label,
+      label: t(`attackTypes.${attack.id}`),
       count: counts.get(attack.id) ?? 0,
     }))
-  }, [match])
+  }, [match, t])
 
   if (!match) return null
 
   const teamAPlayers = playersById(players, match.teamA)
   const teamBPlayers = playersById(players, match.teamB)
+  const teamFallback = t("common.teamFallback")
   const clubA = clubForSide(match, tournament, "A")
   const clubB = clubForSide(match, tournament, "B")
 
@@ -89,7 +92,7 @@ export function MatchDetailScreen() {
         <View style={styles.winnerBanner}>
           <Trophy size={18} color={theme.colors.dark} />
           <Text style={styles.winnerText}>
-            {match.winner === "A" ? teamNames(teamAPlayers) : teamNames(teamBPlayers)} won
+            {t("match.won", { team: match.winner === "A" ? teamNames(teamAPlayers, teamFallback) : teamNames(teamBPlayers, teamFallback) })}
           </Text>
         </View>
       ) : null}
@@ -107,19 +110,19 @@ export function MatchDetailScreen() {
 
       <View style={styles.scoreRow}>
         <View style={styles.teamColumn}>
-          <Text style={styles.teamNames}>{teamNames(teamAPlayers)}</Text>
+          <Text style={styles.teamNames}>{teamNames(teamAPlayers, teamFallback)}</Text>
           {clubA ? <Text style={styles.sectionLabel}>{clubA}</Text> : null}
           <Text style={styles.teamScore(theme.colors.teamA)}>{match.scoreA}</Text>
         </View>
         <View style={styles.teamColumn}>
-          <Text style={styles.teamNames}>{teamNames(teamBPlayers)}</Text>
+          <Text style={styles.teamNames}>{teamNames(teamBPlayers, teamFallback)}</Text>
           {clubB ? <Text style={styles.sectionLabel}>{clubB}</Text> : null}
           <Text style={styles.teamScore(theme.colors.teamB)}>{match.scoreB}</Text>
         </View>
       </View>
 
       <View>
-        <Text style={styles.sectionLabel}>Attack types</Text>
+        <Text style={styles.sectionLabel}>{t("match.attackTypes")}</Text>
         <View style={[styles.tallyRow, { marginTop: theme.spacing.sm }]}>
           {tally.map((t) => (
             <View key={t.label} style={styles.tallyChip}>
@@ -134,16 +137,19 @@ export function MatchDetailScreen() {
       <CourtHeatMap points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
 
       <View>
-        <Text style={styles.sectionLabel}>Point log</Text>
+        <Text style={styles.sectionLabel}>{t("match.pointLog")}</Text>
         {[...match.points].reverse().map((point, index) => {
           const teamPlayers = point.team === "A" ? teamAPlayers : teamBPlayers
           const scorer = teamPlayers.find((p) => p.id === point.scoringPlayerId)
-          const attackLabel = ATTACK_TYPES.find((a) => a.id === point.attackType)?.label
+          const attackLabel = point.attackType ? t(`attackTypes.${point.attackType}`) : undefined
           return (
             <View key={point.id} style={styles.pointRow}>
               <Text style={styles.pointLabel}>
-                #{match.points.length - index} · Team {point.team} ·{" "}
-                {point.ballOut ? "Ball out" : `Zone ${point.zone}`}
+                {t("match.pointLogEntry", {
+                  number: match.points.length - index,
+                  side: point.team,
+                  where: point.ballOut ? t("match.ballOut") : t("match.zone", { zone: point.zone }),
+                })}
                 {attackLabel ? ` · ${attackLabel}` : ""}
                 {scorer ? ` · ${scorer.name}` : ""}
               </Text>

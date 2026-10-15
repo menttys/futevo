@@ -4,12 +4,14 @@ import { Text, View } from "react-native"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import { useNetworkState } from "@/hooks/useNetworkState"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./OfflineBanner.styles"
 
 export function OfflineBanner() {
   const { isOffline, hasPendingWrites } = useNetworkState()
   const insets = useSafeAreaInsets()
+  const { t } = useLanguage()
 
   if (!isOffline && !hasPendingWrites) return null
 
@@ -24,7 +26,7 @@ export function OfflineBanner() {
       ]}
     >
       <Text style={styles.text}>
-        {isSyncing ? "Syncing changes…" : "You're offline — changes will sync later."}
+        {isSyncing ? t("offline.syncing") : t("offline.offline")}
       </Text>
     </View>
   )

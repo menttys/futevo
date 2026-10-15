@@ -22,6 +22,30 @@ export const styles = StyleSheet.create((theme) => ({
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
+  sectionLabel: {
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.sm,
+    color: theme.colors.textMuted,
+    marginBottom: theme.spacing.sm,
+  },
+  languageRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: theme.spacing.sm,
+  },
+  languageChip: (selected: boolean) => ({
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    borderColor: selected ? theme.colors.primary : theme.colors.grey300,
+    backgroundColor: selected ? theme.colors.primary : "transparent",
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+  }),
+  languageLabel: (selected: boolean) => ({
+    fontFamily: "Sora-Bold",
+    fontSize: theme.typography.size.md,
+    color: selected ? theme.colors.dark : theme.colors.text,
+  }),
   signOutButton: {
     borderRadius: theme.radius.md,
     borderWidth: 1,

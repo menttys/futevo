@@ -1,5 +1,7 @@
 import { Alert } from "react-native"
 
+import { i18n } from "@/i18n"
+
 type ConfirmActionParams = {
   title: string
   message: string
@@ -9,7 +11,7 @@ type ConfirmActionParams = {
 
 export function confirmAction({ title, message, confirmLabel, onConfirm }: ConfirmActionParams) {
   Alert.alert(title, message, [
-    { text: "Cancel", style: "cancel" },
+    { text: i18n.t("common.cancel"), style: "cancel" },
     { text: confirmLabel, style: "destructive", onPress: onConfirm },
   ])
 }

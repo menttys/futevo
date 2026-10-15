@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native"
 
 import { ATTACK_TYPES, AttackTypeId, TeamSide } from "@/@types/futevo"
 import { COURT_ZONES, computeHeatMap } from "@/utils/heatMap"
+import { useLanguage } from "@/i18n"
 
 import type { CourtHeatMapProps } from "./CourtHeatMap.d"
 import { styles } from "./CourtHeatMap.styles"
@@ -30,6 +31,7 @@ function Chip({ label, selected, onPress }: ChipProps) {
 }
 
 export function CourtHeatMap({ points, teamA, teamB }: CourtHeatMapProps) {
+  const { t } = useLanguage()
   const [playerId, setPlayerId] = useState<string>()
   const [attackType, setAttackType] = useState<AttackTypeId>()
 
@@ -57,12 +59,12 @@ export function CourtHeatMap({ points, teamA, teamB }: CourtHeatMapProps) {
 
   return (
     <View style={styles.root}>
-      <Text style={styles.title}>Court heat map</Text>
+      <Text style={styles.title}>{t("heatMap.title")}</Text>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Player</Text>
+        <Text style={styles.filterLabel}>{t("heatMap.player")}</Text>
         <View style={styles.chipRow}>
-          <Chip label="All" selected={!playerId} onPress={() => setPlayerId(undefined)} />
+          <Chip label={t("common.all")} selected={!playerId} onPress={() => setPlayerId(undefined)} />
           {[...teamA, ...teamB].map((player) => (
             <Chip
               key={player.id}
@@ -75,13 +77,13 @@ export function CourtHeatMap({ points, teamA, teamB }: CourtHeatMapProps) {
       </View>
 
       <View style={styles.filterGroup}>
-        <Text style={styles.filterLabel}>Point type</Text>
+        <Text style={styles.filterLabel}>{t("heatMap.pointType")}</Text>
         <View style={styles.chipRow}>
-          <Chip label="All" selected={!attackType} onPress={() => setAttackType(undefined)} />
+          <Chip label={t("common.all")} selected={!attackType} onPress={() => setAttackType(undefined)} />
           {ATTACK_TYPES.map((attack) => (
             <Chip
               key={attack.id}
-              label={attack.label}
+              label={t(`attackTypes.${attack.id}`)}
               selected={attackType === attack.id}
               onPress={() => setAttackType(attack.id)}
             />
@@ -98,8 +100,8 @@ export function CourtHeatMap({ points, teamA, teamB }: CourtHeatMapProps) {
       </View>
 
       <Text style={styles.summary}>
-        {data.total} {data.total === 1 ? "point" : "points"} on court
-        {data.ballOut > 0 ? ` · ${data.ballOut} ball out` : ""}
+        {t("heatMap.summary", { count: data.total })}
+        {data.ballOut > 0 ? ` · ${t("heatMap.ballOut", { count: data.ballOut })}` : ""}
       </Text>
     </View>
   )

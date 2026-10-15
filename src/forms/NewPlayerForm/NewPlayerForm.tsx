@@ -6,8 +6,11 @@ import { useUnistyles } from "react-native-unistyles"
 import type { NewPlayerFormProps } from "./NewPlayerForm.d"
 import { styles } from "./NewPlayerForm.styles"
 
+import { useLanguage } from "@/i18n"
+
 export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const palette = theme.colors.playerPalette
   const [name, setName] = useState("")
   const [color, setColor] = useState(palette[0])
@@ -26,7 +29,7 @@ export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
         style={styles.input}
         value={name}
         onChangeText={setName}
-        placeholder="Player name"
+        placeholder={t("players.namePlaceholder")}
         placeholderTextColor={theme.colors.textMuted}
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
@@ -46,7 +49,7 @@ export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
         disabled={!canSubmit}
         activeOpacity={0.85}
       >
-        <Text style={styles.submitLabel(canSubmit)}>Add player</Text>
+        <Text style={styles.submitLabel(canSubmit)}>{t("players.add")}</Text>
       </TouchableOpacity>
     </View>
   )

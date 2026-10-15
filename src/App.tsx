@@ -12,6 +12,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { OfflineBanner } from "@/components/OfflineBanner"
 import { useNetworkState } from "@/hooks/useNetworkState"
+import { i18n } from "@/i18n"
 import { linking } from "@/navigation/linking"
 import { RootNavigator } from "@/navigation/RootNavigator"
 import { theme } from "@/styles/theme"
@@ -58,7 +59,7 @@ export default function App() {
             <NavigationContainer
               theme={NAV_THEME}
               linking={linking}
-              documentTitle={{ formatter: () => "Futevo" }}
+              documentTitle={{ formatter: () => i18n.t("app.name") }}
             >
               <RootNavigator />
             </NavigationContainer>

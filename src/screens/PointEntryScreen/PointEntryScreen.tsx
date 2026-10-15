@@ -15,6 +15,7 @@ import { X } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./PointEntryScreen.styles"
 
@@ -23,6 +24,7 @@ type PointEntryRouteProp = RouteProp<MatchesStackParamList, "PointEntry">
 
 export function PointEntryScreen() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const insets = useSafeAreaInsets()
   const navigation = useNavigation<NavigationProp>()
   const { matchId, team } = useRoute<PointEntryRouteProp>().params
@@ -83,9 +85,9 @@ export function PointEntryScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={styles.title}>Point for Team {team}</Text>
+        <Text style={styles.title}>{t("point.title", { team })}</Text>
 
-        <Text style={styles.sectionLabel}>{`Where did it land on Team ${opponent}'s court?`}</Text>
+        <Text style={styles.sectionLabel}>{t("point.whereLanded", { team: opponent })}</Text>
         <View style={styles.courtWrapper}>
           <CourtGrid side={opponent} selectedZone={zone} onSelectZone={handleSelectZone} />
         </View>
@@ -96,14 +98,14 @@ export function PointEntryScreen() {
           disabled={zone !== undefined}
           activeOpacity={0.85}
         >
-          <Text style={styles.ballOutLabel(ballOut, zone !== undefined)}>Ball out</Text>
+          <Text style={styles.ballOutLabel(ballOut, zone !== undefined)}>{t("point.ballOut")}</Text>
         </TouchableOpacity>
 
         <View style={styles.sectionSpacer} />
 
         {ballOut ? null : (
           <>
-            <Text style={styles.sectionLabel}>Type of attack</Text>
+            <Text style={styles.sectionLabel}>{t("point.attackType")}</Text>
             <AttackTypePicker selected={attackType} onSelect={setAttackType} />
           </>
         )}
@@ -111,7 +113,7 @@ export function PointEntryScreen() {
         {!ballOut && teamPlayers.length > 0 ? (
           <>
             <View style={styles.sectionSpacer} />
-            <Text style={styles.sectionLabel}>Who scored?</Text>
+            <Text style={styles.sectionLabel}>{t("point.whoScored")}</Text>
             <View style={styles.playersRow}>
               {teamPlayers.map((player) => (
                 <TouchableOpacity
@@ -137,7 +139,7 @@ export function PointEntryScreen() {
           disabled={!canConfirm}
           activeOpacity={0.85}
         >
-          <Text style={styles.confirmLabel(canConfirm)}>Confirm point</Text>
+          <Text style={styles.confirmLabel(canConfirm)}>{t("point.confirm")}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>

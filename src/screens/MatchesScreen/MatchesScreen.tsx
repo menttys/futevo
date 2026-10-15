@@ -12,6 +12,7 @@ import { House } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
+import { useLanguage } from "@/i18n"
 
 import { styles } from "./MatchesScreen.styles"
 
@@ -21,13 +22,14 @@ const EMPTY_MATCHES: Match[] = []
 
 export function MatchesScreen() {
   const insets = useSafeAreaInsets()
+  const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const matches = useMatchStore((s) => s.matches) ?? EMPTY_MATCHES
   const players = usePlayerStore((s) => s.players)
 
   const playerName = useCallback(
-    (id: string) => players?.find((p) => p.id === id)?.name ?? "?",
-    [players]
+    (id: string) => players?.find((p) => p.id === id)?.name ?? t("common.unknownPlayer"),
+    [players, t]
   )
 
   const activeMatch = matches.find((m) => m.status === "in_progress")
@@ -68,9 +70,9 @@ export function MatchesScreen() {
           onPress={() => navigation.navigate("LiveMatch", { matchId: activeMatch.id })}
         >
           <View>
-            <Text style={styles.activeBannerText}>Match in progress</Text>
+            <Text style={styles.activeBannerText}>{t("matches.matchInProgress")}</Text>
             <Text style={styles.activeBannerSub}>
-              {activeMatch.scoreA} — {activeMatch.scoreB} · tap to resume
+              {t("matches.tapToResume", { score: `${activeMatch.scoreA} — ${activeMatch.scoreB}` })}
             </Text>
           </View>
         </TouchableOpacity>
@@ -85,8 +87,8 @@ export function MatchesScreen() {
         ListEmptyComponent={
           <EmptyState
             icon={House}
-            title="No matches yet"
-            subtitle="Start a new match to begin tracking scores and court zones."
+            title={t("matches.emptyTitle")}
+            subtitle={t("matches.emptySubtitle")}
           />
         }
       />

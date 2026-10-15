@@ -7,6 +7,7 @@ import { FloatingTabBar } from "@/components/FloatingTabBar"
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import { LayoutDashboard, Settings as SettingsIcon, Trophy, Users } from "@/lib/icons"
 import { MatchesListScreen } from "@/screens/MatchesListScreen"
+import { useLanguage } from "@/i18n"
 
 import { MatchesStack } from "./MatchesStack"
 import { PlayersStack } from "./PlayersStack"
@@ -18,6 +19,7 @@ const Tab = createBottomTabNavigator<TabParamList>()
 
 export function TabNavigator() {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
 
   return (
     <Tab.Navigator
@@ -33,7 +35,7 @@ export function TabNavigator() {
         name={TabRoutes.DASHBOARD}
         component={MatchesStack}
         options={{
-          tabBarLabel: "Dashboard",
+          tabBarLabel: t("tabs.dashboard"),
           tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
         }}
       />
@@ -41,7 +43,7 @@ export function TabNavigator() {
         name={TabRoutes.MATCHES}
         component={MatchesListScreen}
         options={{
-          tabBarLabel: "Matches",
+          tabBarLabel: t("tabs.matches"),
           tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
         }}
       />
@@ -49,7 +51,7 @@ export function TabNavigator() {
         name={TabRoutes.PLAYERS}
         component={PlayersStack}
         options={{
-          tabBarLabel: "Players",
+          tabBarLabel: t("tabs.players"),
           tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
         }}
       />
@@ -57,7 +59,7 @@ export function TabNavigator() {
         name={TabRoutes.SETTINGS}
         component={SettingsStack}
         options={{
-          tabBarLabel: "Settings",
+          tabBarLabel: t("tabs.settings"),
           tabBarIcon: ({ color, size }) => <SettingsIcon color={color} size={size} />,
         }}
       />

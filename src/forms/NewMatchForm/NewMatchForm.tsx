@@ -6,6 +6,7 @@ import { useUnistyles } from "react-native-unistyles"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { DEFAULT_TARGET_SCORE } from "@/constants/App"
 import { findEntry } from "@/utils/tournament"
+import { useLanguage } from "@/i18n"
 
 import type { NewMatchFormProps } from "./NewMatchForm.d"
 import { styles } from "./NewMatchForm.styles"
@@ -18,6 +19,7 @@ const today = () => new Date().toISOString().slice(0, 10)
 
 export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormProps) {
   const { theme } = useUnistyles()
+  const { t } = useLanguage()
   const [selectedIds, setSelectedIds] = useState<string[]>([])
   const [targetScore, setTargetScore] = useState(DEFAULT_TARGET_SCORE)
   const [showDetails, setShowDetails] = useState(false)
@@ -82,14 +84,14 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
   ) =>
     locked ? (
       <Text style={styles.lockedClub}>
-        {label}: {lockedClub ?? "No club"} (locked)
+        {t("newMatch.clubLocked", { team: label, club: lockedClub ?? t("newMatch.noClub") })}
       </Text>
     ) : (
       <TextInput
         style={styles.input}
         value={value}
         onChangeText={onChange}
-        placeholder={`${label} club (optional)`}
+        placeholder={t("newMatch.clubOptional", { team: label })}
         placeholderTextColor={theme.colors.textMuted}
       />
     )
@@ -98,10 +100,10 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
     <View style={styles.container}>
       <View>
         <Text style={styles.sectionLabel}>
-          Pick 4 players — first two are Team A, next two are Team B
+          {t("newMatch.pickPlayers")}
         </Text>
         {players.length === 0 ? (
-          <Text style={styles.hint}>Add players in the Players tab first.</Text>
+          <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text>
         ) : (
           <View style={styles.playersGrid}>
             {players.map((player) => {
@@ -134,7 +136,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
       </View>
 
       <View>
-        <Text style={styles.sectionLabel}>Target score</Text>
+        <Text style={styles.sectionLabel}>{t("newMatch.targetScore")}</Text>
         <View style={styles.scoreRow}>
           <TouchableOpacity
             style={styles.stepperButton}
@@ -154,7 +156,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
 
       <View style={styles.details}>
         <TouchableOpacity onPress={() => setShowDetails((v) => !v)} activeOpacity={0.7}>
-          <Text style={styles.sectionLabel}>Tournament (optional) {showDetails ? "▴" : "▾"}</Text>
+          <Text style={styles.sectionLabel}>{t("newMatch.tournamentOptional")} {showDetails ? "▴" : "▾"}</Text>
         </TouchableOpacity>
 
         {showDetails ? (
@@ -164,7 +166,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                 style={styles.chip(tournamentChoice === undefined)}
                 onPress={() => setTournamentChoice(undefined)}
               >
-                <Text style={styles.chipLabel}>None</Text>
+                <Text style={styles.chipLabel}>{t("common.none")}</Text>
               </TouchableOpacity>
               {tournaments.map((t) => (
                 <TouchableOpacity
@@ -179,7 +181,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                 style={styles.chip(isNew)}
                 onPress={() => setTournamentChoice(NEW_TOURNAMENT)}
               >
-                <Text style={styles.chipLabel}>+ New</Text>
+                <Text style={styles.chipLabel}>{t("newMatch.newTournament")}</Text>
               </TouchableOpacity>
             </View>
 
@@ -189,21 +191,21 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   style={styles.input}
                   value={newName}
                   onChangeText={setNewName}
-                  placeholder="Tournament name"
+                  placeholder={t("newMatch.tournamentName")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
                 <TextInput
                   style={styles.input}
                   value={newLocation}
                   onChangeText={setNewLocation}
-                  placeholder="Location (optional)"
+                  placeholder={t("newMatch.locationOptional")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
                 <TextInput
                   style={styles.input}
                   value={newDate}
                   onChangeText={setNewDate}
-                  placeholder="Date (YYYY-MM-DD)"
+                  placeholder={t("newMatch.dateFormat")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
               </>
@@ -215,16 +217,16 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   style={styles.input}
                   value={round}
                   onChangeText={setRound}
-                  placeholder="Round (e.g. Final, Group A)"
+                  placeholder={t("newMatch.roundPlaceholder")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
                 {teamA && teamB ? (
                   <>
-                    {renderClub("Team A", !!entryA, entryA?.club, clubA, setClubA)}
-                    {renderClub("Team B", !!entryB, entryB?.club, clubB, setClubB)}
+                    {renderClub(t("common.teamWithSide", { side: "A" }), !!entryA, entryA?.club, clubA, setClubA)}
+                    {renderClub(t("common.teamWithSide", { side: "B" }), !!entryB, entryB?.club, clubB, setClubB)}
                   </>
                 ) : (
-                  <Text style={styles.hint}>Pick the 4 players to set the club of each dupla.</Text>
+                  <Text style={styles.hint}>{t("newMatch.pickFourForClubs")}</Text>
                 )}
               </>
             ) : null}
@@ -238,7 +240,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
         disabled={!canSubmit}
         activeOpacity={0.85}
       >
-        <Text style={styles.submitLabel(canSubmit)}>Start match</Text>
+        <Text style={styles.submitLabel(canSubmit)}>{t("newMatch.start")}</Text>
       </TouchableOpacity>
     </View>
   )
