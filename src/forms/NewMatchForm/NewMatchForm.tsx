@@ -91,8 +91,6 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
     new Set((tournament?.entries ?? []).map((e) => e.club).filter((c): c is string => !!c))
   )
 
-  // Tapping "Team A" / "Team B" turns the title into an input for the team name.
-  // In a tournament the name is the dupla's club, locked once the dupla is registered.
   const renderTitle = (side: Side, color: string) => {
     const entry = side === "A" ? entryA : entryB
     const value = side === "A" ? clubA : clubB
@@ -102,7 +100,6 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
     const editing = editingSide === side && !entry
     const close = () => setEditingSide(undefined)
 
-    // Text and input share the same box, font and height so toggling never shifts the layout.
     return (
       <View style={styles.titleRow(editing)}>
         {editing ? (
