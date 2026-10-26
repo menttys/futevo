@@ -10,7 +10,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.md,
   },
   targetLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     textAlign: "center",
@@ -31,11 +31,21 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
     backgroundColor: theme.colors.surface,
   },
+  courtModeButton: {
+    flex: 1,
+    marginBottom: theme.spacing.sm,
+    backgroundColor: theme.colors.primary,
+  },
+  courtModeLabel: {
+    fontFamily: "Figtree_700Bold",
+    fontSize: theme.typography.size.md,
+    color: theme.colors.dark,
+  },
   actionButtonDisabled: {
     opacity: 0.4,
   },
   actionButtonLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
@@ -44,7 +54,7 @@ export const styles = StyleSheet.create((theme) => ({
     marginTop: theme.spacing.sm,
   },
   logTitle: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },

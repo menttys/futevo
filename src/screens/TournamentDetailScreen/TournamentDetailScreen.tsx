@@ -12,6 +12,7 @@ import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { duplaKey } from "@/utils/tournament"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 
 import { styles } from "./TournamentDetailScreen.styles"
@@ -22,6 +23,7 @@ type TournamentRouteProp = RouteProp<MatchesStackParamList, "TournamentDetail">
 export function TournamentDetailScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<NavigationProp>()
   const { tournamentId } = useRoute<TournamentRouteProp>().params
   const tournament = useTournamentStore((s) => s.tournaments?.find((t) => t.id === tournamentId))
@@ -60,7 +62,7 @@ export function TournamentDetailScreen() {
   const meta = [tournament.location, tournament.date].filter(Boolean).join(" · ")
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.root} contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
       <View style={styles.card}>
         <Text style={styles.name}>{tournament.name}</Text>
         {meta ? <Text style={styles.meta}>{meta}</Text> : null}

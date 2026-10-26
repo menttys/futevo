@@ -9,13 +9,13 @@ export const styles = StyleSheet.create((theme) => ({
     gap: 12,
   },
   title: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     textAlign: "center",
   },
   subtitle: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: 13,
     color: theme.colors.textMuted,
     textAlign: "center",

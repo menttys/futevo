@@ -7,6 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack"
 import { NewMatchForm } from "@/forms/NewMatchForm"
 import type { NewMatchFormSubmit } from "@/forms/NewMatchForm/NewMatchForm.d"
 import { useMatches } from "@/hooks/useMatches"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useTournaments } from "@/hooks/useTournaments"
 import { MatchesStackParamList } from "@/navigation/types"
 import { usePlayerStore } from "@/store/playerState"
@@ -19,6 +20,7 @@ type NavigationProp = StackNavigationProp<MatchesStackParamList, "NewMatch">
 
 export function NewMatchScreen() {
   const navigation = useNavigation<NavigationProp>()
+  const tabBarInset = useTabBarInset()
   const players = usePlayerStore((s) => s.players) ?? []
   const tournaments = useTournamentStore((s) => s.tournaments) ?? []
   const { startMatch } = useMatches()
@@ -47,7 +49,7 @@ export function NewMatchScreen() {
   }
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.root} contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
       <View>
         <NewMatchForm players={players} tournaments={tournaments} onSubmit={handleSubmit} />
       </View>

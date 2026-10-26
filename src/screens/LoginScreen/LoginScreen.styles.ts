@@ -14,20 +14,20 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.md,
   },
   wordmark: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.xxl,
     letterSpacing: 4,
     color: theme.colors.primary,
   },
   title: {
     marginTop: theme.spacing.lg,
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.xl,
     color: theme.colors.text,
     textAlign: "center",
   },
   subtitle: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.textMuted,
     textAlign: "center",
@@ -47,7 +47,7 @@ export const styles = StyleSheet.create((theme) => ({
     opacity: 0.85,
   },
   googleButtonText: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.dark,
   },

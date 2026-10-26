@@ -8,7 +8,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   teamTitle: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
@@ -26,7 +26,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   playerName: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
@@ -37,7 +37,7 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.sm,
   },
   sideTagText: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
   },
@@ -49,12 +49,12 @@ export const styles = StyleSheet.create((theme) => ({
     borderTopColor: theme.colors.grey200,
   },
   statLabel: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
   statValue: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },

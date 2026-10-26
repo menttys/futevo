@@ -9,6 +9,7 @@ import { useUnistyles } from "react-native-unistyles"
 
 import type { Match, Tournament } from "@/@types/futevo"
 import { EmptyState } from "@/components/EmptyState"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { Search, X } from "@/lib/icons"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
 import type { TabParamList } from "@/navigation/types"
@@ -27,6 +28,7 @@ const EMPTY_TOURNAMENTS: Tournament[] = []
 
 export function MatchesListScreen() {
   const insets = useSafeAreaInsets()
+  const tabBarInset = useTabBarInset()
   const { t } = useLanguage()
   const { theme } = useUnistyles()
   const navigation = useNavigation<NavigationProp>()
@@ -82,7 +84,6 @@ export function MatchesListScreen() {
             tournaments.find((tr) => tr.id === item.tournamentId),
             side
           )
-          const winner = item.status === "completed" && item.winner === side
           const other = side === "A" ? item.scoreB : item.scoreA
           const result = score > other ? "lead" : score < other ? "trail" : "tie"
           return (
@@ -93,7 +94,7 @@ export function MatchesListScreen() {
                     {club}
                   </Text>
                 ) : null}
-                <Text style={styles.players(winner)} numberOfLines={1}>
+                <Text style={styles.players(result)} numberOfLines={1}>
                   {`${playerName(ids[0])} & ${playerName(ids[1])}`}
                 </Text>
               </View>
@@ -144,7 +145,7 @@ export function MatchesListScreen() {
           data={filteredMatches}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={{ ...styles.listContent, paddingBottom: tabBarInset + 16 }}
           keyboardShouldPersistTaps="handled"
           ItemSeparatorComponent={() => <View style={styles.separator} />}
           ListEmptyComponent={

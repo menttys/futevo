@@ -2,9 +2,10 @@ import { StyleSheet } from "react-native-unistyles"
 
 export const styles = StyleSheet.create((theme) => ({
   tile: (selected: boolean) => ({
+    flexDirection: "row",
     alignItems: "center",
     gap: theme.spacing.sm,
-    paddingVertical: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.sm,
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radius.lg,
@@ -12,10 +13,9 @@ export const styles = StyleSheet.create((theme) => ({
     borderColor: selected ? theme.colors.primary : "transparent",
   }),
   name: {
-    maxWidth: "100%",
-    textAlign: "center",
-    fontFamily: "Sora-SemiBold",
-    fontSize: theme.typography.size.md,
+    flex: 1,
+    fontFamily: "Figtree_600SemiBold",
+    fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
   badge: (color: string) => ({
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create((theme) => ({
     paddingVertical: 2,
   }),
   badgeText: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: 10,
     color: theme.colors.dark,
   },

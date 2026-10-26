@@ -1,0 +1,1 @@
+export { GamifiedMatchScreen } from "./GamifiedMatchScreen"

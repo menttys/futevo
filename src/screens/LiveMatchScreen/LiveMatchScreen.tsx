@@ -17,6 +17,7 @@ import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
 import { clubForSide } from "@/utils/tournament"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 
 import { styles } from "./LiveMatchScreen.styles"
@@ -32,6 +33,7 @@ export function LiveMatchScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const insets = useSafeAreaInsets()
+  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<LiveMatchRouteProp>().params
   const players = usePlayerStore((s) => s.players) ?? []
@@ -101,7 +103,17 @@ export function LiveMatchScreen() {
         <PointLog points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
       </ScrollView>
 
-      <View style={[styles.actions, { marginBottom: insets.bottom }]}>
+      <View style={styles.actions}>
+        <TouchableOpacity
+          style={[styles.actionButton, styles.courtModeButton]}
+          onPress={() => navigation.navigate("GamifiedMatch", { matchId: match.id })}
+          activeOpacity={0.85}
+        >
+          <Text style={styles.courtModeLabel}>{t("gamified.courtMode")}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={[styles.actions, { marginBottom: tabBarInset }]}>
         <TouchableOpacity
           style={[styles.actionButton, !canUndo && styles.actionButtonDisabled]}
           onPress={handleUndo}

@@ -22,12 +22,12 @@ export const styles = StyleSheet.create((theme) => ({
   }),
   label: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
   score: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },

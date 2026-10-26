@@ -13,7 +13,7 @@ export function PlayerTile({ player, onPress, selected = false, badgeLabel, badg
         <PlayerAvatar
           name={player.name}
           photoUri={player.photoUri || undefined}
-          size={64}
+          size={40}
           selected={selected}
         />
         {badgeLabel && badgeColor ? (

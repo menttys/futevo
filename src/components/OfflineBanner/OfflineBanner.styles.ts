@@ -19,7 +19,7 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.secondary,
   },
   text: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.white,
     textAlign: "center",

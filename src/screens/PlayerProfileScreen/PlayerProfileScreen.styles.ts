@@ -28,18 +28,18 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   linkText: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
   label: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.grey300,
     marginBottom: theme.spacing.xs,
   },
   input: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     borderWidth: 1,
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   }),
   saveLabel: (enabled: boolean) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     color: enabled ? theme.colors.dark : theme.colors.textMuted,
   }),
@@ -70,7 +70,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   },
   deleteLabel: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.danger,
   },

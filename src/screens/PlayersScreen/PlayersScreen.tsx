@@ -4,11 +4,13 @@ import { ScrollView, Text, TextInput, TouchableOpacity, View, useWindowDimension
 import { useNavigation } from "@react-navigation/native"
 import type { StackNavigationProp } from "@react-navigation/stack"
 import { FlashList } from "@shopify/flash-list"
+import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useUnistyles } from "react-native-unistyles"
 
 import type { Player } from "@/@types/futevo"
 import { EmptyState } from "@/components/EmptyState"
 import { PlayerTile } from "@/components/PlayerTile"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { Plus, Search, Users } from "@/lib/icons"
 import { PlayersRoutes } from "@/navigation/routes"
 import type { PlayersStackParamList } from "@/navigation/types/navigation"
@@ -20,7 +22,9 @@ import { styles } from "./PlayersScreen.styles"
 
 export function PlayersScreen() {
   const { t, currentLanguage } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const { theme } = useUnistyles()
+  const insets = useSafeAreaInsets()
   const storedPlayers = usePlayerStore((s) => s.players)
   const players = useMemo(() => storedPlayers ?? [], [storedPlayers])
   const navigation = useNavigation<StackNavigationProp<PlayersStackParamList, "PlayersHome">>()
@@ -53,17 +57,17 @@ export function PlayersScreen() {
           onPress={() => navigation.navigate(PlayersRoutes.PLAYER_PROFILE, { playerId: item.id })}
         />
         {item.residencyCountry ? (
-          <Text style={styles.flag}>{getFlagEmoji(item.residencyCountry)}</Text>
+          <Text style={numColumns === 2 ? styles.flagOnAvatar : styles.flag}>{getFlagEmoji(item.residencyCountry)}</Text>
         ) : null}
       </View>
     ),
-    [navigation]
+    [navigation, numColumns]
   )
 
   const isFiltering = query.trim().length > 0 || country.length > 0
 
   return (
-    <View style={styles.root}>
+    <View style={[styles.root, { paddingTop: insets.top }]}>
       <View style={styles.toolbar}>
         <View style={styles.searchField}>
           <Search size={18} color={theme.colors.grey300} />
@@ -105,9 +109,8 @@ export function PlayersScreen() {
                 onPress={() => setCountry(country === c.code ? "" : c.code)}
                 activeOpacity={0.85}
               >
-                <Text style={styles.chipLabel(country === c.code)}>
-                  {getFlagEmoji(c.code)} {c.name}
-                </Text>
+                <Text style={styles.chipFlag}>{getFlagEmoji(c.code)}</Text>
+                <Text style={styles.chipLabel(country === c.code)}>{c.name}</Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
@@ -120,7 +123,7 @@ export function PlayersScreen() {
           numColumns={numColumns}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
-          contentContainerStyle={styles.listContent}
+          contentContainerStyle={{ ...styles.listContent, paddingBottom: tabBarInset + 16 }}
           keyboardShouldPersistTaps="handled"
           ListEmptyComponent={
             isFiltering ? (

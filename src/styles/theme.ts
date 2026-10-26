@@ -3,7 +3,7 @@ const palette = {
   sun: "#FFD400", // brand yellow (primary)
   sunDeep: "#857520", // olive gold, text on light surfaces
   ink: "#1B1A18", // near-black: text, dark cards, tab bar
-  paper: "#F5F2EF", // app background
+  paper: "#F5EAD8", // app background (cream)
   white: "#FFFFFF", // cards
   stone: "#E8E6E1", // neutral badges, disabled fills
   coral: "#FF8A6B",

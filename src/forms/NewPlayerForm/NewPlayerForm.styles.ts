@@ -11,7 +11,7 @@ export const styles = StyleSheet.create((theme) => ({
     borderRadius: theme.radius.lg,
   },
   input: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     borderWidth: 1,
@@ -40,7 +40,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   }),
   submitLabel: (enabled: boolean) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     color: enabled ? theme.colors.dark : theme.colors.textMuted,
   }),

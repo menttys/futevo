@@ -26,13 +26,13 @@ export const styles = StyleSheet.create((theme) => ({
     padding: theme.spacing.lg,
   },
   title: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.lg,
     color: theme.colors.text,
     marginBottom: theme.spacing.lg,
   },
   sectionLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
@@ -63,7 +63,7 @@ export const styles = StyleSheet.create((theme) => ({
     justifyContent: "center",
   }),
   ballOutLabel: (active: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.md,
     color: active ? theme.colors.dark : theme.colors.text,
   }),
@@ -79,7 +79,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.xs,
   },
   playerName: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.text,
   },
@@ -92,7 +92,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   }),
   confirmLabel: (enabled: boolean) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: enabled ? theme.colors.dark : theme.colors.textMuted,
   }),

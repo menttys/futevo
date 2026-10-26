@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native-unistyles"
 
 export const styles = StyleSheet.create((theme) => ({
   label: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.grey300,
     marginBottom: theme.spacing.xs,
@@ -20,7 +20,7 @@ export const styles = StyleSheet.create((theme) => ({
   },
   fieldText: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
@@ -57,7 +57,7 @@ export const styles = StyleSheet.create((theme) => ({
     boxShadow: "0 12px 40px rgba(27,26,24,0.35)",
   },
   search: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     borderWidth: 1,
@@ -81,7 +81,7 @@ export const styles = StyleSheet.create((theme) => ({
   },
   optionText: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },

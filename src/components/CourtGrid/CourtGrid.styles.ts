@@ -28,13 +28,13 @@ export const styles = StyleSheet.create((theme) => ({
   }),
   netLabel: {
     position: "absolute",
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: 10,
     letterSpacing: 2,
     color: theme.colors.dark,
   },
   sideLabel: (side: "A" | "B") => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     textAlign: "center",
     textTransform: "uppercase",

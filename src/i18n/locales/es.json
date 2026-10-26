@@ -37,7 +37,9 @@
     "pingo": "Pingo",
     "loby": "Loby",
     "shark": "Shark",
-    "ace": "Ace"
+    "ace": "Ace",
+    "head": "Remate de cabeza",
+    "opponentError": "Error del rival"
   },
   "auth": {
     "title": "Registra cada punto",
@@ -45,7 +47,7 @@
     "continueWithGoogle": "Continuar con Google"
   },
   "splash": {
-    "tagline": "Anota. Registra. Repite."
+    "tagline": "Cada punto cuenta."
   },
   "offline": {
     "syncing": "Sincronizando cambios…",
@@ -53,6 +55,10 @@
   },
   "errors": {
     "crashCaught": "Error detectado:"
+  },
+  "dashboard": {
+    "recentMatches": "Partidos recientes",
+    "noMatches": "Aún no se han jugado partidos."
   },
   "matches": {
     "title": "Partidos",
@@ -192,5 +198,14 @@
     "language": "Idioma",
     "defaultName": "Jugador",
     "defaultYou": "Tú"
+  },
+  "gamified": {
+    "hintPick": "Toca a un jugador para elegir quién anota",
+    "hintDrag": "Arrastra desde {{name}} hasta donde cayó la pelota · mantén para moverlo",
+    "hintInvalid": "Suelta en la cancha del otro equipo, o fuera de las líneas para pelota fuera",
+    "pointFor": "Punto para {{name}}",
+    "landedIn": "Cayó en la cancha del equipo {{side}}, zona {{zone}}",
+    "courtMode": "Modo cancha",
+    "hintMoving": "Arrastra hasta donde atacó el jugador y suelta"
   }
 }

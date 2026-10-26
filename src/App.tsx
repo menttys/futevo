@@ -3,6 +3,11 @@ import "@/styles/unistyles"
 import React from "react"
 
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import {
+  BricolageGrotesque_700Bold,
+  BricolageGrotesque_800ExtraBold,
+} from "@expo-google-fonts/bricolage-grotesque"
+import { Figtree_400Regular, Figtree_600SemiBold, Figtree_700Bold } from "@expo-google-fonts/figtree"
 import { useFonts } from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
@@ -35,9 +40,11 @@ SplashScreen.preventAutoHideAsync()
 
 export default function App() {
   const [loaded] = useFonts({
-    "Sora-Regular": require("./assets/fonts/Sora-Regular.ttf"),
-    "Sora-SemiBold": require("./assets/fonts/Sora-SemiBold.ttf"),
-    "Sora-Bold": require("./assets/fonts/Sora-Bold.ttf"),
+    Figtree_400Regular,
+    Figtree_600SemiBold,
+    Figtree_700Bold,
+    BricolageGrotesque_700Bold,
+    BricolageGrotesque_800ExtraBold,
   })
 
   useNetworkState()

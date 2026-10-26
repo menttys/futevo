@@ -1,16 +1,14 @@
 import React from "react"
-import { Text, View } from "react-native"
+import { Image, View } from "react-native"
 
 import { styles } from "./SplashScreen.styles"
 
-import { useLanguage } from "@/i18n"
+const LOGO = require("@/assets/images/splash.png")
 
 export function SplashScreen() {
-  const { t } = useLanguage()
   return (
     <View style={styles.root}>
-      <Text style={styles.wordmark}>FUTEVO</Text>
-      <Text style={styles.tagline}>{t("splash.tagline")}</Text>
+      <Image source={LOGO} style={styles.logo} resizeMode="contain" />
     </View>
   )
 }

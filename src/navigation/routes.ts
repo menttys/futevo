@@ -15,6 +15,7 @@ export enum MatchesRoutes {
   NEW_MATCH = "NewMatch",
   LIVE_MATCH = "LiveMatch",
   POINT_ENTRY = "PointEntry",
+  GAMIFIED_MATCH = "GamifiedMatch",
   MATCH_DETAIL = "MatchDetail",
   TOURNAMENT_DETAIL = "TournamentDetail",
 }

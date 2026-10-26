@@ -25,7 +25,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   },
   searchInput: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     paddingVertical: theme.spacing.sm,
@@ -47,14 +47,25 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingBottom: theme.spacing.md,
   },
   chip: (active: boolean) => ({
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: theme.spacing.xs,
     backgroundColor: active ? theme.colors.primary : theme.colors.surface,
     borderRadius: theme.radius.lg,
-    paddingVertical: theme.spacing.xs,
+    paddingVertical: theme.spacing.sm,
     paddingHorizontal: theme.spacing.md,
   }),
-  chipLabel: (active: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+  chipFlag: {
     fontSize: theme.typography.size.sm,
+    lineHeight: theme.typography.size.md,
+    includeFontPadding: false,
+  },
+  chipLabel: (active: boolean) => ({
+    fontFamily: "Figtree_600SemiBold",
+    fontSize: theme.typography.size.sm,
+    lineHeight: theme.typography.size.md,
+    includeFontPadding: false,
     color: active ? theme.colors.dark : theme.colors.text,
   }),
   listWrapper: {
@@ -76,5 +87,12 @@ export const styles = StyleSheet.create((theme, rt) => ({
     top: theme.spacing.md,
     right: theme.spacing.md,
     fontSize: theme.typography.size.lg,
+  },
+  // Small screens: a small flag sitting on the bottom-right edge of the 40px avatar.
+  flagOnAvatar: {
+    position: "absolute",
+    top: theme.spacing.xs + 2 + theme.spacing.sm + 40 - 14,
+    left: theme.spacing.xs + 2 + theme.spacing.sm + 40 - 12,
+    fontSize: theme.typography.size.xs,
   },
 }))

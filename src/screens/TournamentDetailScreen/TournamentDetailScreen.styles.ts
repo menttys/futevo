@@ -22,17 +22,17 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.xs,
   },
   name: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.xl,
     color: theme.colors.text,
   },
   meta: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
   sectionLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
@@ -44,12 +44,12 @@ export const styles = StyleSheet.create((theme) => ({
     borderBottomColor: theme.colors.grey200,
   },
   entryNames: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
   input: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
     borderWidth: 1,
@@ -70,17 +70,17 @@ export const styles = StyleSheet.create((theme) => ({
   },
   matchLabel: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.text,
   },
   matchScore: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
   hint: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
   },

@@ -26,7 +26,7 @@ export const styles = StyleSheet.create((theme) => ({
     padding: theme.spacing.md,
   },
   winnerText: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.dark,
   },
@@ -55,7 +55,7 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: selected ? theme.colors.card : "transparent",
   }),
   tabLabel: (selected: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: selected ? theme.colors.text : theme.colors.textMuted,
   }),
@@ -65,24 +65,25 @@ export const styles = StyleSheet.create((theme) => ({
     flex: 1,
   },
   clubName: (color: string) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.lg,
     color,
     textAlign: "center",
   }),
   teamNames: (color: string, hasClub = false) => ({
-    fontFamily: hasClub ? "Sora-Regular" : "Sora-Bold",
+    fontFamily: hasClub ? "Figtree_400Regular" : "Figtree_700Bold",
     fontSize: hasClub ? theme.typography.size.xs : theme.typography.size.sm,
     color: hasClub ? theme.colors.textMuted : color,
     textAlign: "center",
   }),
   teamScore: (color: string) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "BricolageGrotesque_800ExtraBold",
+    fontVariant: ["tabular-nums"],
     fontSize: 48,
     color,
   }),
   sectionLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
@@ -98,7 +99,7 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
   },
   tallyText: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.text,
   },

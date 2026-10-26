@@ -9,6 +9,7 @@ import { useUnistyles } from "react-native-unistyles"
 import { CountryPicker } from "@/components/CountryPicker"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { usePlayers } from "@/hooks/usePlayers"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { PlayersRoutes } from "@/navigation/routes"
 import type { PlayersStackParamList } from "@/navigation/types/navigation"
@@ -22,6 +23,7 @@ import { styles } from "./PlayerProfileScreen.styles"
 export function PlayerProfileScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<StackNavigationProp<PlayersStackParamList, "PlayerProfile">>()
   const route = useRoute<RouteProp<PlayersStackParamList, "PlayerProfile">>()
   const player = usePlayerStore((s) => s.players?.find((p) => p.id === route.params.playerId))
@@ -70,7 +72,7 @@ export function PlayerProfileScreen() {
   }
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.root} contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
       <View style={styles.card}>
         <View style={styles.photoSection}>
           <PlayerAvatar name={name || player.name} photoUri={photoUri || undefined} size={96} />

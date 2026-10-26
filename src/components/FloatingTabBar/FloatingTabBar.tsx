@@ -1,6 +1,7 @@
-import React from "react"
-import { Pressable, View } from "react-native"
+import React, { useContext } from "react"
+import { Image, Pressable, View } from "react-native"
 
+import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs"
 import { useUnistyles } from "react-native-unistyles"
 
 import { useSideTabBar } from "@/hooks/useSideTabBar"
@@ -11,10 +12,20 @@ import { useLanguage } from "@/i18n"
 import type { FloatingTabBarProps } from "./FloatingTabBar.d"
 import { styles } from "./FloatingTabBar.styles"
 
+const LOGO = require("@/assets/images/logo.png")
+
 export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const sideBar = useSideTabBar()
+  const onHeightChange = useContext(BottomTabBarHeightCallbackContext)
+
+  // The court-mode screen needs the whole display, so the bar steps aside there.
+  const activeRoute = state.routes[state.index]
+  const activeNested = activeRoute.state?.routes[activeRoute.state.index ?? 0]?.name
+  if (activeRoute.name === TabRoutes.MATCH_FLOW && activeNested === MatchesRoutes.GAMIFIED_MATCH) {
+    return null
+  }
 
   const onNewMatch = () => {
     navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
@@ -74,7 +85,18 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   })
 
   return (
-    <View style={[styles.wrapper, sideBar && styles.wrapperWeb]}>
+    <View
+      pointerEvents="box-none"
+      onLayout={(e) => {
+        if (!sideBar) onHeightChange?.(e.nativeEvent.layout.height)
+      }}
+      style={[styles.wrapper, sideBar ? styles.wrapperWeb : styles.wrapperFloating]}
+    >
+      {sideBar && (
+        <View style={styles.logo}>
+          <Image source={LOGO} style={styles.logoImage} resizeMode="cover" />
+        </View>
+      )}
       <View style={[styles.bar, sideBar && styles.barWeb]}>
         {sideBar ? (
           <>

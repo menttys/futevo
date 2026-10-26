@@ -23,6 +23,13 @@ export const styles = StyleSheet.create((theme, rt) => ({
     shadowOffset: { width: 0, height: 8 },
     elevation: 8,
   },
+  // The bottom bar overlays the screen so content scrolls underneath it.
+  wrapperFloating: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   wrapperWeb: {
     justifyContent: "flex-start",
     paddingHorizontal: 8,
@@ -39,6 +46,26 @@ export const styles = StyleSheet.create((theme, rt) => ({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
+  },
+  logo: {
+    // Same outer diameter as the sidebar bar: 44px item + 2 * 10px padding.
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    marginBottom: 12,
+    padding: 10,
+    backgroundColor: theme.colors.dark,
+    // Same shadow as the web sidebar bar.
+    shadowColor: theme.colors.black,
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+  logoImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 22,
   },
   group: {
     flexDirection: "row",

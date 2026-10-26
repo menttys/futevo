@@ -10,12 +10,12 @@ export const styles = StyleSheet.create((theme, rt) => ({
     padding: theme.spacing.lg,
   },
   title: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.lg,
     color: theme.colors.text,
   },
   subtitle: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     marginTop: theme.spacing.xs,
@@ -24,7 +24,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     gap: theme.spacing.xs,
   },
   filterLabel: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
   },
@@ -42,7 +42,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: selected ? theme.colors.primary : "transparent",
   }),
   chipLabel: (selected: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: selected ? theme.colors.dark : theme.colors.text,
   }),
@@ -56,7 +56,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     gap: theme.spacing.sm,
   },
   sideTitle: (side: "A" | "B") => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     textAlign: "center",
     color: side === "A" ? theme.colors.teamA : theme.colors.purple,
@@ -82,12 +82,12 @@ export const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: color,
   }),
   count: (filled: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: rt.screen.width < 400 ? theme.typography.size.xs : theme.typography.size.sm,
     color: filled ? "#5C5750" : theme.colors.grey400,
   }),
   total: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     textAlign: "center",
@@ -108,7 +108,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   netLabel: {
     position: "absolute",
     alignSelf: "center",
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: 10,
     letterSpacing: 1,
     color: theme.colors.textMuted,
@@ -117,7 +117,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     transform: [{ rotate: "90deg" }],
   },
   summary: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
     textAlign: "center",
@@ -140,7 +140,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: color,
   }),
   legendLabel: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
   },

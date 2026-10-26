@@ -17,8 +17,8 @@ const Stack = createStackNavigator<PlayersStackParamList>()
 const HEADER_OPTS = ({ route }: { route: { name: string } }) => {
   const isRoot = route.name === PlayersRoutes.PLAYERS_HOME
   return {
-    // The players list is the root: no back button there. On web it has no header at all.
-    headerShown: !IS_WEB || !isRoot,
+    // The players list is the root: no header at all, the search bar sits at the top.
+    headerShown: !isRoot,
     headerLeft: isRoot ? () => null : undefined,
     headerStyle: IS_WEB
       ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }

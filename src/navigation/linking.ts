@@ -17,6 +17,7 @@ export const linking: LinkingOptions<RootStackParamList> = {
               [MatchesRoutes.NEW_MATCH]: "new",
               [MatchesRoutes.LIVE_MATCH]: "live/:matchId",
               [MatchesRoutes.POINT_ENTRY]: "live/:matchId/point/:team",
+              [MatchesRoutes.GAMIFIED_MATCH]: "live/:matchId/court",
               [MatchesRoutes.MATCH_DETAIL]: "match/:matchId",
               [MatchesRoutes.TOURNAMENT_DETAIL]: "tournament/:tournamentId",
             },

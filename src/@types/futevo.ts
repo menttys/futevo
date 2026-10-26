@@ -3,6 +3,8 @@ export const ATTACK_TYPES = [
   { id: "loby", label: "Loby" },
   { id: "shark", label: "Shark" },
   { id: "ace", label: "Ace" },
+  { id: "head", label: "Head attack" },
+  { id: "opponentError", label: "Opponent error" },
 ] as const
 
 export type AttackTypeId = (typeof ATTACK_TYPES)[number]["id"]
@@ -24,6 +26,11 @@ export type TeamSide = "A" | "B"
 // 3x3 grid per court half, row-major: 1 2 3 / 4 5 6 / 7 8 9
 export type CourtZone = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
+// A spot on the court normalised to the court rectangle: x 0 (left) → 1 (right), y 0 (Team B's
+// baseline, top) → 1 (Team A's baseline, bottom), the net at y = 0.5. Values may fall outside
+// 0..1 for a serve taken behind the baseline or a ball that landed out.
+export type CourtPosition = { x: number; y: number }
+
 export type MatchPoint = {
   id: string
   team: TeamSide
@@ -35,13 +42,20 @@ export type MatchPoint = {
   // Point won because the opponent hit the ball out — no zone or attack type.
   ballOut?: boolean
   attackType?: AttackTypeId
+  // Optional trajectory, only recorded from the court-mode screen: where the shot was taken
+  // and where the ball landed (also set for ball-out points, where `zone` is absent).
+  shotFrom?: CourtPosition
+  landedAt?: CourtPosition
   scoreAAfter: number
   scoreBAfter: number
   createdAt: string
 }
 
 // What the user records when a team scores; the rest of a MatchPoint is derived.
-export type PointDetails = Pick<MatchPoint, "zone" | "attackType" | "ballOut" | "scoringPlayerId">
+export type PointDetails = Pick<
+  MatchPoint,
+  "zone" | "attackType" | "ballOut" | "scoringPlayerId" | "shotFrom" | "landedAt"
+>
 
 export type MatchStatus = "in_progress" | "completed"
 

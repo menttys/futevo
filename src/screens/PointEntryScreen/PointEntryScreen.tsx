@@ -15,6 +15,7 @@ import { X } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 
 import { styles } from "./PointEntryScreen.styles"
@@ -26,6 +27,7 @@ export function PointEntryScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const insets = useSafeAreaInsets()
+  const tabBarInset = useTabBarInset()
   const { width } = useWindowDimensions()
   // Wide screens put the "out" square beside the court, phones put it below.
   const wide = width >= 600
@@ -94,7 +96,7 @@ export function PointEntryScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.content,
-          { paddingBottom: insets.bottom + theme.spacing.lg },
+          { paddingBottom: tabBarInset + theme.spacing.lg },
         ]}
         showsVerticalScrollIndicator={false}
       >

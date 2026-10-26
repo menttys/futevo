@@ -15,7 +15,7 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: selected ? theme.colors.primary : "transparent",
   }),
   chipLabel: (selected: boolean) => ({
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: selected ? theme.colors.dark : theme.colors.text,
   }),

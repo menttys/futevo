@@ -45,12 +45,12 @@ export const styles = StyleSheet.create((theme) => ({
     padding: 4,
   },
   title: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
   },
   counter: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.primary,
   },
@@ -64,7 +64,7 @@ export const styles = StyleSheet.create((theme) => ({
   },
   searchInput: {
     flex: 1,
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     paddingVertical: theme.spacing.sm,
@@ -87,7 +87,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   },
   doneLabel: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.dark,
   },

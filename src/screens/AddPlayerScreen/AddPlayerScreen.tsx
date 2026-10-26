@@ -7,6 +7,7 @@ import { useUnistyles } from "react-native-unistyles"
 
 import { NewPlayerForm } from "@/forms/NewPlayerForm"
 import { usePlayers } from "@/hooks/usePlayers"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { X } from "@/lib/icons"
 import type { PlayersStackParamList } from "@/navigation/types/navigation"
@@ -16,6 +17,7 @@ import { styles } from "./AddPlayerScreen.styles"
 
 export function AddPlayerScreen() {
   const { t } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const { theme } = useUnistyles()
   const { savePlayer } = usePlayers()
   const navigation = useNavigation<StackNavigationProp<PlayersStackParamList, "AddPlayer">>()
@@ -39,7 +41,7 @@ export function AddPlayerScreen() {
   return (
     <ScrollView
       style={styles.root}
-      contentContainerStyle={styles.content}
+      contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}
       keyboardShouldPersistTaps="handled"
     >
       <View style={styles.formWrapper}>

@@ -37,7 +37,9 @@
     "pingo": "Pingo",
     "loby": "Loby",
     "shark": "Shark",
-    "ace": "Ace"
+    "ace": "Ace",
+    "head": "Head attack",
+    "opponentError": "Opponent error"
   },
   "auth": {
     "title": "Track every point",
@@ -45,7 +47,7 @@
     "continueWithGoogle": "Continue with Google"
   },
   "splash": {
-    "tagline": "Score. Track. Replay."
+    "tagline": "Every point counts."
   },
   "offline": {
     "syncing": "Syncing changes…",
@@ -53,6 +55,10 @@
   },
   "errors": {
     "crashCaught": "Crash caught:"
+  },
+  "dashboard": {
+    "recentMatches": "Recent matches",
+    "noMatches": "No matches played yet."
   },
   "matches": {
     "title": "Matches",
@@ -192,5 +198,14 @@
     "language": "Language",
     "defaultName": "Player",
     "defaultYou": "You"
+  },
+  "gamified": {
+    "hintPick": "Tap a player to pick who scores",
+    "hintDrag": "Drag from {{name}} to where the ball landed · hold to move them",
+    "hintInvalid": "Drop on the other team's court, or outside the lines for ball out",
+    "pointFor": "Point for {{name}}",
+    "landedIn": "Landed on Team {{side}}'s court, zone {{zone}}",
+    "courtMode": "Court mode",
+    "hintMoving": "Drag to where the player attacked from, then release"
   }
 }

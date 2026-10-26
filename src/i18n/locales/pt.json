@@ -37,7 +37,9 @@
     "pingo": "Pingo",
     "loby": "Loby",
     "shark": "Shark",
-    "ace": "Ace"
+    "ace": "Ace",
+    "head": "Cabeceio",
+    "opponentError": "Erro do adversário"
   },
   "auth": {
     "title": "Registre cada ponto",
@@ -45,7 +47,7 @@
     "continueWithGoogle": "Continuar com o Google"
   },
   "splash": {
-    "tagline": "Marque. Registre. Reveja."
+    "tagline": "Cada ponto conta."
   },
   "offline": {
     "syncing": "Sincronizando alterações…",
@@ -53,6 +55,10 @@
   },
   "errors": {
     "crashCaught": "Falha detectada:"
+  },
+  "dashboard": {
+    "recentMatches": "Partidas recentes",
+    "noMatches": "Nenhuma partida jogada ainda."
   },
   "matches": {
     "title": "Partidas",
@@ -192,5 +198,14 @@
     "language": "Idioma",
     "defaultName": "Jogador",
     "defaultYou": "Você"
+  },
+  "gamified": {
+    "hintPick": "Toque em um jogador para escolher quem pontuou",
+    "hintDrag": "Arraste de {{name}} até onde a bola caiu · segure para mover",
+    "hintInvalid": "Solte na quadra do outro time, ou fora das linhas para bola fora",
+    "pointFor": "Ponto de {{name}}",
+    "landedIn": "Caiu na quadra do time {{side}}, zona {{zone}}",
+    "courtMode": "Modo quadra",
+    "hintMoving": "Arraste até onde o jogador atacou e solte"
   }
 }

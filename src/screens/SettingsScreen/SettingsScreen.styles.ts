@@ -23,17 +23,17 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.md,
   },
   name: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.lg,
     color: theme.colors.text,
   },
   email: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
   sectionLabel: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
@@ -52,7 +52,7 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
   }),
   languageLabel: (selected: boolean) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: selected ? theme.colors.dark : theme.colors.text,
   }),
@@ -69,7 +69,7 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   signOutLabel: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: theme.colors.danger,
   },

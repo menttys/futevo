@@ -10,16 +10,14 @@ import { ATTACK_TYPES, Player } from "@/@types/futevo"
 import { CourtHeatMap } from "@/components/CourtHeatMap"
 import { PlayerStatsList } from "@/components/PlayerStatsList"
 import { PointLog } from "@/components/PointLog"
-import { IS_WEB } from "@/constants/Platform"
-import { useMatches } from "@/hooks/useMatches"
-import { ChevronLeft, Trash2, Trophy } from "@/lib/icons"
+import { ChevronLeft, Trophy } from "@/lib/icons"
 import { TabRoutes } from "@/navigation/routes"
 import { MatchesStackParamList, TabParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
-import { confirmAction } from "@/utils/confirmAction"
 import { clubForSide } from "@/utils/tournament"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 
 import { styles } from "./MatchDetailScreen.styles"
@@ -38,6 +36,7 @@ function teamNames(players: Player[], fallback: string): string {
 export function MatchDetailScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<NavigationProp>()
   const { matchId, from } = useRoute<MatchDetailRouteProp>().params
   const players = usePlayerStore((s) => s.players) ?? []
@@ -45,7 +44,6 @@ export function MatchDetailScreen() {
   const tournament = useTournamentStore((s) =>
     s.tournaments?.find((t) => t.id === match?.tournamentId)
   )
-  const { deleteMatch } = useMatches()
   const [tab, setTab] = useState<"players" | "log">("players")
 
   useLayoutEffect(() => {
@@ -69,28 +67,7 @@ export function MatchDetailScreen() {
         </TouchableOpacity>
       ),
     })
-    if (IS_WEB) return
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={() => {
-            confirmAction({
-              title: t("match.deleteTitle"),
-              message: t("match.deleteMessage"),
-              confirmLabel: t("match.deleteConfirm"),
-              onConfirm: () => {
-                deleteMatch(matchId)
-                navigation.goBack()
-              },
-            })
-          }}
-          hitSlop={theme.hitSlop.md}
-        >
-          <Trash2 size={20} color={theme.colors.danger} />
-        </TouchableOpacity>
-      ),
-    })
-  }, [navigation, deleteMatch, matchId, from, theme, t])
+  }, [navigation, from, theme])
 
   const tally = useMemo(() => {
     if (!match) return []
@@ -114,7 +91,7 @@ export function MatchDetailScreen() {
   const clubB = clubForSide(match, tournament, "B")
 
   return (
-    <ScrollView style={styles.root} contentContainerStyle={styles.content}>
+    <ScrollView style={styles.root} contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
       {match.winner ? (
         <View style={styles.winnerBanner}>
           <Trophy size={18} color={theme.colors.dark} />

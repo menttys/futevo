@@ -17,7 +17,7 @@ export const styles = StyleSheet.create((theme) => ({
     height: size,
   }),
   initials: (size: number) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: size * 0.4,
     color: theme.colors.dark,
   }),

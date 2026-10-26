@@ -3,6 +3,7 @@ import React from "react"
 import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack"
 
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
+import { GamifiedMatchScreen } from "@/screens/GamifiedMatchScreen"
 import { LiveMatchScreen } from "@/screens/LiveMatchScreen"
 import { MatchDetailScreen } from "@/screens/MatchDetailScreen"
 import { NewMatchScreen } from "@/screens/NewMatchScreen"
@@ -53,9 +54,23 @@ export function MatchesStack() {
         }}
       />
       <Stack.Screen
+        name={MatchesRoutes.GAMIFIED_MATCH}
+        component={GamifiedMatchScreen}
+        options={{
+          headerShown: false,
+          gestureEnabled: false,
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+        }}
+      />
+      <Stack.Screen
         name={MatchesRoutes.MATCH_DETAIL}
         component={MatchDetailScreen}
-        options={{ title: t("screens.match"), headerShown: true }}
+        options={{
+          title: "",
+          headerShown: true,
+          headerTransparent: false,
+          headerStyle: { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 },
+        }}
       />
       <Stack.Screen
         name={MatchesRoutes.TOURNAMENT_DETAIL}

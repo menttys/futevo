@@ -10,7 +10,7 @@ export const styles = StyleSheet.create((theme) => ({
     borderRadius: theme.radius.lg,
   },
   sectionLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.sm,
@@ -50,7 +50,7 @@ export const styles = StyleSheet.create((theme) => ({
     paddingVertical: 0,
     borderRadius: theme.radius.sm,
     backgroundColor: theme.colors.background,
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color,
     outlineWidth: 0,
@@ -70,12 +70,12 @@ export const styles = StyleSheet.create((theme) => ({
     borderColor: theme.colors.grey200,
   },
   versus: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.xl,
     color: theme.colors.textMuted,
   },
   teamTitle: (color: string) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color,
   }),
@@ -106,7 +106,7 @@ export const styles = StyleSheet.create((theme) => ({
     justifyContent: "center",
   },
   playerName: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.text,
     textAlign: "center",
@@ -122,7 +122,7 @@ export const styles = StyleSheet.create((theme) => ({
   }),
   // Light text on Team A's dark badge, dark text on Team B's yellow one.
   badgeText: (side: "A" | "B") => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: 10,
     color: side === "A" ? theme.colors.white : theme.colors.dark,
   }),
@@ -140,12 +140,12 @@ export const styles = StyleSheet.create((theme) => ({
     justifyContent: "center",
   },
   stepperLabel: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.lg,
     color: theme.colors.text,
   },
   scoreValue: {
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.xl,
     color: theme.colors.primary,
     minWidth: 48,
@@ -169,12 +169,12 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
   }),
   chipLabel: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.xs,
     color: theme.colors.text,
   },
   input: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.md,
     color: theme.colors.text,
     borderWidth: 1,
@@ -185,12 +185,12 @@ export const styles = StyleSheet.create((theme) => ({
     paddingVertical: theme.spacing.sm,
   },
   lockedClub: {
-    fontFamily: "Sora-SemiBold",
+    fontFamily: "Figtree_600SemiBold",
     fontSize: theme.typography.size.sm,
     color: theme.colors.textMuted,
   },
   hint: {
-    fontFamily: "Sora-Regular",
+    fontFamily: "Figtree_400Regular",
     fontSize: theme.typography.size.xs,
     color: theme.colors.textMuted,
   },
@@ -203,7 +203,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
   }),
   submitLabel: (enabled: boolean) => ({
-    fontFamily: "Sora-Bold",
+    fontFamily: "Figtree_700Bold",
     fontSize: theme.typography.size.md,
     color: enabled ? theme.colors.dark : theme.colors.textMuted,
   }),

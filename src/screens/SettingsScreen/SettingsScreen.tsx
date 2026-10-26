@@ -5,6 +5,7 @@ import { useUnistyles } from "react-native-unistyles"
 
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { signout } from "@/hooks/useFirebase"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { LogOut } from "@/lib/icons"
 import { useUserStore } from "@/store/userState"
@@ -15,10 +16,11 @@ export function SettingsScreen() {
   const { theme } = useUnistyles()
   const { t, currentLanguage, changeLanguage, availableLanguages } = useLanguage()
   const user = useUserStore((s) => s.user)
+  const tabBarInset = useTabBarInset()
 
   return (
     <View style={styles.root}>
-      <View style={styles.content}>
+      <View style={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
         <View style={styles.card}>
           {user ? (
             <View style={styles.profileRow}>
