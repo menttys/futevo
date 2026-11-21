@@ -45,7 +45,11 @@
         }
       ]
     ],
-    "extra": {},
+    "extra": {
+      "eas": {
+        "projectId": "f8b5f9eb-bbac-469c-8a6c-8416f09cf239"
+      }
+    },
     "owner": "menttys"
   }
 }

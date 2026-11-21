@@ -38,8 +38,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
       onPress={onNewMatch}
       style={styles.center}
     >
-      <View style={[styles.circle, styles.circleNew]}>
-        <Plus size={22} color={theme.colors.dark} />
+      <View style={[styles.circle, sideBar && styles.circleSide, styles.circleNew]}>
+        <Plus size={sideBar ? 22 : 18} color={theme.colors.dark} />
       </View>
     </Pressable>
   )
@@ -77,8 +77,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
         onPress={onPress}
         style={styles.item}
       >
-        <View style={[styles.circle, focused && styles.circleActive]}>
-          {options.tabBarIcon?.({ focused, color, size: 20 })}
+        <View style={[styles.circle, sideBar && styles.circleSide, focused && styles.circleActive]}>
+          {options.tabBarIcon?.({ focused, color, size: sideBar ? 20 : 17 })}
         </View>
       </Pressable>
     )

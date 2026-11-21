@@ -44,14 +44,14 @@ export const styles = StyleSheet.create((theme, rt) => {
     card: {
       backgroundColor: theme.colors.dark,
       borderRadius: theme.radius.xl,
-      paddingVertical: compact ? theme.spacing.md : theme.spacing.lg,
-      paddingHorizontal: compact ? theme.spacing.md : theme.spacing.lg,
-      gap: compact ? theme.spacing.sm : theme.spacing.md,
+      paddingVertical: compact ? theme.spacing.sm + 2 : theme.spacing.lg,
+      paddingHorizontal: compact ? theme.spacing.md - 2 : theme.spacing.lg,
+      gap: compact ? theme.spacing.xs : theme.spacing.md,
     },
     teamRow: {
       flexDirection: "row",
       alignItems: "center",
-      gap: theme.spacing.md,
+      gap: compact ? theme.spacing.sm : theme.spacing.md,
     },
     teamInfo: {
       flex: 1,
@@ -59,20 +59,20 @@ export const styles = StyleSheet.create((theme, rt) => {
     },
     club: {
       fontFamily: "Figtree_600SemiBold",
-      fontSize: theme.typography.size.xs,
+      fontSize: compact ? 10 : theme.typography.size.xs,
       letterSpacing: 1,
       textTransform: "uppercase",
       color: theme.colors.grey400,
     },
     players: (result: "lead" | "trail" | "tie") => ({
       fontFamily: "Figtree_700Bold",
-      fontSize: compact ? theme.typography.size.md : theme.typography.size.lg,
+      fontSize: compact ? theme.typography.size.sm : theme.typography.size.lg,
       color: result === "trail" ? theme.colors.primary : theme.colors.white,
     }),
     score: (result: "lead" | "trail" | "tie") => ({
       fontFamily: "BricolageGrotesque_800ExtraBold",
       fontVariant: ["tabular-nums"],
-      fontSize: compact ? 32 : 44,
+      fontSize: compact ? 24 : 44,
       color: result === "trail" ? theme.colors.primary : theme.colors.white,
     }),
     footer: {

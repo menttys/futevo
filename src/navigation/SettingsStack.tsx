@@ -19,6 +19,8 @@ const HEADER_OPTS = ({ navigation }: { navigation: { canGoBack: () => boolean } 
     ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
     : { backgroundColor: theme.colors.primary },
   headerTitle: IS_WEB ? "" : undefined,
+  // "float" stops the stack from letting the page body scroll (hidden on web), which froze ScrollViews.
+  headerMode: IS_WEB ? ("float" as const) : undefined,
   headerTintColor: theme.colors.dark,
   headerTitleStyle: { color: theme.colors.dark },
   cardStyle: { backgroundColor: theme.colors.background },

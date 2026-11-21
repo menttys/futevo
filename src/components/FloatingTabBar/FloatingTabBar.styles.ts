@@ -5,7 +5,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     alignItems: "center",
     paddingHorizontal: 24,
     paddingTop: 8,
-    paddingBottom: Math.max(rt.insets.bottom, 12),
+    paddingBottom: Math.max(rt.insets.bottom, 8),
     backgroundColor: "transparent",
   },
   bar: {
@@ -14,7 +14,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     justifyContent: "space-between",
     alignSelf: "stretch",
     maxWidth: 420,
-    padding: 10,
+    padding: 6,
     borderRadius: 999,
     backgroundColor: theme.colors.dark,
     shadowColor: theme.colors.black,
@@ -39,6 +39,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   barWeb: {
     flexDirection: "column",
     alignSelf: "center",
+    padding: 10,
     maxWidth: undefined,
     gap: 16,
     borderRadius: 32,
@@ -87,11 +88,16 @@ export const styles = StyleSheet.create((theme, rt) => ({
     justifyContent: "center",
   },
   circle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  circleSide: {
     width: 44,
     height: 44,
     borderRadius: 22,
-    alignItems: "center",
-    justifyContent: "center",
   },
   circleNew: {
     backgroundColor: theme.colors.white,
