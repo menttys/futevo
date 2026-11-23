@@ -1,10 +1,9 @@
 import type { StyleProp, ViewStyle } from "react-native"
 
-import type { LucideIcon } from "@/lib/icons"
-
 export type EmptyStateProps = {
-  icon: LucideIcon
   title: string
   subtitle?: string
+  actionLabel?: string
+  onAction?: () => void
   style?: StyleProp<ViewStyle>
 }

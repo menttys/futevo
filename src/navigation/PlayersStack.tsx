@@ -1,6 +1,6 @@
 import React from "react"
 
-import { createStackNavigator } from "@react-navigation/stack"
+import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack"
 
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import { useLanguage } from "@/i18n"
@@ -14,22 +14,12 @@ import { PlayersStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<PlayersStackParamList>()
 
-const HEADER_OPTS = ({ route }: { route: { name: string } }) => {
-  const isRoot = route.name === PlayersRoutes.PLAYERS_HOME
-  return {
-    // The players list is the root: no header at all, the search bar sits at the top.
-    headerShown: !isRoot,
-    headerLeft: isRoot ? () => null : undefined,
-    headerStyle: IS_WEB
-      ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
-      : { backgroundColor: theme.colors.primary },
-    headerTitle: IS_WEB ? "" : undefined,
-    // "float" stops the stack from letting the page body scroll (hidden on web), which froze ScrollViews.
-    headerMode: IS_WEB ? ("float" as const) : undefined,
-    headerTintColor: theme.colors.dark,
-    headerTitleStyle: { color: theme.colors.dark },
-    cardStyle: { backgroundColor: theme.colors.background },
-  }
+// Every screen draws its own design header (back button + Unbounded title).
+const HEADER_OPTS = {
+  headerShown: false,
+  // "float" stops the stack from letting the page body scroll (hidden on web), which froze ScrollViews.
+  headerMode: IS_WEB ? ("float" as const) : undefined,
+  cardStyle: { backgroundColor: theme.colors.background },
 }
 
 export function PlayersStack() {
@@ -51,9 +41,10 @@ export function PlayersStack() {
         component={AddPlayerScreen}
         options={{
           title: t("screens.addPlayer"),
-          presentation: "modal",
-          headerShown: true,
-          headerTitle: t("screens.addPlayer"),
+          // A short sheet over the players list.
+          presentation: "transparentModal",
+          cardStyle: { backgroundColor: "transparent" },
+          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
         }}
       />
     </Stack.Navigator>

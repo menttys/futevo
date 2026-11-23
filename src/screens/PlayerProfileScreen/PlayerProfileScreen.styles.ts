@@ -2,76 +2,109 @@ import { StyleSheet } from "react-native-unistyles"
 
 import { WEB_CONTENT } from "@/constants/Platform"
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
+    paddingTop: rt.insets.top,
     backgroundColor: theme.colors.background,
+  },
+  savePill: (enabled: boolean) => ({
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: theme.radius.full,
+    backgroundColor: theme.colors.primary,
+    opacity: enabled ? 1 : 0.4,
+  }),
+  saveLabel: {
+    fontFamily: theme.fonts.bold,
+    fontSize: 13,
+    color: theme.colors.text,
   },
   content: {
     ...WEB_CONTENT,
-    padding: theme.spacing.md,
-    gap: theme.spacing.md,
+    paddingHorizontal: theme.gutter,
+    gap: 14,
   },
-  card: {
-    gap: theme.spacing.md,
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.lg,
-  },
-  photoSection: {
+  // Large avatar with a faint mark behind it.
+  hero: {
     alignItems: "center",
-    gap: theme.spacing.sm,
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 12,
   },
-  actions: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm,
+  heroMark: {
+    position: "absolute",
+    alignSelf: "center",
+    top: -20,
   },
-  linkText: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
+  cameraBadge: {
+    position: "absolute",
+    right: -2,
+    bottom: -2,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.colors.primary,
+    borderWidth: 3,
+    borderColor: theme.colors.background,
+  },
+  link: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
     color: theme.colors.text,
+    textDecorationLine: "underline",
   },
   label: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.grey300,
-    marginBottom: theme.spacing.xs,
+    marginBottom: 6,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
   },
   input: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.md,
+    borderRadius: theme.radius.full,
+    paddingHorizontal: 18,
+    paddingVertical: 13,
+    backgroundColor: theme.colors.wash,
+    fontFamily: theme.fonts.regular,
+    fontSize: 15,
     color: theme.colors.text,
-    borderWidth: 1,
-    borderColor: theme.colors.grey600,
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.md,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
   },
-  saveButton: (enabled: boolean) => ({
-    backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    alignItems: "center",
-  }),
-  saveLabel: (enabled: boolean) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.sm,
-    color: enabled ? theme.colors.dark : theme.colors.textMuted,
-  }),
-  deleteButton: {
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.danger,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
-    alignItems: "center",
+  countries: {
+    flexDirection: "row",
+    gap: 10,
   },
-  deleteLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.danger,
+  country: {
+    flex: 1,
+  },
+  stats: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  card: {
+    padding: 14,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  cardLabel: {
+    marginBottom: 10,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  form: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  empty: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
+    color: theme.colors.textMuted,
   },
 }))

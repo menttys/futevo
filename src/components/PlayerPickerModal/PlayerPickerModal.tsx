@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useState } from "react"
-import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Modal, Pressable, ScrollView, Text, View } from "react-native"
 
 import { useUnistyles } from "react-native-unistyles"
 
+import { AppButton } from "@/components/AppButton"
 import { EmptyState } from "@/components/EmptyState"
 import { PlayerTile } from "@/components/PlayerTile"
+import { SearchField } from "@/components/SearchField"
 import { IS_WEB } from "@/constants/Platform"
 import { useLanguage } from "@/i18n"
-import { Search, X } from "@/lib/icons"
+import { X } from "@/lib/icons"
 
 import type { PlayerPickerModalProps } from "./PlayerPickerModal.d"
 import { styles } from "./PlayerPickerModal.styles"
@@ -70,31 +72,30 @@ export function PlayerPickerModal({
               <Text style={styles.counter}>
                 {draftIds.length}/{max}
               </Text>
-              <TouchableOpacity style={styles.closeButton} onPress={close} hitSlop={8}>
-                <X size={20} color={theme.colors.text} />
-              </TouchableOpacity>
+              <Pressable
+                style={styles.closeButton}
+                onPress={close}
+                hitSlop={8}
+                accessibilityRole="button"
+                accessibilityLabel={t("common.close")}
+              >
+                <X size={18} color={theme.colors.text} />
+              </Pressable>
             </View>
           </View>
-          <View style={styles.searchField}>
-            <Search size={18} color={theme.colors.grey300} />
-            <TextInput
-              style={styles.searchInput}
-              value={query}
-              onChangeText={setQuery}
-              placeholder={t("players.searchPlaceholder")}
-              placeholderTextColor={theme.colors.grey300}
-              autoCapitalize="none"
-              autoCorrect={false}
-              autoFocus={IS_WEB}
-            />
-          </View>
+          <SearchField
+            value={query}
+            onChangeText={setQuery}
+            placeholder={t("players.searchPlaceholder")}
+            clearLabel={t("common.clear")}
+          />
           <ScrollView
             style={styles.list}
             contentContainerStyle={styles.grid}
             keyboardShouldPersistTaps="handled"
           >
             {filtered.length === 0 ? (
-              <EmptyState icon={Search} title={t("players.noResults")} />
+              <EmptyState title={t("players.noResults")} />
             ) : (
               filtered.map((player) => {
                 const index = draftIds.indexOf(player.id)
@@ -113,9 +114,7 @@ export function PlayerPickerModal({
               })
             )}
           </ScrollView>
-          <TouchableOpacity style={styles.doneButton} onPress={done} activeOpacity={0.85}>
-            <Text style={styles.doneLabel}>{t("newMatch.done")}</Text>
-          </TouchableOpacity>
+          <AppButton label={t("newMatch.done")} onPress={done} />
         </View>
       </View>
     </Modal>

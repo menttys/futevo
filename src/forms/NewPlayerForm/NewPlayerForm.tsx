@@ -1,17 +1,19 @@
 import React, { useState } from "react"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import { Image, Pressable, ScrollView, Text, TextInput, View } from "react-native"
 
 import { useUnistyles } from "react-native-unistyles"
+
+import { AppButton } from "@/components/AppButton"
+import { CountryPicker } from "@/components/CountryPicker"
+import { useLanguage } from "@/i18n"
+import { Camera } from "@/lib/icons"
+import { capitalizeName } from "@/utils/capitalizeName"
+import { pickPlayerPhoto } from "@/utils/pickPlayerPhoto"
 
 import type { NewPlayerFormProps } from "./NewPlayerForm.d"
 import { styles } from "./NewPlayerForm.styles"
 
-import { CountryPicker } from "@/components/CountryPicker"
-import { PlayerAvatar } from "@/components/PlayerAvatar"
-import { useLanguage } from "@/i18n"
-import { capitalizeName } from "@/utils/capitalizeName"
-import { pickPlayerPhoto } from "@/utils/pickPlayerPhoto"
-
+// A short sheet: photo, name, country. Add stays disabled until there is a name.
 export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
@@ -46,44 +48,50 @@ export function NewPlayerForm({ onSubmit }: NewPlayerFormProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handlePickPhoto} activeOpacity={0.85}>
-        <PlayerAvatar name={name || "?"} photoUri={photoUri || undefined} size={48} />
-      </TouchableOpacity>
-      <View style={styles.nameField}>
-        <TextInput
-          style={[styles.input, !name && styles.inputEmpty]}
-          value={name}
-          onChangeText={(value) => setName(capitalizeName(value))}
-          autoCapitalize="words"
-          placeholder={t("players.namePlaceholder")}
-          placeholderTextColor={theme.colors.grey300}
-          returnKeyType="done"
-          onSubmitEditing={handleSubmit}
-        />
-      </View>
-      <View style={styles.countryField}>
-        <CountryPicker
-          label={t("players.profile.birthCountry")}
-          value={birthCountry}
-          onChange={setBirthCountry}
-        />
-      </View>
-      <View style={styles.countryField}>
+    <View style={styles.root}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t("players.profile.choosePhoto")}
+          onPress={handlePickPhoto}
+          style={styles.photo}
+        >
+          {photoUri ? (
+            <Image source={{ uri: photoUri }} style={styles.photoImage} />
+          ) : (
+            <>
+              <Camera size={20} color={theme.colors.text} />
+              <Text style={styles.photoLabel}>{t("players.addPhoto")}</Text>
+            </>
+          )}
+        </Pressable>
+
+        <View>
+          <Text style={styles.label}>{t("players.profile.name")}</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={(value) => setName(capitalizeName(value))}
+            autoCapitalize="words"
+            autoFocus
+            placeholder={t("players.namePlaceholder")}
+            placeholderTextColor={theme.colors.textMuted}
+            returnKeyType="done"
+            onSubmitEditing={handleSubmit}
+          />
+        </View>
+
+        <CountryPicker label={t("players.profile.birthCountry")} value={birthCountry} onChange={setBirthCountry} />
         <CountryPicker
           label={t("players.profile.residencyCountry")}
           value={residencyCountry}
           onChange={setResidencyCountry}
         />
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <AppButton label={t("players.add")} disabled={!canSubmit} onPress={handleSubmit} style={styles.submit} />
       </View>
-      <TouchableOpacity
-        style={styles.submitButton(canSubmit)}
-        onPress={handleSubmit}
-        disabled={!canSubmit}
-        activeOpacity={0.85}
-      >
-        <Text style={styles.submitLabel(canSubmit)}>{t("players.add")}</Text>
-      </TouchableOpacity>
     </View>
   )
 }

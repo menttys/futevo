@@ -1,23 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { Pressable, Text, View } from "react-native"
 import type { LayoutChangeEvent } from "react-native"
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import Svg, { Circle, Line } from "react-native-svg"
 import { useUnistyles } from "react-native-unistyles"
 
 import type { AttackTypeId, CourtZone, Player, TeamSide } from "@/@types/futevo"
+import { AppButton } from "@/components/AppButton"
 import { AttackTypePicker } from "@/components/AttackTypePicker"
+import { MeshBackground } from "@/components/MeshBackground"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { useMatches } from "@/hooks/useMatches"
-import { RotateCcw, X } from "@/lib/icons"
+import { Undo, X } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
-import { heatGradient } from "@/utils/heatMap"
 import { confirmAction } from "@/utils/confirmAction"
 import type { CourtHit, CourtRect, Point2D } from "@/utils/courtGesture"
 import {
@@ -50,7 +50,6 @@ type PendingPoint = {
 }
 
 // Same red-to-green band as the net on the stats court.
-const NET_BANDS = heatGradient(32)
 
 const COURT_ZONES: CourtZone[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const COURT_CELLS = (["B", "A"] as const).flatMap((side) =>
@@ -69,7 +68,6 @@ const BEHIND_BASELINE = 20
 export function GamifiedMatchScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
-  const insets = useSafeAreaInsets()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<GamifiedRouteProp>().params
   const allPlayers = usePlayerStore((s) => s.players) ?? []
@@ -300,28 +298,34 @@ export function GamifiedMatchScreen() {
   const sheetAnchor = pending && pending.landing.y > arena.height / 2 ? "top" : "bottom"
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top }]}>
+    <View style={styles.root}>
+      <MeshBackground />
       <View style={styles.topBar}>
-        <TouchableOpacity
+        <Pressable
           style={styles.iconButton}
           onPress={() => navigation.goBack()}
-          hitSlop={theme.hitSlop.md}
+          hitSlop={theme.hitSlop.sm}
+          accessibilityRole="button"
+          accessibilityLabel={t("common.close")}
         >
-          <X size={26} color={theme.colors.white} />
-        </TouchableOpacity>
+          <X size={18} color={theme.colors.text} />
+        </Pressable>
         <View style={styles.scorePill}>
           <Text style={styles.scoreText("A")}>{match.scoreA}</Text>
-          <Text style={styles.scoreDivider}>–</Text>
+          <Text style={styles.scoreDivider}>·</Text>
           <Text style={styles.scoreText("B")}>{match.scoreB}</Text>
         </View>
-        <TouchableOpacity
+        <Pressable
           style={styles.iconButton}
           onPress={handleUndo}
           disabled={!canUndo}
-          hitSlop={theme.hitSlop.md}
+          hitSlop={theme.hitSlop.sm}
+          accessibilityRole="button"
+          accessibilityLabel={t("match.undo")}
+          accessibilityState={{ disabled: !canUndo }}
         >
-          <RotateCcw size={22} color={canUndo ? theme.colors.white : theme.colors.grey500} />
-        </TouchableOpacity>
+          <Undo size={18} color={canUndo ? theme.colors.text : theme.colors.iconMuted} />
+        </Pressable>
       </View>
 
       <Text style={[styles.hint, invalidDrop && styles.hintError]}>{hint}</Text>
@@ -340,12 +344,11 @@ export function GamifiedMatchScreen() {
               {highlight ? (
                 <View style={styles.zoneHighlight(highlight)} pointerEvents="none" />
               ) : null}
-              <View style={styles.net(court)} pointerEvents="none">
-                {NET_BANDS.map((color, index) => (
-                  <View key={index} style={styles.netBand(color)} />
-                ))}
-                <Text style={styles.netLabel}>{t("court.net")}</Text>
-              </View>
+              <View
+                style={styles.net(court)}
+                pointerEvents="none"
+                accessibilityLabel={t("court.net")}
+              />
 
               {tokens.map((token) => {
                 const selected = token.player.id === selectedId || token.player.id === movingId
@@ -360,6 +363,7 @@ export function GamifiedMatchScreen() {
                       photoUri={token.player.photoUri}
                       size={TOKEN_SIZE}
                       selected={selected}
+                      tone={token.team === "A" ? "dark" : "yellow"}
                     />
                     <Text style={styles.tokenName(selected)} numberOfLines={1}>
                       {token.player.name}
@@ -375,19 +379,19 @@ export function GamifiedMatchScreen() {
                     y1={line.origin.y}
                     x2={line.current.x}
                     y2={line.current.y}
-                    stroke={theme.colors.primary}
-                    strokeWidth={4}
-                    strokeDasharray="10 8"
+                    stroke={theme.colors.dark}
+                    strokeWidth={3}
+                    strokeDasharray="1 7"
                     strokeLinecap="round"
                   />
-                  <Circle cx={line.origin.x} cy={line.origin.y} r={7} fill={theme.colors.white} />
+                  <Circle cx={line.origin.x} cy={line.origin.y} r={5} fill={theme.colors.dark} />
                   <Circle
                     cx={line.current.x}
                     cy={line.current.y}
                     r={11}
                     fill={theme.colors.primary}
                     stroke={theme.colors.dark}
-                    strokeWidth={3}
+                    strokeWidth={2}
                   />
                 </Svg>
               ) : null}
@@ -397,16 +401,11 @@ export function GamifiedMatchScreen() {
       </GestureDetector>
 
       {/* Always reserved, so the sheet (absolute) opening never resizes the arena. */}
-      <View style={{ height: insets.bottom }} />
+      <View style={styles.bottomSpacer} />
 
       {pending ? (
         <View
-          style={[
-            styles.sheet(sheetAnchor),
-            sheetAnchor === "bottom"
-              ? { paddingBottom: insets.bottom + theme.spacing.lg }
-              : { paddingTop: insets.top + theme.spacing.md },
-          ]}
+          style={styles.sheet(sheetAnchor)}
         >
           <Text style={styles.sheetTitle}>
             {t("gamified.pointFor", { name: pending.player.name })}
@@ -435,12 +434,14 @@ export function GamifiedMatchScreen() {
             </>
           ) : null}
           <View style={styles.sheetActions}>
-            <TouchableOpacity style={styles.cancelButton} onPress={handleCancelPending}>
-              <Text style={styles.cancelLabel}>{t("common.cancel")}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
-              <Text style={styles.confirmLabel}>{t("point.confirm")}</Text>
-            </TouchableOpacity>
+            <AppButton
+              label={t("common.cancel")}
+              variant="wash"
+              labelStyle="body"
+              onPress={handleCancelPending}
+              style={styles.cancelButton}
+            />
+            <AppButton label={t("point.confirm")} onPress={handleConfirm} style={styles.confirmButton} />
           </View>
         </View>
       ) : null}

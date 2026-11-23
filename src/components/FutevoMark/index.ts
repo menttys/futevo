@@ -1,0 +1,1 @@
+export { FutevoMark } from "./FutevoMark"

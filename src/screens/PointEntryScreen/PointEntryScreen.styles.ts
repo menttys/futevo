@@ -1,99 +1,147 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { IS_WEB, WEB_CONTENT } from "@/constants/Platform"
-
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  closeRow: {
-    ...WEB_CONTENT,
-    flexDirection: "row",
     justifyContent: "flex-end",
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.md,
+  },
+  scrim: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.colors.dark,
+    opacity: 0.5,
+  },
+  // The sheet slides up over the live score.
+  sheet: {
+    width: "100%",
+    maxWidth: 560,
+    alignSelf: "center",
+    maxHeight: "94%",
+    marginTop: rt.insets.top + 8,
+    backgroundColor: theme.colors.background,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: "hidden",
+  },
+  grabber: {
+    width: 44,
+    height: 5,
+    borderRadius: 3,
+    alignSelf: "center",
+    marginTop: 10,
+    backgroundColor: "rgba(10,17,31,0.28)",
   },
   content: {
-    ...WEB_CONTENT,
-    padding: theme.spacing.lg,
+    paddingHorizontal: theme.gutter,
+    paddingTop: 12,
+    paddingBottom: 12,
+    gap: 16,
   },
-  card: {
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.grey200,
-    padding: theme.spacing.lg,
-  },
-  title: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.lg,
-  },
-  sectionLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
-    marginBottom: theme.spacing.sm,
-  },
-  courtWrapper: {
-    maxWidth: 320,
-    alignSelf: "center",
-    width: "100%",
-    flexShrink: 1,
-  },
-  courtRow: (wide: boolean) => ({
-    flexDirection: wide ? "row" : "column",
-    alignItems: wide ? "stretch" : "center",
-    justifyContent: "center",
-    gap: theme.spacing.md,
-  }),
-  // Mirrors a court cell, but sits outside the court boundary.
-  outCell: (active: boolean, wide: boolean) => ({
-    width: wide ? 110 : "100%",
-    maxWidth: wide ? undefined : 320,
-    minHeight: 56,
-    borderRadius: theme.radius.sm,
-    borderWidth: 2,
-    borderStyle: "dashed",
-    borderColor: active ? theme.colors.dark : theme.colors.grey400,
-    backgroundColor: active ? theme.colors.primary : "transparent",
-    alignItems: "center",
-    justifyContent: "center",
-  }),
-  ballOutLabel: (active: boolean) => ({
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.md,
-    color: active ? theme.colors.dark : theme.colors.text,
-  }),
-  sectionSpacer: {
-    height: theme.spacing.lg,
-  },
-  playersRow: {
+  header: {
     flexDirection: "row",
-    gap: theme.spacing.md,
-  },
-  playerOption: {
     alignItems: "center",
-    gap: theme.spacing.xs,
+    justifyContent: "space-between",
+    gap: 12,
   },
-  playerName: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.xs,
+  headerText: {
+    flex: 1,
+  },
+  eyebrow: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 11,
+    letterSpacing: 1.1,
+    textTransform: "uppercase",
+    color: theme.colors.textMuted,
+  },
+  team: {
+    marginTop: 8,
+    fontFamily: theme.fonts.display,
+    fontSize: 19,
+    letterSpacing: -0.4,
     color: theme.colors.text,
   },
-  confirmButton: (enabled: boolean) => ({
-    backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: IS_WEB ? theme.spacing.xl : 0,
-    alignSelf: IS_WEB ? "flex-start" : "stretch",
+  preview: {
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: theme.radius.full,
+    backgroundColor: theme.colors.primary,
+  },
+  previewText: {
+    fontFamily: theme.fonts.display,
+    fontSize: 17.8,
+    letterSpacing: -0.35,
+    color: theme.colors.text,
+    fontVariant: ["tabular-nums"],
+  },
+  step: {
+    marginBottom: 8,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  note: {
+    marginTop: 7,
+    fontFamily: theme.fonts.regular,
+    fontSize: 11.5,
+    color: theme.colors.textMuted,
+    textAlign: "center",
+  },
+  ballOut: (selected: boolean) => ({
+    marginTop: 8,
     alignItems: "center",
+    paddingVertical: 12,
+    borderRadius: theme.radius.md,
+    backgroundColor: selected ? theme.colors.dark : theme.colors.wash,
   }),
-  confirmLabel: (enabled: boolean) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: enabled ? theme.colors.dark : theme.colors.textMuted,
+  ballOutLabel: (selected: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13.5,
+    color: selected ? theme.colors.white : theme.colors.text,
   }),
+  players: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  player: (selected: boolean, pressed: boolean) => ({
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 8,
+    paddingLeft: 8,
+    paddingRight: 12,
+    borderRadius: theme.radius.full,
+    backgroundColor: selected ? theme.colors.dark : theme.colors.card,
+    boxShadow: selected ? undefined : theme.shadows.card,
+    opacity: pressed ? 0.85 : 1,
+  }),
+  playerName: (selected: boolean) => ({
+    flex: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: selected ? theme.colors.white : theme.colors.text,
+  }),
+  footer: {
+    paddingHorizontal: theme.gutter,
+    paddingTop: 8,
+    paddingBottom: Math.max(rt.insets.bottom, 12) + 6,
+    gap: 4,
+  },
+  save: {
+    minHeight: 52,
+  },
+  cancel: {
+    alignSelf: "center",
+    padding: 6,
+  },
+  cancelLabel: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: theme.colors.text,
+  },
 }))

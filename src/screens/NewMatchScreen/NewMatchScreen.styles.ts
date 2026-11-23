@@ -1,15 +1,9 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { WEB_CONTENT } from "@/constants/Platform"
-
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
+    paddingTop: rt.insets.top,
     backgroundColor: theme.colors.background,
-  },
-  content: {
-    ...WEB_CONTENT,
-    flexGrow: 1,
-    padding: theme.spacing.lg,
   },
 }))

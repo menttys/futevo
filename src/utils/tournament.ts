@@ -1,4 +1,4 @@
-import type { Match, Player, TeamSide, Tournament } from "@/@types/futevo"
+import type { Match, Player, TeamSide, Tournament, TournamentEntry } from "@/@types/futevo"
 
 // Order-independent identity of a dupla.
 export function sortDupla(players: [Player["id"], Player["id"]]): [string, string] {
@@ -24,4 +24,36 @@ export function clubForSide(
 ): string | undefined {
   const club = findEntry(tournament, side === "A" ? match.teamA : match.teamB)?.club
   return club ?? (side === "A" ? match.teamNameA : match.teamNameB)
+}
+
+export type Standing = {
+  entry: TournamentEntry
+  wins: number
+  losses: number
+  // Points scored minus points conceded, completed matches only.
+  diff: number
+}
+
+// Table for a tournament: wins first, then point difference. Only completed matches count.
+export function computeStandings(tournament: Tournament, matches: Match[]): Standing[] {
+  const rows = new Map<string, Standing>(
+    tournament.entries.map((entry) => [duplaKey(entry.players), { entry, wins: 0, losses: 0, diff: 0 }])
+  )
+  for (const m of matches) {
+    if (m.tournamentId !== tournament.id || m.status !== "completed") continue
+    const a = rows.get(duplaKey(m.teamA))
+    const b = rows.get(duplaKey(m.teamB))
+    const aWon = m.winner ? m.winner === "A" : m.scoreA > m.scoreB
+    if (a) {
+      a.diff += m.scoreA - m.scoreB
+      if (aWon) a.wins += 1
+      else a.losses += 1
+    }
+    if (b) {
+      b.diff += m.scoreB - m.scoreA
+      if (aWon) b.losses += 1
+      else b.wins += 1
+    }
+  }
+  return [...rows.values()].sort((x, y) => y.wins - x.wins || y.diff - x.diff || x.losses - y.losses)
 }

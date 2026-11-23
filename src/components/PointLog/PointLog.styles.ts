@@ -3,32 +3,35 @@ import { StyleSheet } from "react-native-unistyles"
 export const styles = StyleSheet.create((theme) => ({
   root: {
     backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.lg,
-    paddingHorizontal: theme.spacing.md,
+    boxShadow: theme.shadows.card,
+    borderRadius: theme.radius.card,
+    paddingHorizontal: 14,
   },
-  row: {
+  row: (last: boolean) => ({
     flexDirection: "row",
     alignItems: "center",
-    gap: theme.spacing.sm,
-    paddingVertical: theme.spacing.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.grey200,
-  },
+    gap: 10,
+    paddingVertical: 11,
+    borderBottomWidth: last ? 0 : 1,
+    borderBottomColor: theme.colors.wash,
+  }),
+  // Home blue-black, Away deep purple.
   dot: (side: "A" | "B") => ({
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: side === "A" ? theme.colors.teamA : theme.colors.primary,
+    backgroundColor: side === "A" ? theme.colors.teamA : theme.colors.teamB,
   }),
   label: {
     flex: 1,
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.sm,
+    fontFamily: theme.fonts.regular,
+    fontSize: 13.5,
     color: theme.colors.text,
   },
   score: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 13,
+    color: theme.colors.text,
+    fontVariant: ["tabular-nums"],
   },
 }))

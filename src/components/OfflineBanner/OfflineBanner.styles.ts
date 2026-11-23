@@ -8,20 +8,21 @@ export const styles = StyleSheet.create((theme) => ({
     top: 0,
     zIndex: 100,
     alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: theme.spacing.md,
-    paddingBottom: theme.spacing.sm,
   },
-  offline: {
-    backgroundColor: theme.colors.dangerAlt,
-  },
-  syncing: {
-    backgroundColor: theme.colors.secondary,
+  banner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.primary,
+    boxShadow: theme.shadows.bar,
   },
   text: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.white,
-    textAlign: "center",
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: theme.colors.text,
   },
 }))

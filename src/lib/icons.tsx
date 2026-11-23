@@ -2,53 +2,71 @@ import React from "react"
 import { View } from "react-native"
 
 import {
+  ArrowUUpLeft as _ArrowUUpLeft,
+  Camera as _Camera,
+  CaretDown as _CaretDown,
+  CaretLeft as _CaretLeft,
+  CaretRight as _CaretRight,
   Check as _Check,
-  ChevronDown as _ChevronDown,
-  ChevronLeft as _ChevronLeft,
-  ChevronRight as _ChevronRight,
+  Flag as _Flag,
+  GoogleLogo as _GoogleLogo,
   House as _House,
-  LayoutDashboard as _LayoutDashboard,
-  LogOut as _LogOut,
-  Pencil as _Pencil,
+  type Icon,
+  type IconProps,
+  ListBullets as _ListBullets,
+  MagnifyingGlass as _MagnifyingGlass,
+  PencilSimple as _PencilSimple,
   Plus as _Plus,
-  RotateCcw as _RotateCcw,
-  Search as _Search,
-  Settings as _Settings,
-  Trash2 as _Trash2,
+  ShareNetwork as _ShareNetwork,
+  SignOut as _SignOut,
+  SlidersHorizontal as _SlidersHorizontal,
+  SquareSplitVertical as _SquareSplitVertical,
+  Trash as _Trash,
   Trophy as _Trophy,
   User as _User,
   Users as _Users,
+  WifiSlash as _WifiSlash,
   X as _X,
-  type LucideIcon,
-  type LucideProps,
-} from "lucide-react-native"
+} from "phosphor-react-native"
 
-function wrap(Icon: LucideIcon): LucideIcon {
-  const Wrapped = React.forwardRef<any, LucideProps>((props, _ref) => (
+// Phosphor · Regular. Active tab icons switch to `weight="fill"` at the call site.
+export type AppIcon = Icon
+export type AppIconProps = IconProps
+
+function wrap(Glyph: Icon): Icon {
+  const Wrapped = React.forwardRef<any, IconProps>((props, _ref) => (
     <View pointerEvents="none">
-      <Icon {...props} />
+      <Glyph weight="regular" {...props} />
     </View>
   ))
-  Wrapped.displayName = (Icon as any).displayName
-  return Wrapped as unknown as LucideIcon
+  Wrapped.displayName = (Glyph as any).displayName
+  return Wrapped as unknown as Icon
 }
 
-export const Check = wrap(_Check)
-export const ChevronDown = wrap(_ChevronDown)
-export const ChevronLeft = wrap(_ChevronLeft)
-export const ChevronRight = wrap(_ChevronRight)
+// Tab bar
 export const House = wrap(_House)
-export const LayoutDashboard = wrap(_LayoutDashboard)
-export const LogOut = wrap(_LogOut)
-export const Pencil = wrap(_Pencil)
-export const Plus = wrap(_Plus)
-export const RotateCcw = wrap(_RotateCcw)
-export const Search = wrap(_Search)
-export const Settings = wrap(_Settings)
-export const Trash2 = wrap(_Trash2)
-export const Trophy = wrap(_Trophy)
-export const User = wrap(_User)
+export const ListBullets = wrap(_ListBullets)
 export const Users = wrap(_Users)
-export const X = wrap(_X)
+export const SlidersHorizontal = wrap(_SlidersHorizontal)
 
-export type { LucideIcon, LucideProps }
+// Actions and navigation
+export const Camera = wrap(_Camera)
+export const Check = wrap(_Check)
+export const ChevronDown = wrap(_CaretDown)
+export const ChevronLeft = wrap(_CaretLeft)
+export const ChevronRight = wrap(_CaretRight)
+export const CourtMode = wrap(_SquareSplitVertical)
+export const Flag = wrap(_Flag)
+export const GoogleLogo = wrap(_GoogleLogo)
+export const LogOut = wrap(_SignOut)
+export const Pencil = wrap(_PencilSimple)
+export const Plus = wrap(_Plus)
+export const Search = wrap(_MagnifyingGlass)
+export const Share = wrap(_ShareNetwork)
+export const Trash2 = wrap(_Trash)
+export const Trophy = wrap(_Trophy)
+export const Undo = wrap(_ArrowUUpLeft)
+export const RotateCcw = Undo
+export const User = wrap(_User)
+export const WifiSlash = wrap(_WifiSlash)
+export const X = wrap(_X)

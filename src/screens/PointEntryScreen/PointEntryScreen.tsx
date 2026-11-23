@@ -1,40 +1,35 @@
 import React, { useState } from "react"
-import { ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native"
+import { Pressable, ScrollView, Text, View } from "react-native"
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
-import { useUnistyles } from "react-native-unistyles"
 
 import type { AttackTypeId, CourtZone, Player, TeamSide } from "@/@types/futevo"
+import { AppButton } from "@/components/AppButton"
 import { AttackTypePicker } from "@/components/AttackTypePicker"
 import { CourtGrid } from "@/components/CourtGrid"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { useMatches } from "@/hooks/useMatches"
-import { X } from "@/lib/icons"
+import { useLanguage } from "@/i18n"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
-import { useTabBarInset } from "@/hooks/useTabBarInset"
-import { useLanguage } from "@/i18n"
+import { useTournamentStore } from "@/store/tournamentState"
+import { firstName, sideLabel } from "@/utils/matchLabels"
 
 import { styles } from "./PointEntryScreen.styles"
 
 type NavigationProp = StackNavigationProp<MatchesStackParamList, "PointEntry">
 type PointEntryRouteProp = RouteProp<MatchesStackParamList, "PointEntry">
 
+// Three taps: where it landed, which attack, who scored. A sheet over the live score.
 export function PointEntryScreen() {
-  const { theme } = useUnistyles()
   const { t } = useLanguage()
-  const insets = useSafeAreaInsets()
-  const tabBarInset = useTabBarInset()
-  const { width } = useWindowDimensions()
-  // Wide screens put the "out" square beside the court, phones put it below.
-  const wide = width >= 600
   const navigation = useNavigation<NavigationProp>()
   const { matchId, team } = useRoute<PointEntryRouteProp>().params
   const allPlayers = usePlayerStore((s) => s.players) ?? []
   const match = useMatchStore((s) => s.matches?.find((m) => m.id === matchId))
+  const tournament = useTournamentStore((s) => s.tournaments?.find((tr) => tr.id === match?.tournamentId))
   const { addPoint } = useMatches()
 
   const [zone, setZone] = useState<CourtZone | undefined>()
@@ -45,18 +40,19 @@ export function PointEntryScreen() {
   if (!match) return null
 
   const teamIds = team === "A" ? match.teamA : match.teamB
-  const teamPlayers = teamIds
-    .map((id) => allPlayers.find((p) => p.id === id))
-    .filter((p): p is Player => !!p)
+  const teamPlayers = teamIds.map((id) => allPlayers.find((p) => p.id === id)).filter((p): p is Player => !!p)
+  const playerName = (id: string) => allPlayers.find((p) => p.id === id)?.name ?? t("common.unknownPlayer")
+  const teamName = sideLabel(match, tournament, team, playerName)
 
   // The point is decided on the opposing half, so that's the only court shown.
   const opponent: TeamSide = team === "A" ? "B" : "A"
   // Attack type is optional: without one the point is logged as a plain attack.
   // A scorer is required for in-court points whenever the team has known players.
   const needsPlayer = teamPlayers.length > 0
-  const canConfirm =
-    ballOut ||
-    (zone !== undefined && (!needsPlayer || !!scoringPlayerId))
+  const canConfirm = ballOut || (zone !== undefined && (!needsPlayer || !!scoringPlayerId))
+
+  const nextA = match.scoreA + (team === "A" ? 1 : 0)
+  const nextB = match.scoreB + (team === "B" ? 1 : 0)
 
   const handleSelectZone = (nextZone: CourtZone) => {
     setBallOut(false)
@@ -86,83 +82,85 @@ export function PointEntryScreen() {
   }
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top }]}>
-      <View style={styles.closeRow}>
-        <TouchableOpacity onPress={() => navigation.goBack()} hitSlop={theme.hitSlop.md}>
-          <X size={26} color={theme.colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          { paddingBottom: tabBarInset + theme.spacing.lg },
-        ]}
-        showsVerticalScrollIndicator={false}
-      >
-        <Text style={styles.title}>{t("point.title", { team })}</Text>
-
-        <View style={styles.card}>
-          <Text style={styles.sectionLabel}>{t("point.whereLanded", { team: opponent })}</Text>
-          <View style={styles.courtRow(wide)}>
-            <View style={styles.courtWrapper}>
-              <CourtGrid side={opponent} selectedZone={zone} onSelectZone={handleSelectZone} />
+    <View style={styles.root}>
+      <Pressable
+        style={styles.scrim}
+        onPress={() => navigation.goBack()}
+        accessibilityRole="button"
+        accessibilityLabel={t("common.cancel")}
+      />
+      <View style={styles.sheet}>
+        <View style={styles.grabber} />
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <View style={styles.headerText}>
+              <Text style={styles.eyebrow}>{t("point.pointFor")}</Text>
+              <Text style={styles.team} numberOfLines={1}>
+                {teamName}
+              </Text>
             </View>
-            <TouchableOpacity
-              style={styles.outCell(ballOut, wide)}
-              onPress={handleToggleBallOut}
-              activeOpacity={0.85}
+            <View style={styles.preview}>
+              <Text style={styles.previewText}>{`${nextA}–${nextB}`}</Text>
+            </View>
+          </View>
+
+          <View>
+            <Text style={styles.step}>{t("point.stepWhere")}</Text>
+            <CourtGrid side={opponent} selectedZone={zone} onSelectZone={handleSelectZone} />
+            <Text style={styles.note}>{t("point.courtNote")}</Text>
+            <Pressable
               accessibilityRole="button"
+              accessibilityState={{ selected: ballOut }}
+              onPress={handleToggleBallOut}
+              style={styles.ballOut(ballOut)}
             >
               <Text style={styles.ballOutLabel(ballOut)}>{t("point.ballOut")}</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
-        </View>
 
-        <View style={styles.sectionSpacer} />
-
-        {ballOut ? null : (
-          <>
-            <Text style={styles.sectionLabel}>{t("point.attackType")}</Text>
-            <AttackTypePicker
-              selected={attackType}
-              onSelect={(next) => setAttackType((current) => (current === next ? undefined : next))}
-            />
-          </>
-        )}
-
-        {!ballOut && teamPlayers.length > 0 ? (
-          <>
-            <View style={styles.sectionSpacer} />
-            <Text style={styles.sectionLabel}>{t("point.whoScored")}</Text>
-            <View style={styles.playersRow}>
-              {teamPlayers.map((player) => (
-                <TouchableOpacity
-                  key={player.id}
-                  style={styles.playerOption}
-                  onPress={() =>
-                    setScoringPlayerId((current) => (current === player.id ? undefined : player.id))
-                  }
-                >
-                  <PlayerAvatar name={player.name} selected={scoringPlayerId === player.id} />
-                  <Text style={styles.playerName}>{player.name}</Text>
-                </TouchableOpacity>
-              ))}
+          {ballOut ? null : (
+            <View>
+              <Text style={styles.step}>{t("point.stepAttack")}</Text>
+              <AttackTypePicker
+                selected={attackType}
+                onSelect={(next) => setAttackType((current) => (current === next ? undefined : next))}
+              />
             </View>
-          </>
-        ) : null}
+          )}
 
-        <View style={styles.sectionSpacer} />
+          {!ballOut && teamPlayers.length > 0 ? (
+            <View>
+              <Text style={styles.step}>{t("point.stepWho")}</Text>
+              <View style={styles.players}>
+                {teamPlayers.map((player) => {
+                  const selected = scoringPlayerId === player.id
+                  return (
+                    <Pressable
+                      key={player.id}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      onPress={() => setScoringPlayerId((current) => (current === player.id ? undefined : player.id))}
+                      style={({ pressed }) => styles.player(selected, pressed)}
+                    >
+                      <PlayerAvatar name={player.name} photoUri={player.photoUri} size={32} />
+                      <Text style={styles.playerName(selected)} numberOfLines={1}>
+                        {firstName(player.name)}
+                      </Text>
+                    </Pressable>
+                  )
+                })}
+              </View>
+            </View>
+          ) : null}
+        </ScrollView>
 
-        <TouchableOpacity
-          style={styles.confirmButton(canConfirm)}
-          onPress={handleConfirm}
-          disabled={!canConfirm}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.confirmLabel(canConfirm)}>{t("point.confirm")}</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        <View style={styles.footer}>
+          <AppButton label={t("point.save")} disabled={!canConfirm} onPress={handleConfirm} style={styles.save} />
+          <Pressable accessibilityRole="button" onPress={() => navigation.goBack()} style={styles.cancel}>
+            <Text style={styles.cancelLabel}>{t("common.cancel")}</Text>
+          </Pressable>
+        </View>
+      </View>
     </View>
   )
 }

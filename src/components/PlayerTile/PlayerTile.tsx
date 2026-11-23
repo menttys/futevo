@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { Pressable, Text, View } from "react-native"
 
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 
@@ -8,23 +8,23 @@ import { styles } from "./PlayerTile.styles"
 
 export function PlayerTile({ player, onPress, selected = false, badgeLabel, badgeColor }: PlayerTileProps) {
   return (
-    <TouchableOpacity style={styles.tile(selected)} activeOpacity={0.7} onPress={onPress}>
+    <Pressable accessibilityRole="button" accessibilityState={{ selected }} style={styles.tile(selected)} onPress={onPress}>
       <View>
         <PlayerAvatar
           name={player.name}
           photoUri={player.photoUri || undefined}
-          size={40}
-          selected={selected}
+          size={36}
+          tone="yellow"
         />
         {badgeLabel && badgeColor ? (
           <View style={styles.badge(badgeColor)}>
-            <Text style={styles.badgeText}>{badgeLabel}</Text>
+            <Text style={styles.badgeText(badgeColor)}>{badgeLabel}</Text>
           </View>
         ) : null}
       </View>
       <Text style={styles.name} numberOfLines={1}>
         {player.name}
       </Text>
-    </TouchableOpacity>
+    </Pressable>
   )
 }

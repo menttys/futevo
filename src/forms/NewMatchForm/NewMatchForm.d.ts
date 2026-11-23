@@ -4,6 +4,7 @@ export type NewMatchFormSubmit = {
   teamA: [string, string]
   teamB: [string, string]
   targetScore: number
+  winBy: number
   tournamentId?: string
   // Set instead of tournamentId when the user creates a tournament inline.
   newTournament?: { name: string; location?: string; date?: string }

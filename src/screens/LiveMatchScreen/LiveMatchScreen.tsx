@@ -1,46 +1,40 @@
 import React, { useEffect } from "react"
-import { ScrollView, Text, TouchableOpacity, View } from "react-native"
+import { Pressable, ScrollView, Text, View } from "react-native"
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
-import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useUnistyles } from "react-native-unistyles"
 
-import type { Player } from "@/@types/futevo"
-import { PointLog } from "@/components/PointLog"
+import type { TeamSide } from "@/@types/futevo"
+import { AppButton } from "@/components/AppButton"
+import { MeshBackground } from "@/components/MeshBackground"
 import { ScoreBoard } from "@/components/ScoreBoard"
+import { ScreenHeader } from "@/components/ScreenHeader"
 import { useMatches } from "@/hooks/useMatches"
-import { RotateCcw, Trophy } from "@/lib/icons"
+import { useLanguage } from "@/i18n"
+import { CourtMode, Flag, Undo } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
-import { clubForSide } from "@/utils/tournament"
-import { useTabBarInset } from "@/hooks/useTabBarInset"
-import { useLanguage } from "@/i18n"
+import { firstName, pointSummary, sideLabel } from "@/utils/matchLabels"
 
 import { styles } from "./LiveMatchScreen.styles"
 
 type NavigationProp = StackNavigationProp<MatchesStackParamList, "LiveMatch">
 type LiveMatchRouteProp = RouteProp<MatchesStackParamList, "LiveMatch">
 
-function playersById(players: Player[], ids: string[]): Player[] {
-  return ids.map((id) => players.find((p) => p.id === id)).filter((p): p is Player => !!p)
-}
+const RECENT_POINTS = 6
 
 export function LiveMatchScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
-  const insets = useSafeAreaInsets()
-  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<LiveMatchRouteProp>().params
-  const players = usePlayerStore((s) => s.players) ?? []
+  const players = usePlayerStore((s) => s.players)
   const match = useMatchStore((s) => s.matches?.find((m) => m.id === matchId))
-  const tournament = useTournamentStore((s) =>
-    s.tournaments?.find((t) => t.id === match?.tournamentId)
-  )
+  const tournament = useTournamentStore((s) => s.tournaments?.find((tr) => tr.id === match?.tournamentId))
   const { undoLastPoint, finishMatch } = useMatches()
 
   useEffect(() => {
@@ -51,8 +45,9 @@ export function LiveMatchScreen() {
 
   if (!match) return null
 
-  const teamAPlayers = playersById(players, match.teamA)
-  const teamBPlayers = playersById(players, match.teamB)
+  const playerName = (id: string) => players?.find((p) => p.id === id)?.name ?? t("common.unknownPlayer")
+  const homeName = sideLabel(match, tournament, "A", playerName)
+  const awayName = sideLabel(match, tournament, "B", playerName)
 
   const handleFinish = () => {
     confirmAction({
@@ -72,66 +67,93 @@ export function LiveMatchScreen() {
     })
   }
 
+  const scorePoint = (team: TeamSide) => navigation.navigate("PointEntry", { matchId: match.id, team })
   const canUndo = match.points.length > 0
+  const recent = match.points.slice(-RECENT_POINTS).reverse()
 
   return (
-    <View style={[styles.root, { paddingTop: insets.top + theme.spacing.md }]}>
-      <View>
-        <Text style={styles.targetLabel}>
-          {t("match.firstTo", { target: match.targetScore, winBy: match.winBy })}
-        </Text>
-      </View>
-
-      <ScoreBoard
-        teamAPlayers={teamAPlayers}
-        teamBPlayers={teamBPlayers}
-        scoreA={match.scoreA}
-        scoreB={match.scoreB}
-        clubA={clubForSide(match, tournament, "A")}
-        clubB={clubForSide(match, tournament, "B")}
-        onScorePoint={(team) => navigation.navigate("PointEntry", { matchId: match.id, team })}
+    <View style={styles.root}>
+      <MeshBackground />
+      <ScreenHeader
+        title={t("common.live")}
+        onBack={() => navigation.goBack()}
+        backLabel={t("common.back")}
+        right={
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => navigation.navigate("GamifiedMatch", { matchId: match.id })}
+            style={styles.courtMode}
+          >
+            <CourtMode size={16} color={theme.colors.text} />
+            <Text style={styles.courtModeLabel}>{t("gamified.courtMode")}</Text>
+          </Pressable>
+        }
       />
 
-      <View style={styles.logHeader}>
-        <Text style={styles.logTitle}>{t("match.pointLog")}</Text>
-      </View>
-      <ScrollView
-        style={styles.logScroll}
-        contentContainerStyle={styles.logContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <PointLog points={match.points} teamA={teamAPlayers} teamB={teamBPlayers} />
+      <ScrollView contentContainerStyle={styles.content}>
+        <ScoreBoard
+          homeName={homeName}
+          awayName={awayName}
+          scoreA={match.scoreA}
+          scoreB={match.scoreB}
+          leftNote={t("match.pointsPlayed", { count: match.points.length })}
+          rightNote={t("match.firstTo", { target: match.targetScore, winBy: match.winBy })}
+        />
+
+        {(["A", "B"] as const).map((side) => (
+          <Pressable
+            key={side}
+            accessibilityRole="button"
+            onPress={() => scorePoint(side)}
+            style={({ pressed }) => styles.pointButton(side === "B", pressed)}
+          >
+            <Text style={styles.pointHint}>{t("match.tapToScore")}</Text>
+            <Text style={styles.pointLabel} numberOfLines={1}>
+              {t("match.pointFor", { team: side === "A" ? homeName : awayName })}
+            </Text>
+          </Pressable>
+        ))}
+
+        <View style={styles.actions}>
+          <AppButton
+            label={t("match.undo")}
+            variant="wash"
+            labelStyle="body"
+            disabled={!canUndo}
+            onPress={handleUndo}
+            icon={<Undo size={18} color={theme.colors.text} />}
+            style={styles.action}
+          />
+          <AppButton
+            label={t("match.finish")}
+            variant="outline"
+            labelStyle="body"
+            onPress={handleFinish}
+            icon={<Flag size={18} color={theme.colors.text} />}
+            style={styles.finish}
+          />
+        </View>
+
+        {recent.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+            {recent.map((point) => {
+              const scorer = point.scoringPlayerId ? playerName(point.scoringPlayerId) : undefined
+              const how = point.ballOut
+                ? t("match.ballOut")
+                : point.attackType
+                  ? t(`attackTypes.${point.attackType}`)
+                  : undefined
+              return (
+                <View key={point.id} style={styles.chip}>
+                  <Text style={styles.chipLabel}>
+                    {pointSummary(point, [scorer ? firstName(scorer) : undefined, how])}
+                  </Text>
+                </View>
+              )
+            })}
+          </ScrollView>
+        ) : null}
       </ScrollView>
-
-      <View style={styles.actions}>
-        <TouchableOpacity
-          style={[styles.actionButton, styles.courtModeButton]}
-          onPress={() => navigation.navigate("GamifiedMatch", { matchId: match.id })}
-          activeOpacity={0.85}
-        >
-          <Text style={styles.courtModeLabel}>{t("gamified.courtMode")}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={[styles.actions, { marginBottom: tabBarInset }]}>
-        <TouchableOpacity
-          style={[styles.actionButton, !canUndo && styles.actionButtonDisabled]}
-          onPress={handleUndo}
-          disabled={!canUndo}
-          activeOpacity={0.85}
-        >
-          <RotateCcw size={16} color={theme.colors.text} />
-          <Text style={styles.actionButtonLabel}>{t("match.undo")}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.actionButton, styles.finishButton]}
-          onPress={handleFinish}
-          activeOpacity={0.85}
-        >
-          <Trophy size={16} color={theme.colors.danger} />
-          <Text style={[styles.actionButtonLabel, styles.finishLabel]}>{t("match.finish")}</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   )
 }

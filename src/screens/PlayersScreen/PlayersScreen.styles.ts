@@ -1,98 +1,56 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { IS_WEB, WEB_CONTENT, WEB_SIDE_BAR_MIN_WIDTH } from "@/constants/Platform"
+import { WEB_CONTENT } from "@/constants/Platform"
 
-export const styles = StyleSheet.create((theme, rt) => ({
+export const styles = StyleSheet.create((theme) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  toolbar: {
+  header: {
     ...WEB_CONTENT,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.sm,
-    padding: theme.spacing.md,
+    paddingHorizontal: theme.gutter,
+    gap: 12,
   },
-  searchField: {
+  title: {
+    paddingHorizontal: 0,
+    paddingBottom: 0,
+  },
+  total: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: theme.colors.textMuted,
+  },
+  chips: {
+    gap: 8,
+  },
+  listWrapper: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.sm,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.md,
-    paddingHorizontal: theme.spacing.md,
   },
-  searchInput: {
-    flex: 1,
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.text,
-    paddingVertical: theme.spacing.sm,
+  listContent: {
+    ...WEB_CONTENT,
+    paddingHorizontal: theme.gutter,
+    paddingTop: 4,
   },
-  addButton: {
-    width: 44,
-    height: 44,
+  letter: {
+    paddingTop: 12,
+    paddingBottom: 8,
+  },
+  item: {
+    paddingBottom: 9,
+  },
+  // Yellow floating + above the tab bar.
+  fab: (tabBarInset: number, pressed: boolean) => ({
+    position: "absolute",
+    right: theme.gutter,
+    bottom: tabBarInset + 12,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius.md,
-  },
-  chipsWrapper: {
-    ...WEB_CONTENT,
-  },
-  chips: {
-    gap: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
-    paddingBottom: theme.spacing.md,
-  },
-  chip: (active: boolean) => ({
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: theme.spacing.xs,
-    backgroundColor: active ? theme.colors.primary : theme.colors.surface,
-    borderRadius: theme.radius.lg,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
+    boxShadow: theme.shadows.bar,
+    opacity: pressed ? 0.85 : 1,
   }),
-  chipFlag: {
-    fontSize: theme.typography.size.sm,
-    lineHeight: theme.typography.size.md,
-    includeFontPadding: false,
-  },
-  chipLabel: (active: boolean) => ({
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    lineHeight: theme.typography.size.md,
-    includeFontPadding: false,
-    color: active ? theme.colors.dark : theme.colors.text,
-  }),
-  listWrapper: {
-    ...WEB_CONTENT,
-    flex: 1,
-    paddingHorizontal:
-      IS_WEB && rt.screen.width < WEB_SIDE_BAR_MIN_WIDTH ? theme.spacing.md - theme.spacing.xs : 0,
-  },
-  listContent: {
-    paddingHorizontal: theme.spacing.md - theme.spacing.xs,
-    paddingBottom: theme.spacing.xl,
-  },
-  tileWrapper: {
-    flex: 1,
-    padding: theme.spacing.xs,
-  },
-  flag: {
-    position: "absolute",
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-    fontSize: theme.typography.size.lg,
-  },
-  // Small screens: a small flag sitting on the bottom-right edge of the 40px avatar.
-  flagOnAvatar: {
-    position: "absolute",
-    top: theme.spacing.xs + 2 + theme.spacing.sm + 40 - 14,
-    left: theme.spacing.xs + 2 + theme.spacing.sm + 40 - 12,
-    fontSize: theme.typography.size.xs,
-  },
 }))

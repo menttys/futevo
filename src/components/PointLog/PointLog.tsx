@@ -22,7 +22,7 @@ export function PointLog({ points, teamA, teamB }: PointLogProps) {
             ? undefined
             : t("match.defaultAttack")
         return (
-          <View key={point.id} style={styles.row}>
+          <View key={point.id} style={styles.row(index === points.length - 1)}>
             <View style={styles.dot(point.team)} />
             <Text style={styles.label}>
               {t("match.pointLogEntry", {
@@ -34,7 +34,7 @@ export function PointLog({ points, teamA, teamB }: PointLogProps) {
               {scorer ? ` · ${scorer.name}` : ""}
             </Text>
             <Text style={styles.score}>
-              {point.scoreAAfter}-{point.scoreBAfter}
+              {point.scoreAAfter}–{point.scoreBAfter}
             </Text>
           </View>
         )

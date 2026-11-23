@@ -11,15 +11,16 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.spacing.md,
   },
   toast: {
-    backgroundColor: theme.colors.dark,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.full,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    boxShadow: theme.shadows.bar,
   },
   text: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.white,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: theme.colors.text,
     textAlign: "center",
   },
 }))

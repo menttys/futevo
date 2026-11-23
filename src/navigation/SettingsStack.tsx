@@ -12,19 +12,13 @@ import { SettingsStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<SettingsStackParamList>()
 
-const HEADER_OPTS = ({ navigation }: { navigation: { canGoBack: () => boolean } }) => ({
-  // On web the root screen has no header; nested screens get one with a back button.
-  headerShown: !IS_WEB || navigation.canGoBack(),
-  headerStyle: IS_WEB
-    ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
-    : { backgroundColor: theme.colors.primary },
-  headerTitle: IS_WEB ? "" : undefined,
+// Every screen draws its own design header (back button + Unbounded title).
+const HEADER_OPTS = {
+  headerShown: false,
   // "float" stops the stack from letting the page body scroll (hidden on web), which froze ScrollViews.
   headerMode: IS_WEB ? ("float" as const) : undefined,
-  headerTintColor: theme.colors.dark,
-  headerTitleStyle: { color: theme.colors.dark },
   cardStyle: { backgroundColor: theme.colors.background },
-})
+}
 
 export function SettingsStack() {
   const { t } = useLanguage()

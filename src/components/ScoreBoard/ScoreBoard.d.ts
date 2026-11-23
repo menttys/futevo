@@ -1,12 +1,9 @@
-import type { Player, TeamSide } from "@/@types/futevo"
-
 export type ScoreBoardProps = {
-  teamAPlayers: Player[]
-  teamBPlayers: Player[]
+  homeName: string
+  awayName: string
   scoreA: number
   scoreB: number
-  clubA?: string
-  clubB?: string
-  onScorePoint: (team: TeamSide) => void
-  disabled?: boolean
+  // Bottom line, left and right (e.g. "18 points" · "to 18 · win by 2").
+  leftNote?: string
+  rightNote?: string
 }

@@ -2,102 +2,102 @@ import { StyleSheet } from "react-native-unistyles"
 
 import type { CourtRect } from "@/utils/courtGesture"
 
-export const TOKEN_SIZE = 48
+export const TOKEN_SIZE = 44
 export const COURT_MARGIN = 36
-const CELL_GAP = 1.5
+const CELL_GAP = 3
 
-export const styles = StyleSheet.create((theme) => ({
+// Court mode: the court is the interface. Cream zones, a blue-black net, the ball's flight as a dotted trail.
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
-    backgroundColor: theme.colors.dark,
+    paddingTop: rt.insets.top,
+    backgroundColor: theme.colors.background,
   },
   topBar: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: theme.spacing.md,
+    paddingHorizontal: theme.gutter,
+    paddingTop: 6,
     paddingBottom: theme.spacing.sm,
   },
   iconButton: {
-    width: 40,
-    height: 40,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: theme.colors.wash,
   },
+  // Floating score pill: Home blue-black, Away deep purple.
   scorePill: {
     flexDirection: "row",
     alignItems: "center",
-    gap: theme.spacing.md,
+    gap: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 8,
+    borderRadius: theme.radius.full,
+    backgroundColor: theme.colors.butter,
   },
   scoreText: (team: "A" | "B") => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.xl,
-    color: team === "A" ? theme.colors.white : theme.colors.primary,
+    fontFamily: theme.fonts.display,
+    fontSize: 15,
+    color: team === "A" ? theme.colors.text : theme.colors.purple,
+    fontVariant: ["tabular-nums"],
   }),
   scoreDivider: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.lg,
-    color: theme.colors.grey400,
+    fontFamily: theme.fonts.display,
+    fontSize: 15,
+    color: theme.colors.text,
   },
   hint: {
     textAlign: "center",
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.grey300,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: theme.colors.text,
     paddingHorizontal: theme.spacing.lg,
     paddingBottom: theme.spacing.sm,
     // Reserve two lines so a longer hint never shifts the court under the user's finger.
-    lineHeight: 20,
-    minHeight: 20 * 2 + theme.spacing.sm,
+    lineHeight: 18,
+    minHeight: 18 * 2 + theme.spacing.sm,
   },
   hintError: {
-    color: theme.colors.secondary,
+    color: theme.colors.danger,
   },
   arena: {
     flex: 1,
   },
-  // One slightly rounded square per zone; the inset leaves a thin gap that reads as the court lines.
+  // One cream tile per zone; the gap between tiles reads as the court lines.
   cell: (rect: CourtRect) => ({
     position: "absolute",
     left: rect.x + CELL_GAP,
     top: rect.y + CELL_GAP,
     width: rect.width - CELL_GAP * 2,
     height: rect.height - CELL_GAP * 2,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.grey800,
+    borderRadius: 10,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
   }),
   net: (rect: CourtRect) => ({
     position: "absolute",
-    left: rect.x,
-    width: rect.width,
-    top: rect.y + rect.height / 2 - 11,
-    height: 22,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
+    left: rect.x - 4,
+    width: rect.width + 8,
+    top: rect.y + rect.height / 2 - 3,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: theme.colors.dark,
   }),
-  netBand: (color: string) => ({
-    flex: 1,
-    alignSelf: "stretch",
-    backgroundColor: color,
-  }),
-  netLabel: {
-    position: "absolute",
-    fontFamily: "Figtree_700Bold",
-    fontSize: 10,
-    letterSpacing: 2,
-    color: theme.colors.dark,
-  },
+  // The landing zone turns brand yellow.
   zoneHighlight: (rect: CourtRect) => ({
     position: "absolute",
     left: rect.x + CELL_GAP,
     top: rect.y + CELL_GAP,
     width: rect.width - CELL_GAP * 2,
     height: rect.height - CELL_GAP * 2,
-    borderRadius: theme.radius.sm,
+    borderRadius: 10,
     backgroundColor: theme.colors.primary,
-    opacity: 0.4,
+    borderWidth: 1.5,
+    borderColor: theme.colors.dark,
   }),
   overlay: {
     position: "absolute",
@@ -115,10 +115,14 @@ export const styles = StyleSheet.create((theme) => ({
   }),
   tokenName: (selected: boolean) => ({
     marginTop: 2,
-    fontFamily: "Figtree_600SemiBold",
+    fontFamily: selected ? theme.fonts.bold : theme.fonts.semibold,
     fontSize: theme.typography.size.xs,
-    color: selected ? theme.colors.primary : theme.colors.white,
+    color: theme.colors.text,
   }),
+  // Always reserved, so the sheet (absolute) opening never resizes the arena.
+  bottomSpacer: {
+    height: rt.insets.bottom,
+  },
   // Docks on whichever edge is farther from where the ball landed, so the landing spot stays visible.
   sheet: (anchor: "top" | "bottom") => ({
     position: "absolute",
@@ -127,59 +131,49 @@ export const styles = StyleSheet.create((theme) => ({
     ...(anchor === "bottom"
       ? {
           bottom: 0,
-          borderTopLeftRadius: theme.radius.xl,
-          borderTopRightRadius: theme.radius.xl,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          paddingBottom: rt.insets.bottom + theme.spacing.lg,
         }
       : {
           top: 0,
-          borderBottomLeftRadius: theme.radius.xl,
-          borderBottomRightRadius: theme.radius.xl,
+          borderBottomLeftRadius: 20,
+          borderBottomRightRadius: 20,
+          paddingTop: rt.insets.top + theme.spacing.md,
         }),
-    backgroundColor: theme.colors.card,
-    padding: theme.spacing.lg,
-    gap: theme.spacing.sm,
+    backgroundColor: theme.colors.background,
+    boxShadow: theme.shadows.bar,
+    paddingHorizontal: theme.gutter,
+    paddingVertical: theme.spacing.lg,
+    gap: 10,
   }),
   sheetTitle: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
+    fontFamily: theme.fonts.display,
+    fontSize: 19,
+    letterSpacing: -0.4,
     color: theme.colors.text,
   },
   sheetSubtitle: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.sm,
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
     color: theme.colors.textMuted,
   },
   sheetLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
   },
   sheetActions: {
     flexDirection: "row",
     gap: theme.spacing.sm,
+    marginTop: 4,
   },
   cancelButton: {
     flex: 1,
-    alignItems: "center",
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.grey600,
-  },
-  cancelLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.text,
   },
   confirmButton: {
     flex: 2,
-    alignItems: "center",
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.primary,
-  },
-  confirmLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.dark,
   },
 }))

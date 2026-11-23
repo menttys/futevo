@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { IS_WEB, WEB_CONTENT } from "@/constants/Platform"
+import { WEB_CONTENT } from "@/constants/Platform"
 
 export const styles = StyleSheet.create((theme) => ({
   root: {
@@ -9,68 +9,86 @@ export const styles = StyleSheet.create((theme) => ({
   },
   content: {
     ...WEB_CONTENT,
-    padding: theme.spacing.lg,
+    paddingHorizontal: theme.gutter,
+    gap: 14,
   },
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.lg,
-    padding: theme.spacing.lg,
-    gap: theme.spacing.lg,
+  title: {
+    paddingHorizontal: 0,
+    paddingBottom: 0,
   },
-  profileRow: {
+  // Light yellow to butter gradient profile card with a yellow mark watermark.
+  profile: {
     flexDirection: "row",
     alignItems: "center",
-    gap: theme.spacing.md,
+    gap: 14,
+    padding: 16,
+    borderRadius: theme.radius.lg,
+    overflow: "hidden",
+  },
+  profileMark: {
+    position: "absolute",
+    right: -20,
+    top: -26,
+    opacity: 0.55,
+  },
+  profileText: {
+    flex: 1,
+    minWidth: 0,
   },
   name: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 14,
+    letterSpacing: -0.3,
     color: theme.colors.text,
   },
   email: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
+    marginTop: 7,
+    fontFamily: theme.fonts.regular,
+    fontSize: 12.5,
+    color: theme.colors.text,
   },
-  sectionLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
-    marginBottom: theme.spacing.sm,
+  label: {
+    marginBottom: 6,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
   },
-  languageRow: {
+  card: {
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  row: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm,
-  },
-  languageChip: (selected: boolean) => ({
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: selected ? theme.colors.primary : theme.colors.grey300,
-    backgroundColor: selected ? theme.colors.primary : "transparent",
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
-  }),
-  languageLabel: (selected: boolean) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: selected ? theme.colors.dark : theme.colors.text,
-  }),
-  signOutButton: {
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.danger,
-    paddingVertical: IS_WEB ? theme.spacing.sm : theme.spacing.md,
-    paddingHorizontal: IS_WEB ? theme.spacing.md : 0,
-    alignSelf: IS_WEB ? "flex-start" : "stretch",
     alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 13,
+  },
+  rowText: {
+    flex: 1,
+  },
+  rowTitle: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 15,
+    color: theme.colors.text,
+  },
+  rowSubtitle: {
+    marginTop: 2,
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.textMuted,
+  },
+  signOut: {
+    backgroundColor: theme.colors.wash,
+  },
+  tape: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: theme.spacing.sm,
-  },
-  signOutLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.danger,
+    gap: 4,
+    opacity: 0.8,
+    paddingTop: 2,
   },
 }))

@@ -2,105 +2,133 @@ import { StyleSheet } from "react-native-unistyles"
 
 import { WEB_CONTENT } from "@/constants/Platform"
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
+    paddingTop: rt.insets.top,
     backgroundColor: theme.colors.background,
+  },
+  iconButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.colors.wash,
   },
   content: {
     ...WEB_CONTENT,
-    padding: theme.spacing.lg,
-    paddingBottom: theme.spacing.xxl,
-    gap: theme.spacing.lg,
+    paddingHorizontal: theme.gutter,
+    gap: 12,
   },
-  backButton: {
-    paddingHorizontal: theme.spacing.md,
-  },
-  winnerBanner: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: theme.spacing.sm,
+  // Result card: brand yellow, cropped mark, the score as supergraphic.
+  result: {
     backgroundColor: theme.colors.primary,
     borderRadius: theme.radius.lg,
-    padding: theme.spacing.md,
+    paddingHorizontal: 18,
+    paddingTop: 16,
+    paddingBottom: 18,
+    overflow: "hidden",
   },
-  winnerText: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.dark,
+  watermark: {
+    position: "absolute",
+    right: -30,
+    top: -34,
+    opacity: 0.1,
   },
-  resultCard: {
+  metaRow: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    gap: theme.spacing.md,
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.grey200,
-    padding: theme.spacing.lg,
+    gap: 8,
   },
-  tabBar: {
-    flexDirection: "row",
-    backgroundColor: theme.colors.grey200,
+  finalPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
     borderRadius: theme.radius.full,
-    padding: theme.spacing.xs,
+    backgroundColor: theme.colors.onYellow,
   },
-  tab: (selected: boolean) => ({
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: theme.spacing.sm,
-    borderRadius: theme.radius.full,
-    backgroundColor: selected ? theme.colors.card : "transparent",
-  }),
-  tabLabel: (selected: boolean) => ({
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: selected ? theme.colors.text : theme.colors.textMuted,
-  }),
-  teamColumn: {
-    alignItems: "center",
-    gap: theme.spacing.xs,
-    flex: 1,
-  },
-  clubName: (color: string) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
-    color,
-    textAlign: "center",
-  }),
-  teamNames: (color: string, hasClub = false) => ({
-    fontFamily: hasClub ? "Figtree_400Regular" : "Figtree_700Bold",
-    fontSize: hasClub ? theme.typography.size.xs : theme.typography.size.sm,
-    color: hasClub ? theme.colors.textMuted : color,
-    textAlign: "center",
-  }),
-  teamScore: (color: string) => ({
-    fontFamily: "BricolageGrotesque_800ExtraBold",
-    fontVariant: ["tabular-nums"],
-    fontSize: 48,
-    color,
-  }),
-  sectionLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
-  },
-  tallyRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm,
-  },
-  tallyChip: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.full,
-    paddingVertical: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md,
-  },
-  tallyText: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.xs,
+  finalLabel: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 0.6,
+    textTransform: "uppercase",
     color: theme.colors.text,
+  },
+  meta: {
+    flex: 1,
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.text,
+  },
+  sides: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    gap: 12,
+    marginTop: 14,
+  },
+  side: {
+    flex: 1,
+    minWidth: 0,
+  },
+  sideRight: {
+    alignItems: "flex-end",
+  },
+  nameRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  name: (away: boolean) => ({
+    flexShrink: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: away ? theme.colors.purple : theme.colors.text,
+  }),
+  dupla: {
+    marginTop: 3,
+    fontFamily: theme.fonts.regular,
+    fontSize: 11.5,
+    color: theme.colors.text,
+  },
+  scores: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  score: (away: boolean) => ({
+    fontFamily: theme.fonts.display,
+    fontSize: 56,
+    lineHeight: 62,
+    letterSpacing: -1.1,
+    color: away ? theme.colors.purple : theme.colors.text,
+    fontVariant: ["tabular-nums"],
+  }),
+  card: {
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+    borderRadius: theme.radius.card,
+    padding: 14,
+  },
+  cardLabel: {
+    marginBottom: 8,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  pair: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  half: {
+    flex: 1,
+  },
+  empty: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
+    color: theme.colors.textMuted,
   },
 }))

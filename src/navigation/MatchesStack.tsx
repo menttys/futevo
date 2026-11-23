@@ -17,20 +17,13 @@ import { MatchesStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<MatchesStackParamList>()
 
-const HEADER_OPTS = ({ navigation }: { navigation: { canGoBack: () => boolean } }) => ({
-  // On web the root screen has no header; nested screens get one with a back button.
-  headerShown: !IS_WEB || navigation.canGoBack(),
-  // On web the header is just a bare back arrow: no title, no yellow bar.
-  headerStyle: IS_WEB
-    ? { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 }
-    : { backgroundColor: theme.colors.primary },
-  headerTitle: IS_WEB ? "" : undefined,
+// Every screen draws its own design header (back button + Unbounded title).
+const HEADER_OPTS = {
+  headerShown: false,
   // "float" stops the stack from letting the page body scroll (hidden on web), which froze ScrollViews.
   headerMode: IS_WEB ? ("float" as const) : undefined,
-  headerTintColor: theme.colors.dark,
-  headerTitleStyle: { color: theme.colors.dark },
   cardStyle: { backgroundColor: theme.colors.background },
-})
+}
 
 export function MatchesStack() {
   const { t } = useLanguage()
@@ -52,6 +45,9 @@ export function MatchesStack() {
         options={{
           headerShown: false,
           gestureEnabled: false,
+          // A sheet over the live score: the screen below stays visible behind the scrim.
+          presentation: "transparentModal",
+          cardStyle: { backgroundColor: "transparent" },
           cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
         }}
       />
@@ -67,12 +63,7 @@ export function MatchesStack() {
       <Stack.Screen
         name={MatchesRoutes.MATCH_DETAIL}
         component={MatchDetailScreen}
-        options={{
-          title: "",
-          headerShown: true,
-          headerTransparent: false,
-          headerStyle: { backgroundColor: theme.colors.background, borderBottomWidth: 0, shadowOpacity: 0 },
-        }}
+        options={{ title: t("screens.match") }}
       />
       <Stack.Screen
         name={MatchesRoutes.TOURNAMENT_DETAIL}

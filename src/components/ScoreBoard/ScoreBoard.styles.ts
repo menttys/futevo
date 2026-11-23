@@ -1,53 +1,49 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { WEB_CONTENT } from "@/constants/Platform"
-
 export const styles = StyleSheet.create((theme) => ({
+  // The live scoreboard: soft yellow, with a big brand-yellow mark at 75%.
+  card: {
+    backgroundColor: theme.colors.softYellow,
+    borderRadius: 18,
+    paddingHorizontal: 18,
+    paddingTop: 18,
+    paddingBottom: 16,
+    overflow: "hidden",
+  },
+  watermark: {
+    position: "absolute",
+    right: -70,
+    top: -60,
+    opacity: 0.75,
+  },
   row: {
-    ...WEB_CONTENT,
     flexDirection: "row",
-    gap: theme.spacing.md,
-  },
-  panel: (color: string) => ({
-    flex: 1,
-    borderRadius: theme.radius.lg,
-    borderWidth: 2,
-    borderColor: color,
-    backgroundColor: theme.colors.surface,
+    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: theme.spacing.lg,
-    gap: theme.spacing.sm,
+    gap: 12,
+  },
+  name: (away: boolean) => ({
+    flexShrink: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 12,
+    color: away ? theme.colors.purple : theme.colors.text,
   }),
-  names: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.text,
-    textAlign: "center",
-    paddingHorizontal: theme.spacing.sm,
+  scores: {
+    marginTop: 14,
+    marginBottom: 10,
   },
-  club: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
-    color: theme.colors.text,
-    textAlign: "center",
-    paddingHorizontal: theme.spacing.sm,
-  },
-  namesSmall: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.textMuted,
-    textAlign: "center",
-    paddingHorizontal: theme.spacing.sm,
-  },
-  score: (color: string) => ({
-    fontFamily: "BricolageGrotesque_800ExtraBold",
+  score: (away: boolean) => ({
+    fontFamily: theme.fonts.display,
+    fontSize: 83,
+    lineHeight: 90,
+    letterSpacing: -1.6,
+    color: away ? theme.colors.purple : theme.colors.text,
     fontVariant: ["tabular-nums"],
-    fontSize: 72,
-    color,
   }),
-  hint: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.textMuted,
+  note: {
+    flexShrink: 1,
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.text,
   },
 }))

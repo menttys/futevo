@@ -1,210 +1,220 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { IS_WEB } from "@/constants/Platform"
+import { WEB_CONTENT } from "@/constants/Platform"
 
-export const styles = StyleSheet.create((theme) => ({
-  container: {
-    gap: theme.spacing.lg,
-    padding: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.lg,
+export const styles = StyleSheet.create((theme, rt) => ({
+  root: {
+    flex: 1,
   },
-  sectionLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
-    marginBottom: theme.spacing.sm,
-  },
-  teams: (sideBySide: boolean) => ({
-    flexDirection: sideBySide ? "row" : "column",
-    alignItems: sideBySide ? "center" : "stretch",
-    justifyContent: "center",
-    gap: sideBySide ? theme.spacing.lg : theme.spacing.md,
-  }),
-  teamCard: (sideBySide: boolean) => ({
-    gap: theme.spacing.xs,
-    flex: sideBySide ? 1 : undefined,
-    alignItems: sideBySide ? "center" : "stretch",
-  }),
-  // Fixed height shared by the title and its input so editing never shifts the layout.
-  titleRow: (editing: boolean) => ({
-    height: 28,
-    justifyContent: "center",
-    zIndex: editing ? 10 : 0,
-  }),
-  titleBox: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.xs,
-    height: 28,
-    // Padding offset by a negative margin keeps the text at the same x in both states.
-    paddingHorizontal: theme.spacing.sm,
-    marginHorizontal: -theme.spacing.sm,
-    borderRadius: theme.radius.sm,
-  },
-  teamNameInput: (color: string) => ({
-    width: 180,
-    height: 28,
-    paddingHorizontal: theme.spacing.sm,
-    marginHorizontal: -theme.spacing.sm,
-    paddingVertical: 0,
-    borderRadius: theme.radius.sm,
-    backgroundColor: theme.colors.background,
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color,
-    outlineWidth: 0,
-  }),
-  suggestions: {
-    position: "absolute",
-    top: 32,
-    left: -theme.spacing.sm,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.xs,
-    width: 240,
-    padding: theme.spacing.sm,
-    backgroundColor: theme.colors.card,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.grey200,
-  },
-  versus: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.xl,
-    color: theme.colors.textMuted,
-  },
-  teamTitle: (color: string) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color,
-  }),
-  slotsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm,
-  },
-  slot: (filled: boolean) => ({
-    alignItems: "center",
-    gap: theme.spacing.xs,
-    width: 88,
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.xs,
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.lg,
-    borderWidth: 2,
-    borderColor: filled ? theme.colors.primary : "transparent",
-  }),
-  slotEmpty: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderStyle: "dashed",
-    borderColor: theme.colors.grey600,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  playerName: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.text,
-    textAlign: "center",
-  },
-  badge: (color: string) => ({
-    position: "absolute",
-    top: theme.spacing.xs,
-    right: theme.spacing.xs,
-    backgroundColor: color,
-    borderRadius: theme.radius.full,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  }),
-  // Light text on Team A's dark badge, dark text on Team B's yellow one.
-  badgeText: (side: "A" | "B") => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: 10,
-    color: side === "A" ? theme.colors.white : theme.colors.dark,
-  }),
-  scoreRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.md,
-  },
-  stepperButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  stepperLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.lg,
-    color: theme.colors.text,
-  },
-  scoreValue: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.xl,
-    color: theme.colors.primary,
-    minWidth: 48,
-    textAlign: "center",
-  },
-  details: {
-    gap: theme.spacing.sm,
-  },
-  detailsBody: {
-    gap: theme.spacing.sm,
-  },
-  chipRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm,
-  },
-  chip: (selected: boolean) => ({
-    backgroundColor: selected ? theme.colors.primary : theme.colors.background,
-    borderRadius: theme.radius.full,
-    paddingVertical: theme.spacing.xs,
-    paddingHorizontal: theme.spacing.md,
-  }),
-  chipLabel: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.xs,
-    color: theme.colors.text,
-  },
-  input: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.text,
-    borderWidth: 1,
-    borderColor: theme.colors.grey600,
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.md,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-  },
-  lockedClub: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.textMuted,
+  content: {
+    ...WEB_CONTENT,
+    paddingHorizontal: theme.gutter,
+    paddingBottom: 16,
+    gap: 8,
   },
   hint: {
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.xs,
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
     color: theme.colors.textMuted,
   },
-  submitButton: (enabled: boolean) => ({
-    backgroundColor: enabled ? theme.colors.primary : theme.colors.grey600,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: IS_WEB ? theme.spacing.xl : 0,
-    alignSelf: IS_WEB ? "flex-start" : "stretch",
+  // Home is the blue-black card, Away the yellow one.
+  teamCard: (home: boolean) => ({
+    gap: 10,
+    padding: 16,
+    borderRadius: theme.radius.lg,
+    overflow: "hidden",
+    backgroundColor: home ? theme.colors.dark : theme.colors.primary,
+  }),
+  watermark: (home: boolean) => ({
+    position: "absolute",
+    right: -20,
+    top: -24,
+    opacity: home ? 0.14 : 0.1,
+  }),
+  teamLabel: (home: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: home ? theme.colors.primary : theme.colors.text,
+  }),
+  nameField: (home: boolean) => ({
+    borderRadius: theme.radius.full,
+    paddingHorizontal: 18,
+    paddingVertical: 13,
+    backgroundColor: home ? theme.colors.onDarkWash : theme.colors.wash,
+  }),
+  nameInput: (home: boolean) => ({
+    fontFamily: theme.fonts.regular,
+    fontSize: 15,
+    color: home ? theme.colors.white : theme.colors.text,
+  }),
+  lockedName: (home: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 15,
+    color: home ? theme.colors.white : theme.colors.text,
+  }),
+  suggestions: {
+    gap: 6,
+  },
+  suggestion: (home: boolean, selected: boolean) => ({
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: theme.radius.full,
+    backgroundColor: selected
+      ? home
+        ? theme.colors.primary
+        : theme.colors.dark
+      : home
+        ? theme.colors.onDarkWash
+        : theme.colors.washStrong,
+  }),
+  suggestionLabel: (home: boolean, selected: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 12,
+    color: selected
+      ? home
+        ? theme.colors.text
+        : theme.colors.primary
+      : home
+        ? theme.colors.white
+        : theme.colors.text,
+  }),
+  slots: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  slot: (home: boolean, pressed: boolean) => ({
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
+    gap: 10,
+    paddingVertical: 7,
+    paddingLeft: 7,
+    paddingRight: 14,
+    borderRadius: theme.radius.full,
+    backgroundColor: home ? theme.colors.onDarkWash : theme.colors.washStrong,
+    opacity: pressed ? 0.8 : 1,
   }),
-  submitLabel: (enabled: boolean) => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: enabled ? theme.colors.dark : theme.colors.textMuted,
+  slotEmpty: (home: boolean) => ({
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: home ? theme.colors.primary : theme.colors.dark,
   }),
+  slotText: {
+    flex: 1,
+    minWidth: 0,
+  },
+  slotSide: (home: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 9.5,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    opacity: 0.85,
+    color: home ? theme.colors.white : theme.colors.text,
+  }),
+  slotName: (home: boolean) => ({
+    marginTop: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: home ? theme.colors.white : theme.colors.text,
+  }),
+  versus: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 12,
+    marginVertical: -2,
+  },
+  versusLabel: {
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 10.4,
+    letterSpacing: -0.2,
+    color: theme.colors.text,
+  },
+  rules: {
+    flexDirection: "row",
+    gap: 12,
+    marginTop: 6,
+  },
+  ruleTarget: {
+    flex: 1.5,
+  },
+  ruleWinBy: {
+    flex: 1,
+  },
+  fieldLabel: {
+    marginBottom: 6,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  tournamentCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 11,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  tournamentText: {
+    flex: 1,
+  },
+  tournamentEyebrow: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: theme.colors.textMuted,
+  },
+  tournamentValue: {
+    marginTop: 3,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14.5,
+    color: theme.colors.text,
+  },
+  tournamentBody: {
+    gap: 8,
+    paddingTop: 4,
+  },
+  chipRow: {
+    gap: 8,
+  },
+  chip: (selected: boolean) => ({
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: theme.radius.full,
+    backgroundColor: selected ? theme.colors.dark : theme.colors.wash,
+  }),
+  chipLabel: (selected: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: selected ? theme.colors.white : theme.colors.text,
+  }),
+  input: {
+    borderRadius: theme.radius.full,
+    paddingHorizontal: 18,
+    paddingVertical: 13,
+    backgroundColor: theme.colors.wash,
+    fontFamily: theme.fonts.regular,
+    fontSize: 15,
+    color: theme.colors.text,
+  },
+  // Big yellow Start match pinned at the bottom.
+  footer: {
+    ...WEB_CONTENT,
+    paddingHorizontal: theme.gutter,
+    paddingTop: 8,
+    paddingBottom: Math.max(rt.insets.bottom, 16) + 8,
+  },
+  start: {
+    minHeight: 52,
+  },
 }))

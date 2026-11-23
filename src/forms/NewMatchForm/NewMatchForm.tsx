@@ -1,13 +1,17 @@
-import React, { Fragment, useState } from "react"
-import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import React, { useState } from "react"
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native"
 
 import { useUnistyles } from "react-native-unistyles"
 
+import { AppButton } from "@/components/AppButton"
+import { FutevoMark } from "@/components/FutevoMark"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { PlayerPickerModal } from "@/components/PlayerPickerModal"
-import { DEFAULT_TARGET_SCORE } from "@/constants/App"
+import { SegmentedControl } from "@/components/SegmentedControl"
+import { DEFAULT_TARGET_SCORE, DEFAULT_WIN_BY } from "@/constants/App"
 import { useLanguage } from "@/i18n"
-import { Pencil, Plus } from "@/lib/icons"
+import { ChevronDown, Plus, Trophy } from "@/lib/icons"
+import { firstName } from "@/utils/matchLabels"
 import { findEntry } from "@/utils/tournament"
 
 import type { NewMatchFormProps } from "./NewMatchForm.d"
@@ -15,15 +19,13 @@ import { styles } from "./NewMatchForm.styles"
 
 type Side = "A" | "B"
 
-const SIDES: Side[] = ["A", "B"]
-
 const NEW_TOURNAMENT = "new"
-
-// Form width from which Team A and Team B sit side by side (A × B).
-const SIDE_BY_SIDE_MIN_WIDTH = 460
+const TARGET_SCORES = [12, 15, 18, 21]
+const WIN_BY = [1, 2]
 
 const today = () => new Date().toISOString().slice(0, 10)
 
+// Two symmetric teams, then the rules. Blue-black card = Home, yellow card = Away.
 export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
@@ -31,10 +33,8 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
   const [teamAIds, setTeamAIds] = useState<(string | undefined)[]>([undefined, undefined])
   const [teamBIds, setTeamBIds] = useState<(string | undefined)[]>([undefined, undefined])
   const [targetScore, setTargetScore] = useState(DEFAULT_TARGET_SCORE)
-  const [showDetails, setShowDetails] = useState(true)
-  const [editingSide, setEditingSide] = useState<Side | undefined>()
-  const [teamsWidth, setTeamsWidth] = useState(0)
-  const sideBySide = teamsWidth >= SIDE_BY_SIDE_MIN_WIDTH
+  const [winBy, setWinBy] = useState(DEFAULT_WIN_BY)
+  const [showTournament, setShowTournament] = useState(false)
   const [picker, setPicker] = useState<{ side: Side; index: number } | undefined>()
   // undefined = friendly match, NEW_TOURNAMENT = create inline, otherwise a tournament id
   const [tournamentChoice, setTournamentChoice] = useState<string | undefined>()
@@ -46,12 +46,12 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
   const [clubB, setClubB] = useState("")
 
   const isNew = tournamentChoice === NEW_TOURNAMENT
-  const tournament = tournaments.find((t) => t.id === tournamentChoice)
+  const tournament = tournaments.find((tr) => tr.id === tournamentChoice)
   const toTeam = (ids: (string | undefined)[]): [string, string] | undefined =>
     ids[0] && ids[1] ? [ids[0], ids[1]] : undefined
   const teamA = toTeam(teamAIds)
   const teamB = toTeam(teamBIds)
-  const sideLabel = (index: number) => (index === 0 ? t("newMatch.left") : t("newMatch.right"))
+  const slotLabel = (index: number) => (index === 0 ? t("newMatch.left") : t("newMatch.right"))
   const slotIds = (side: Side) => (side === "A" ? teamAIds : teamBIds)
   const setSlot = (side: Side, index: number, id: string | undefined) => {
     const set = side === "A" ? setTeamAIds : setTeamBIds
@@ -71,6 +71,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
       teamA,
       teamB,
       targetScore,
+      winBy,
       tournamentId: tournament?.id,
       newTournament: isNew
         ? {
@@ -91,213 +92,164 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
     new Set((tournament?.entries ?? []).map((e) => e.club).filter((c): c is string => !!c))
   )
 
-  const renderTitle = (side: Side, color: string) => {
-    const entry = side === "A" ? entryA : entryB
-    const value = side === "A" ? clubA : clubB
-    const onChange = side === "A" ? setClubA : setClubB
-    const fallback = t("common.teamWithSide", { side })
+  const tournamentLabel = isNew
+    ? newName.trim() || t("newMatch.newTournamentLabel")
+    : (tournament?.name ?? t("common.none"))
 
-    const editing = editingSide === side && !entry
-    const close = () => setEditingSide(undefined)
+  const renderTeam = (side: Side) => {
+    const home = side === "A"
+    const entry = home ? entryA : entryB
+    const value = home ? clubA : clubB
+    const onChange = home ? setClubA : setClubB
+    const ids = slotIds(side)
 
     return (
-      <View style={styles.titleRow(editing)}>
-        {editing ? (
+      <View style={styles.teamCard(home)}>
+        <FutevoMark
+          size={120}
+          rotate={16}
+          color={home ? theme.colors.primary : theme.colors.dark}
+          style={styles.watermark(home)}
+        />
+        <Text style={styles.teamLabel(home)}>{home ? t("newMatch.home") : t("newMatch.away")}</Text>
+        {entry ? (
+          <View style={styles.nameField(home)}>
+            <Text style={styles.lockedName(home)} numberOfLines={1}>
+              {entry.club ?? t("newMatch.noClub")}
+            </Text>
+          </View>
+        ) : (
           <TextInput
-            style={styles.teamNameInput(color)}
+            style={[styles.nameField(home), styles.nameInput(home)]}
             value={value}
             onChangeText={onChange}
-            onBlur={close}
-            onSubmitEditing={close}
-            placeholder={fallback}
-            placeholderTextColor={theme.colors.textMuted}
-            autoFocus
+            placeholder={inTournament ? t("newMatch.clubPlaceholder") : t("newMatch.teamNamePlaceholder")}
+            placeholderTextColor={home ? theme.colors.onDarkMuted : theme.colors.textMuted}
+            accessibilityLabel={home ? t("newMatch.home") : t("newMatch.away")}
             returnKeyType="done"
           />
-        ) : (
-          <TouchableOpacity
-            style={styles.titleBox}
-            onPress={() => setEditingSide(side)}
-            disabled={!!entry}
-            activeOpacity={0.6}
-          >
-            <Text style={styles.teamTitle(color)} numberOfLines={1}>
-              {entry ? (entry.club ?? fallback) : value.trim() || fallback}
-            </Text>
-            {!entry ? <Pencil size={12} color={theme.colors.textMuted} /> : null}
-          </TouchableOpacity>
         )}
-        {editing && inTournament && knownClubs.length > 0 ? (
-          // Floats over the slots instead of pushing them down.
-          <View style={styles.suggestions}>
+        {inTournament && !entry && knownClubs.length > 0 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestions}>
             {knownClubs.map((club) => (
-              <TouchableOpacity
+              <Pressable
                 key={club}
-                style={styles.chip(value.trim() === club)}
-                // onPressIn runs before the input's blur closes the editor.
-                onPressIn={() => {
-                  onChange(club)
-                  close()
-                }}
+                accessibilityRole="button"
+                onPress={() => onChange(club)}
+                style={styles.suggestion(home, value.trim() === club)}
               >
-                <Text style={styles.chipLabel}>{club}</Text>
-              </TouchableOpacity>
+                <Text style={styles.suggestionLabel(home, value.trim() === club)}>{club}</Text>
+              </Pressable>
             ))}
-          </View>
+          </ScrollView>
         ) : null}
+        <View style={styles.slots}>
+          {[0, 1].map((index) => {
+            const player = players.find((p) => p.id === ids[index])
+            return (
+              <Pressable
+                key={index}
+                accessibilityRole="button"
+                accessibilityLabel={`${home ? t("newMatch.home") : t("newMatch.away")} · ${slotLabel(index)}`}
+                onPress={() => setPicker({ side, index })}
+                style={({ pressed }) => styles.slot(home, pressed)}
+              >
+                {player ? (
+                  <PlayerAvatar
+                    name={player.name}
+                    photoUri={player.photoUri || undefined}
+                    size={32}
+                    tone={home ? "yellow" : "dark"}
+                  />
+                ) : (
+                  <View style={styles.slotEmpty(home)}>
+                    <Plus size={16} color={home ? theme.colors.text : theme.colors.primary} />
+                  </View>
+                )}
+                <View style={styles.slotText}>
+                  <Text style={styles.slotSide(home)}>{slotLabel(index)}</Text>
+                  <Text style={styles.slotName(home)} numberOfLines={1}>
+                    {player ? firstName(player.name) : t("newMatch.selectPlayer")}
+                  </Text>
+                </View>
+              </Pressable>
+            )
+          })}
+        </View>
       </View>
     )
   }
 
   return (
-    <View style={styles.container}>
-      <View>
-        <Text style={styles.sectionLabel}>{t("newMatch.pickPlayers")}</Text>
-        {players.length === 0 ? (
-          <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text>
-        ) : (
-          <View
-            style={styles.teams(sideBySide)}
-            onLayout={(e) => setTeamsWidth(e.nativeEvent.layout.width)}
-          >
-            {SIDES.map((side) => {
-              const ids = slotIds(side)
-              const color = side === "A" ? theme.colors.teamA : theme.colors.teamB
-              return (
-                <Fragment key={side}>
-                  {sideBySide && side === "B" ? <Text style={styles.versus}>×</Text> : null}
-                  <View style={styles.teamCard(sideBySide)}>
-                    {renderTitle(side, color)}
-                    <View style={styles.slotsGrid}>
-                      {[0, 1].map((index) => {
-                        const player = players.find((p) => p.id === ids[index])
-                        return (
-                          <TouchableOpacity
-                            key={index}
-                            style={styles.slot(!!player)}
-                            onPress={() => setPicker({ side, index })}
-                            activeOpacity={0.7}
-                          >
-                            <View>
-                              {player ? (
-                                <PlayerAvatar
-                                  name={player.name}
-                                  photoUri={player.photoUri || undefined}
-                                  selected
-                                />
-                              ) : (
-                                <View style={styles.slotEmpty}>
-                                  <Plus size={20} color={theme.colors.textMuted} />
-                                </View>
-                              )}
-                            </View>
-                            <View style={styles.badge(color)}>
-                              <Text style={styles.badgeText(side)}>
-                                {index === 0 ? t("newMatch.leftShort") : t("newMatch.rightShort")}
-                              </Text>
-                            </View>
-                            <Text style={styles.playerName} numberOfLines={1}>
-                              {player?.name ?? sideLabel(index)}
-                            </Text>
-                          </TouchableOpacity>
-                        )
-                      })}
-                    </View>
-                  </View>
-                </Fragment>
-              )
-            })}
-          </View>
-        )}
-      </View>
+    <View style={styles.root}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+        {players.length === 0 ? <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text> : null}
 
-      <PlayerPickerModal
-        visible={picker !== undefined}
-        title={
-          picker
-            ? t("newMatch.selectSidePlayer", {
-                team: t("common.teamWithSide", { side: picker.side }),
-                side: sideLabel(picker.index),
-              })
-            : undefined
-        }
-        players={players.filter((p) => {
-          if (!picker) return true
-          const taken = [
-            ...teamAIds.map((id, i) =>
-              picker.side === "A" && i === picker.index ? undefined : id
-            ),
-            ...teamBIds.map((id, i) =>
-              picker.side === "B" && i === picker.index ? undefined : id
-            ),
-          ]
-          return !taken.includes(p.id)
-        })}
-        selectedIds={
-          picker
-            ? slotIds(picker.side)
-                .slice(picker.index, picker.index + 1)
-                .filter((id): id is string => !!id)
-            : []
-        }
-        max={1}
-        slotLabels={[picker ? sideLabel(picker.index) : ""]}
-        slotColor={() => (picker?.side === "B" ? theme.colors.teamB : theme.colors.teamA)}
-        onChange={(ids) => picker && setSlot(picker.side, picker.index, ids[0])}
-        onClose={() => setPicker(undefined)}
-      />
-
-      <View>
-        <Text style={styles.sectionLabel}>{t("newMatch.targetScore")}</Text>
-        <View style={styles.scoreRow}>
-          <TouchableOpacity
-            style={styles.stepperButton}
-            onPress={() => setTargetScore((s) => Math.max(1, s - 1))}
-          >
-            <Text style={styles.stepperLabel}>−</Text>
-          </TouchableOpacity>
-          <Text style={styles.scoreValue}>{targetScore}</Text>
-          <TouchableOpacity
-            style={styles.stepperButton}
-            onPress={() => setTargetScore((s) => s + 1)}
-          >
-            <Text style={styles.stepperLabel}>+</Text>
-          </TouchableOpacity>
+        {renderTeam("A")}
+        <View style={styles.versus}>
+          <FutevoMark size={18} />
+          <Text style={styles.versusLabel}>{t("newMatch.vs")}</Text>
+          <FutevoMark size={18} rotate={72} />
         </View>
-      </View>
+        {renderTeam("B")}
 
-      <View style={styles.details}>
-        <TouchableOpacity onPress={() => setShowDetails((v) => !v)} activeOpacity={0.7}>
-          <Text style={styles.sectionLabel}>
-            {t("newMatch.tournamentOptional")} {showDetails ? "▴" : "▾"}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.rules}>
+          <View style={styles.ruleTarget}>
+            <Text style={styles.fieldLabel}>{t("newMatch.targetScore")}</Text>
+            <SegmentedControl
+              options={TARGET_SCORES.map((s) => ({ value: s, label: String(s) }))}
+              value={targetScore}
+              onChange={setTargetScore}
+            />
+          </View>
+          <View style={styles.ruleWinBy}>
+            <Text style={styles.fieldLabel}>{t("newMatch.winBy")}</Text>
+            <SegmentedControl
+              options={WIN_BY.map((w) => ({ value: w, label: String(w) }))}
+              value={winBy}
+              onChange={setWinBy}
+            />
+          </View>
+        </View>
 
-        {showDetails ? (
-          <View style={styles.detailsBody}>
-            <View style={styles.chipRow}>
-              <TouchableOpacity
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ expanded: showTournament }}
+          onPress={() => setShowTournament((v) => !v)}
+          style={styles.tournamentCard}
+        >
+          <Trophy size={20} color={theme.colors.text} />
+          <View style={styles.tournamentText}>
+            <Text style={styles.tournamentEyebrow}>{t("newMatch.tournamentOptional")}</Text>
+            <Text style={styles.tournamentValue} numberOfLines={1}>
+              {tournamentLabel}
+            </Text>
+          </View>
+          <ChevronDown size={18} color={theme.colors.text} />
+        </Pressable>
+
+        {showTournament ? (
+          <View style={styles.tournamentBody}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+              <Pressable
                 style={styles.chip(tournamentChoice === undefined)}
                 onPress={() => setTournamentChoice(undefined)}
               >
-                <Text style={styles.chipLabel}>{t("common.none")}</Text>
-              </TouchableOpacity>
-              {tournaments.map((t) => (
-                <TouchableOpacity
-                  key={t.id}
-                  style={styles.chip(tournamentChoice === t.id)}
-                  onPress={() => setTournamentChoice(t.id)}
+                <Text style={styles.chipLabel(tournamentChoice === undefined)}>{t("common.none")}</Text>
+              </Pressable>
+              {tournaments.map((tr) => (
+                <Pressable
+                  key={tr.id}
+                  style={styles.chip(tournamentChoice === tr.id)}
+                  onPress={() => setTournamentChoice(tr.id)}
                 >
-                  <Text style={styles.chipLabel}>{t.name}</Text>
-                </TouchableOpacity>
+                  <Text style={styles.chipLabel(tournamentChoice === tr.id)}>{tr.name}</Text>
+                </Pressable>
               ))}
-              <TouchableOpacity
-                style={styles.chip(isNew)}
-                onPress={() => setTournamentChoice(NEW_TOURNAMENT)}
-              >
-                <Text style={styles.chipLabel}>{t("newMatch.newTournament")}</Text>
-              </TouchableOpacity>
-            </View>
+              <Pressable style={styles.chip(isNew)} onPress={() => setTournamentChoice(NEW_TOURNAMENT)}>
+                <Text style={styles.chipLabel(isNew)}>{t("newMatch.newTournament")}</Text>
+              </Pressable>
+            </ScrollView>
 
             {isNew ? (
               <>
@@ -334,23 +286,48 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   placeholder={t("newMatch.roundPlaceholder")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
-                {!(teamA && teamB) ? (
-                  <Text style={styles.hint}>{t("newMatch.pickFourForClubs")}</Text>
-                ) : null}
+                {!(teamA && teamB) ? <Text style={styles.hint}>{t("newMatch.pickFourForClubs")}</Text> : null}
               </>
             ) : null}
           </View>
         ) : null}
+      </ScrollView>
+
+      <View style={styles.footer}>
+        <AppButton label={t("newMatch.start")} disabled={!canSubmit} onPress={handleSubmit} style={styles.start} />
       </View>
 
-      <TouchableOpacity
-        style={styles.submitButton(canSubmit)}
-        onPress={handleSubmit}
-        disabled={!canSubmit}
-        activeOpacity={0.85}
-      >
-        <Text style={styles.submitLabel(canSubmit)}>{t("newMatch.start")}</Text>
-      </TouchableOpacity>
+      <PlayerPickerModal
+        visible={picker !== undefined}
+        title={
+          picker
+            ? t("newMatch.selectSidePlayer", {
+                team: picker.side === "A" ? t("newMatch.home") : t("newMatch.away"),
+                side: slotLabel(picker.index),
+              })
+            : undefined
+        }
+        players={players.filter((p) => {
+          if (!picker) return true
+          const taken = [
+            ...teamAIds.map((id, i) => (picker.side === "A" && i === picker.index ? undefined : id)),
+            ...teamBIds.map((id, i) => (picker.side === "B" && i === picker.index ? undefined : id)),
+          ]
+          return !taken.includes(p.id)
+        })}
+        selectedIds={
+          picker
+            ? slotIds(picker.side)
+                .slice(picker.index, picker.index + 1)
+                .filter((id): id is string => !!id)
+            : []
+        }
+        max={1}
+        slotLabels={[picker ? slotLabel(picker.index) : ""]}
+        slotColor={() => (picker?.side === "B" ? theme.colors.primary : theme.colors.dark)}
+        onChange={(ids) => picker && setSlot(picker.side, picker.index, ids[0])}
+        onClose={() => setPicker(undefined)}
+      />
     </View>
   )
 }

@@ -7,7 +7,7 @@ import { FloatingTabBar } from "@/components/FloatingTabBar"
 import { DETACH_INACTIVE_SCREENS } from "@/constants/Platform"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
-import { LayoutDashboard, Settings as SettingsIcon, Trophy, Users } from "@/lib/icons"
+import { House, ListBullets, SlidersHorizontal, Users } from "@/lib/icons"
 import { DashboardScreen } from "@/screens/DashboardScreen"
 import { MatchesListScreen } from "@/screens/MatchesListScreen"
 
@@ -42,7 +42,9 @@ export function TabNavigator() {
         component={DashboardScreen}
         options={{
           tabBarLabel: t("tabs.dashboard"),
-          tabBarIcon: ({ color, size }) => <LayoutDashboard color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <House color={color} size={size} weight={focused ? "fill" : "regular"} />
+          ),
         }}
       />
       <Tab.Screen
@@ -50,7 +52,9 @@ export function TabNavigator() {
         component={MatchesListScreen}
         options={{
           tabBarLabel: t("tabs.matches"),
-          tabBarIcon: ({ color, size }) => <Trophy color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <ListBullets color={color} size={size} weight={focused ? "fill" : "regular"} />
+          ),
         }}
       />
       <Tab.Screen name={TabRoutes.MATCH_FLOW} component={MatchesStack} />
@@ -59,7 +63,9 @@ export function TabNavigator() {
         component={PlayersStack}
         options={{
           tabBarLabel: t("tabs.players"),
-          tabBarIcon: ({ color, size }) => <Users color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <Users color={color} size={size} weight={focused ? "fill" : "regular"} />
+          ),
         }}
       />
       <Tab.Screen
@@ -67,7 +73,9 @@ export function TabNavigator() {
         component={SettingsStack}
         options={{
           tabBarLabel: t("tabs.settings"),
-          tabBarIcon: ({ color, size }) => <SettingsIcon color={color} size={size} />,
+          tabBarIcon: ({ color, size, focused }) => (
+            <SlidersHorizontal color={color} size={size} weight={focused ? "fill" : "regular"} />
+          ),
         }}
       />
     </Tab.Navigator>

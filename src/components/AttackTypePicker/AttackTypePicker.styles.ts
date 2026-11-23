@@ -1,22 +1,28 @@
 import { StyleSheet } from "react-native-unistyles"
 
 export const styles = StyleSheet.create((theme) => ({
-  row: {
+  grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: theme.spacing.sm,
+    gap: 8,
   },
-  chip: (selected: boolean) => ({
-    paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.md,
-    borderRadius: theme.radius.full,
-    borderWidth: 1,
-    borderColor: selected ? theme.colors.primary : theme.colors.grey300,
-    backgroundColor: selected ? theme.colors.primary : "transparent",
+  // Three to a row; the chosen attack is blue-black with cream text.
+  tile: (selected: boolean, pressed: boolean) => ({
+    flexBasis: "30%",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+    paddingVertical: 13,
+    borderRadius: theme.radius.md,
+    backgroundColor: selected ? theme.colors.dark : theme.colors.card,
+    boxShadow: selected ? undefined : theme.shadows.card,
+    opacity: pressed ? 0.85 : 1,
   }),
-  chipLabel: (selected: boolean) => ({
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: selected ? theme.colors.dark : theme.colors.text,
+  label: (selected: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13.5,
+    color: selected ? theme.colors.white : theme.colors.text,
+    textAlign: "center",
   }),
 }))

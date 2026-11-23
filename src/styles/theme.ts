@@ -1,72 +1,109 @@
-// Palette: sun-yellow, ink and warm paper — light, flat, sporty.
+// Futevo colour system (Colour Guide): brand yellow and blue-black carry the
+// product; deep purple is the Away team only; the rest is warm neutral.
 const palette = {
-  sun: "#FFD400", // brand yellow (primary)
-  sunDeep: "#857520", // olive gold, text on light surfaces
-  ink: "#1B1A18", // near-black: text, dark cards, tab bar
-  paper: "#F5EAD8", // app background (cream)
-  white: "#FFFFFF", // cards
-  stone: "#E8E6E1", // neutral badges, disabled fills
-  coral: "#FF8A6B",
-  lime: "#B7DC6E",
-  danger: "#E5484D",
+  sun: "#FFD400", // brand yellow: tab bar, primary buttons, live cards
+  ink: "#0A111F", // blue-black: text, Home team, dark buttons
+  purple: "#4A2A96", // deep purple: Away team only
+  purplePressed: "#3B2178",
+  softYellow: "#FFE680", // live scoreboard
+  butter: "#FFEFB0", // selected rows, result tiles, W badge
+  lavender: "#E9E3F6", // Away tint
+  cream: "#FFFDF6", // cards and rows
+  onYellow: "#FFFBF2", // pills and buttons sitting on brand yellow
+  warmWhite: "#FBF7EE", // page base under the mesh
+  creamText: "#FFFAF0", // text on blue-black or purple
+  stone: "#E9E7E2", // L badge, neutral circles
+  wash: "rgba(10,17,31,0.06)", // search fields, chips, inset tiles
+  washStrong: "rgba(10,17,31,0.12)", // selected chip on yellow, hairlines
+  onDarkWash: "rgba(255,255,255,0.14)", // fields and pills on a blue-black card
+  onDarkMuted: "rgba(255,250,240,0.6)", // placeholders on a blue-black card
+  muted: "rgba(10,17,31,0.72)", // secondary text and labels
+  iconMuted: "rgba(10,17,31,0.62)", // inactive icons
+  danger: "#C2185B",
+  dangerAlt: "#D92D20",
 } as const
 
 export const theme = {
   colors: {
     // brand
     primary: palette.sun,
-    secondary: palette.coral,
-    purple: palette.sunDeep,
+    secondary: palette.softYellow,
+    purple: palette.purple,
+    purplePressed: palette.purplePressed,
     indigo: palette.ink,
 
+    // tints
+    softYellow: palette.softYellow,
+    butter: palette.butter,
+    lavender: palette.lavender,
+    onYellow: palette.onYellow,
+    stone: palette.stone,
+    wash: palette.wash,
+    washStrong: palette.washStrong,
+    onDarkWash: palette.onDarkWash,
+    onDarkMuted: palette.onDarkMuted,
+
     // surfaces
-    background: palette.paper,
-    card: palette.white,
-    surface: palette.white,
+    background: palette.warmWhite,
+    card: palette.cream,
+    surface: palette.cream,
+    surfaceBright: palette.cream,
 
     // text
     text: palette.ink,
-    textMuted: "#8A857D",
+    textMuted: palette.muted,
+    iconMuted: palette.iconMuted,
 
     // base
     dark: palette.ink,
-    light: palette.paper,
+    light: palette.warmWhite,
 
     // extended brand
-    violet: palette.sunDeep,
+    violet: palette.purple,
     navy: palette.ink,
-    primaryDark: palette.sunDeep,
+    primaryDark: palette.purplePressed,
 
     // utility
     black: palette.ink, // never pure black
-    white: palette.white,
+    white: palette.creamText,
 
     // danger
     danger: palette.danger,
-    dangerAlt: "#D92D20",
+    dangerAlt: palette.dangerAlt,
 
-    // settings surfaces
-    surfaceBright: palette.white,
     profileGradientStart: palette.sun,
 
-    // grey scale (warm light ramp: 100 lightest -> 900 ink)
-    grey100: palette.paper,
-    grey200: "#ECE8E3",
-    grey300: "#B9B4AB",
-    grey400: "#A39E95",
-    grey500: "#8A857D",
-    grey600: palette.stone,
-    grey700: "#ECE8E3",
+    // neutral ramp (blue-black based)
+    grey100: palette.warmWhite,
+    grey200: palette.washStrong,
+    grey300: palette.iconMuted,
+    grey400: palette.muted,
+    grey500: palette.iconMuted,
+    grey600: palette.wash,
+    grey700: palette.stone,
+    // Dark court cells in the gamified match. Not in the nine-colour palette; kept from before the redesign.
     grey800: "#3A3834",
     grey900: palette.ink,
 
-    // team colors for the scoreboard
+    // team colours: Home blue-black, Away deep purple
     teamA: palette.ink,
-    teamB: palette.sun,
+    teamB: palette.purple,
 
-    // Cycling palettes used to color-code cards & players
-    cardPalette: [palette.sun, palette.stone, palette.coral, palette.lime] as string[],
-    playerPalette: [palette.sun, palette.coral, palette.lime, palette.stone] as string[],
+    // colour-coding for cards and players: brand tints only
+    cardPalette: [palette.sun, palette.softYellow, palette.butter, palette.lavender] as string[],
+    playerPalette: [palette.sun, palette.butter, palette.lavender, palette.softYellow] as string[],
+  },
+  fonts: {
+    display: "Unbounded_800ExtraBold", // wordmark, scores, screen titles
+    displayBold: "Unbounded_700Bold", // section titles, card titles, buttons
+    regular: "Figtree_400Regular",
+    semibold: "Figtree_600SemiBold",
+    bold: "Figtree_700Bold",
+  },
+  shadows: {
+    // Cream cards and rows: no border, a soft shadow.
+    card: "0px 2px 14px rgba(10,17,31,0.07)",
+    bar: "0px 8px 24px rgba(10,17,31,0.14)",
   },
   spacing: {
     xs: 4,
@@ -76,6 +113,8 @@ export const theme = {
     xl: 32,
     xxl: 48,
   },
+  // Screen side gutter from the designs.
+  gutter: 18,
   typography: {
     size: {
       xs: 12,
@@ -95,6 +134,7 @@ export const theme = {
   radius: {
     sm: 8,
     md: 12,
+    card: 14,
     lg: 16,
     xl: 24,
     full: 9999,

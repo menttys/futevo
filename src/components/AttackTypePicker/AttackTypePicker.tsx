@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, TouchableOpacity, View } from "react-native"
+import { Pressable, Text, View } from "react-native"
 
 import { ATTACK_TYPES } from "@/@types/futevo"
 import { useLanguage } from "@/i18n"
@@ -10,18 +10,21 @@ import { styles } from "./AttackTypePicker.styles"
 export function AttackTypePicker({ selected, onSelect }: AttackTypePickerProps) {
   const { t } = useLanguage()
   return (
-    <View style={styles.row}>
+    <View style={styles.grid}>
       {ATTACK_TYPES.map((attack) => {
         const isSelected = attack.id === selected
         return (
-          <TouchableOpacity
+          <Pressable
             key={attack.id}
-            style={styles.chip(isSelected)}
+            accessibilityRole="button"
+            accessibilityState={{ selected: isSelected }}
+            style={({ pressed }) => styles.tile(isSelected, pressed)}
             onPress={() => onSelect(attack.id)}
-            activeOpacity={0.8}
           >
-            <Text style={styles.chipLabel(isSelected)}>{t(`attackTypes.${attack.id}`)}</Text>
-          </TouchableOpacity>
+            <Text style={styles.label(isSelected)} numberOfLines={1}>
+              {t(`attackTypes.${attack.id}`)}
+            </Text>
+          </Pressable>
         )
       })}
     </View>

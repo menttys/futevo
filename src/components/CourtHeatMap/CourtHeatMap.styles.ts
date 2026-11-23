@@ -84,7 +84,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   count: (filled: boolean) => ({
     fontFamily: "Figtree_600SemiBold",
     fontSize: rt.screen.width < 400 ? theme.typography.size.xs : theme.typography.size.sm,
-    color: filled ? "#5C5750" : theme.colors.grey400,
+    color: filled ? theme.colors.text : theme.colors.grey400,
   }),
   total: {
     fontFamily: "Figtree_400Regular",

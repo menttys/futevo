@@ -1,24 +1,26 @@
 import { StyleSheet } from "react-native-unistyles"
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   overlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(27,26,24,0.4)",
+    backgroundColor: "rgba(10,17,31,0.5)",
   },
   sheet: {
     height: "80%",
     backgroundColor: theme.colors.background,
-    borderTopLeftRadius: theme.radius.lg,
-    borderTopRightRadius: theme.radius.lg,
-    padding: theme.spacing.md,
-    gap: theme.spacing.sm,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: theme.gutter,
+    paddingTop: 16,
+    paddingBottom: Math.max(rt.insets.bottom, 16),
+    gap: 12,
   },
   overlayWeb: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(27,26,24,0.5)",
+    backgroundColor: "rgba(10,17,31,0.5)",
     padding: theme.spacing.md,
   },
   floating: {
@@ -26,15 +28,16 @@ export const styles = StyleSheet.create((theme) => ({
     maxWidth: 560,
     height: "80%",
     backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.lg,
-    padding: theme.spacing.md,
-    gap: theme.spacing.sm,
-    boxShadow: "0 12px 40px rgba(27,26,24,0.35)",
+    borderRadius: theme.radius.xl,
+    padding: theme.gutter,
+    gap: 12,
+    boxShadow: "0 12px 40px rgba(10,17,31,0.35)",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: 12,
   },
   headerRight: {
     flexDirection: "row",
@@ -42,32 +45,24 @@ export const styles = StyleSheet.create((theme) => ({
     gap: theme.spacing.sm,
   },
   closeButton: {
-    padding: 4,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: theme.colors.wash,
   },
   title: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
+    flex: 1,
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 15.5,
+    letterSpacing: -0.3,
     color: theme.colors.text,
   },
   counter: {
-    fontFamily: "Figtree_600SemiBold",
-    fontSize: theme.typography.size.sm,
-    color: theme.colors.primary,
-  },
-  searchField: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: theme.spacing.sm,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.md,
-    paddingHorizontal: theme.spacing.md,
-  },
-  searchInput: {
-    flex: 1,
-    fontFamily: "Figtree_400Regular",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.text,
-    paddingVertical: theme.spacing.sm,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 13,
+    color: theme.colors.textMuted,
   },
   list: {
     flex: 1,
@@ -75,20 +70,10 @@ export const styles = StyleSheet.create((theme) => ({
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
+    marginHorizontal: -4,
   },
   cell: {
-    width: "33.33%",
-    padding: theme.spacing.xs,
-  },
-  doneButton: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.radius.md,
-    paddingVertical: theme.spacing.md,
-    alignItems: "center",
-  },
-  doneLabel: {
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.md,
-    color: theme.colors.dark,
+    width: "50%",
+    padding: 4,
   },
 }))

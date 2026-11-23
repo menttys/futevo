@@ -11,14 +11,21 @@
     "vs": "vs",
     "unknownPlayer": "?",
     "optional": "opcional",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "back": "Atrás",
+    "clear": "Borrar",
+    "live": "En vivo",
+    "win": "G",
+    "loss": "P",
+    "today": "Hoy",
+    "yesterday": "Ayer"
   },
   "app": {
     "name": "Futevo",
     "wordmark": "FUTEVO"
   },
   "tabs": {
-    "dashboard": "Panel",
+    "dashboard": "Inicio",
     "matches": "Partidos",
     "players": "Jugadores",
     "settings": "Ajustes",
@@ -31,7 +38,8 @@
     "players": "Jugadores",
     "settings": "Ajustes",
     "playerProfile": "Perfil del jugador",
-    "addPlayer": "Añadir jugador"
+    "addPlayer": "Añadir jugador",
+    "player": "Jugador"
   },
   "attackTypes": {
     "pingo": "Pingo",
@@ -44,7 +52,9 @@
   "auth": {
     "title": "Registra cada punto",
     "subtitle": "Marcador en vivo, zonas de la cancha y tipos de ataque — en un toque.",
-    "continueWithGoogle": "Continuar con Google"
+    "continueWithGoogle": "Continuar con Google",
+    "tagline": "Anota cada punto.\nSigue cada partido.",
+    "version": "v{{version}} · Beta"
   },
   "splash": {
     "tagline": "Cada punto cuenta."
@@ -54,11 +64,29 @@
     "offline": "Estás sin conexión — los cambios se sincronizarán después."
   },
   "errors": {
-    "crashCaught": "Error detectado:"
+    "crashCaught": "Error detectado:",
+    "title": "Esa se escapó",
+    "subtitle": "Algo salió mal. Tus marcadores están a salvo.",
+    "retry": "Reintentar"
   },
   "dashboard": {
     "recentMatches": "Partidos recientes",
-    "noMatches": "Aún no se han jugado partidos."
+    "noMatches": "Aún no se han jugado partidos.",
+    "greetingMorning": "Buenos días, {{name}}",
+    "greetingAfternoon": "Buenas tardes, {{name}}",
+    "greetingEvening": "Buenas noches, {{name}}",
+    "profile": "Perfil",
+    "liveMeta": "a {{target}} · gana por {{winBy}}",
+    "resume": "Seguir anotando",
+    "startTitle": "Nada en vivo ahora",
+    "startSubtitle": "Cada punto cuenta. Anota el próximo.",
+    "startMatch": "Empezar un partido",
+    "statMatches": "Partidos",
+    "statPoints": "Puntos",
+    "statTournaments": "Torneos",
+    "tournaments": "Torneos",
+    "seeAll": "Ver todo",
+    "tournamentSubtitle": "{{duplas}} duplas · {{matches}} partidos"
   },
   "matches": {
     "title": "Partidos",
@@ -68,9 +96,17 @@
     "matchInProgress": "Partido en curso",
     "tapToResume": "{{score}} · toca para continuar",
     "scoreSeparator": "—",
-    "searchPlaceholder": "Buscar equipo, jugador o fecha",
+    "searchPlaceholder": "Buscar partidos y torneos",
     "noResultsTitle": "No se encontraron partidos",
-    "noResultsSubtitle": "Prueba con otro equipo, jugador o fecha."
+    "noResultsSubtitle": "Prueba con otro equipo, jugador o fecha.",
+    "minutes": "{{count}} min",
+    "tournamentSubtitle": "{{duplas}} duplas · {{matches}} partidos",
+    "filters": {
+      "all": "Todos",
+      "live": "En vivo",
+      "finished": "Terminados",
+      "tournaments": "Torneos"
+    }
   },
   "players": {
     "emptyTitle": "Aún no hay jugadores",
@@ -94,18 +130,29 @@
       "name": "Nombre",
       "delete": "Eliminar jugador",
       "deleteTitle": "¿Eliminar jugador?",
-      "deleteMessage": "Esta acción no se puede deshacer."
+      "deleteMessage": "Esta acción no se puede deshacer.",
+      "matches": "Partidos",
+      "winRate": "% victorias",
+      "bestPartner": "Mejor pareja",
+      "lastFive": "Últimos 5"
     },
     "searchPlaceholder": "Buscar jugadores",
     "filterAll": "Todos",
     "added": "El jugador ha sido añadido",
-    "noResults": "Ningún jugador coincide con tu búsqueda"
+    "noResults": "Ningún jugador coincide con tu búsqueda",
+    "addPhoto": "Añadir foto",
+    "noMatches": "Sin partidos aún",
+    "record": {
+      "one": "{{count}} partido · {{rate}}% ganados",
+      "other": "{{count}} partidos · {{rate}}% ganados"
+    },
+    "total": "{{count}} en total"
   },
   "newMatch": {
     "pickPlayers": "Elige los jugadores de cada equipo",
     "addPlayersFirst": "Primero agrega jugadores en la pestaña Jugadores.",
     "targetScore": "Puntaje objetivo",
-    "tournamentOptional": "Torneo (opcional)",
+    "tournamentOptional": "Torneo · opcional",
     "newTournament": "+ Nuevo",
     "tournamentName": "Nombre del torneo",
     "locationOptional": "Lugar (opcional)",
@@ -124,14 +171,35 @@
     "leftShort": "I",
     "rightShort": "D",
     "selectSidePlayer": "Seleccionar jugador de {{team}} · {{side}}",
-    "selectPlayer": "Seleccionar"
+    "selectPlayer": "Seleccionar",
+    "home": "Local",
+    "away": "Visitante",
+    "vs": "VS",
+    "winBy": "Gana por",
+    "clubPlaceholder": "Club",
+    "teamNamePlaceholder": "Nombre del equipo (opcional)",
+    "newTournamentLabel": "Nuevo torneo"
   },
   "tournament": {
     "duplasAndClubs": "Duplas y clubes",
     "duplasEmpty": "Las duplas aparecen aquí cuando juegan un partido.",
     "clubPlaceholder": "Club (opcional)",
     "matches": "Partidos",
-    "noMatches": "Aún no hay partidos."
+    "noMatches": "Aún no hay partidos.",
+    "standings": "Clasificación",
+    "duplaClub": "Dupla · club",
+    "record": "G–P",
+    "diff": "+/−",
+    "addClub": "Añadir club",
+    "editClub": "Editar el club de esta dupla",
+    "duplasCount": {
+      "one": "{{count}} dupla",
+      "other": "{{count}} duplas"
+    },
+    "matchesCount": {
+      "one": "{{count}} partido",
+      "other": "{{count}} partidos"
+    }
   },
   "match": {
     "firstTo": "Primero a {{target}}, con {{winBy}} de diferencia",
@@ -155,12 +223,23 @@
     "tapToScore": "Toca para anotar",
     "tabs": {
       "players": "Jugadores",
-      "pointLog": "Puntos"
+      "pointLog": "Puntos",
+      "summary": "Resumen"
     },
     "stats": {
       "pointsScored": "Puntos hechos"
     },
-    "defaultAttack": "Ataque"
+    "defaultAttack": "Ataque",
+    "final": "Final",
+    "landingZones": "Zonas de caída",
+    "momentum": "Momento",
+    "noPoints": "Aún no hay puntos.",
+    "pointFor": "Punto · {{team}}",
+    "pointsPlayed": {
+      "one": "{{count}} punto",
+      "other": "{{count}} puntos"
+    },
+    "share": "Compartir"
   },
   "point": {
     "title": "Punto del Equipo {{team}}",
@@ -168,7 +247,13 @@
     "ballOut": "Balón afuera",
     "attackType": "Tipo de ataque",
     "whoScored": "¿Quién anotó?",
-    "confirm": "Confirmar punto"
+    "confirm": "Confirmar punto",
+    "pointFor": "Punto para",
+    "save": "Guardar punto",
+    "stepWhere": "1 · ¿Dónde cayó?",
+    "stepAttack": "2 · ¿Qué ataque?",
+    "stepWho": "3 · ¿Quién anotó?",
+    "courtNote": "Campo rival · red arriba"
   },
   "court": {
     "net": "RED",
@@ -197,7 +282,13 @@
     "signOut": "Cerrar sesión",
     "language": "Idioma",
     "defaultName": "Jugador",
-    "defaultYou": "Tú"
+    "defaultYou": "Tú",
+    "data": "Datos",
+    "synced": "Todo guardado",
+    "syncing": "Sincronizando cambios…",
+    "syncOffline": "Sin conexión — guardado en este dispositivo",
+    "syncSubtitle": "Partidos, jugadores, torneos",
+    "signedInWith": "{{email}} · Google"
   },
   "gamified": {
     "hintPick": "Toca a un jugador para elegir quién anota",

@@ -27,12 +27,12 @@ export const styles = StyleSheet.create((theme) => ({
     lineHeight: 24,
   },
   title: {
-    fontFamily: "BricolageGrotesque_800ExtraBold",
+    fontFamily: "Unbounded_800ExtraBold",
     fontSize: theme.typography.size.xxl,
     lineHeight: 32,
   },
   subtitle: {
-    fontFamily: "BricolageGrotesque_800ExtraBold",
+    fontFamily: "Unbounded_800ExtraBold",
     fontSize: theme.typography.size.lg,
   },
   link: {

@@ -3,10 +3,7 @@ import "@/styles/unistyles"
 import React from "react"
 
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native"
-import {
-  BricolageGrotesque_700Bold,
-  BricolageGrotesque_800ExtraBold,
-} from "@expo-google-fonts/bricolage-grotesque"
+import { Unbounded_700Bold, Unbounded_800ExtraBold } from "@expo-google-fonts/unbounded"
 import { Figtree_400Regular, Figtree_600SemiBold, Figtree_700Bold } from "@expo-google-fonts/figtree"
 import { useFonts } from "expo-font"
 import * as SplashScreen from "expo-splash-screen"
@@ -43,8 +40,8 @@ export default function App() {
     Figtree_400Regular,
     Figtree_600SemiBold,
     Figtree_700Bold,
-    BricolageGrotesque_700Bold,
-    BricolageGrotesque_800ExtraBold,
+    Unbounded_700Bold,
+    Unbounded_800ExtraBold,
   })
 
   useNetworkState()

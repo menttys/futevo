@@ -1,58 +1,29 @@
 import { StyleSheet } from "react-native-unistyles"
 
-import { HEAT_STOPS } from "@/utils/heatMap"
-
 export const styles = StyleSheet.create((theme) => ({
-  court: {
-    aspectRatio: 1.4,
-    borderWidth: 2,
-    borderColor: theme.colors.grey200,
-    borderRadius: theme.radius.lg,
-    padding: theme.spacing.xs,
-    gap: theme.spacing.xs,
-    backgroundColor: theme.colors.card,
+  grid: {
+    gap: 8,
   },
-  net: {
-    height: 22,
-    marginVertical: theme.spacing.xs,
-    borderRadius: theme.radius.full,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  netBand: (color: string) => ({
-    flex: 1,
-    alignSelf: "stretch",
-    backgroundColor: color,
-  }),
-  netLabel: {
-    position: "absolute",
-    fontFamily: "Figtree_700Bold",
-    fontSize: 10,
-    letterSpacing: 2,
-    color: theme.colors.dark,
-  },
-  sideLabel: (side: "A" | "B") => ({
-    fontFamily: "Figtree_700Bold",
-    fontSize: theme.typography.size.sm,
-    textAlign: "center",
-    textTransform: "uppercase",
-    marginBottom: theme.spacing.sm,
-    color: side === "A" ? theme.colors.teamA : theme.colors.purple,
-  }),
   row: {
-    flex: 1,
     flexDirection: "row",
-    gap: theme.spacing.xs,
+    gap: 8,
   },
-  cell: (selected: boolean, emptyColor: string) => ({
+  // Cream tiles; the chosen zone turns brand yellow and carries the mark.
+  cell: (selected: boolean, pressed: boolean) => ({
     flex: 1,
-    borderRadius: theme.radius.sm,
+    height: 92,
+    borderRadius: theme.radius.md,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: selected ? HEAT_STOPS[0] : emptyColor,
-    borderWidth: selected ? 2 : 0,
-    borderColor: theme.colors.grey200,
+    backgroundColor: selected ? theme.colors.primary : theme.colors.card,
+    boxShadow: selected ? undefined : theme.shadows.card,
+    borderWidth: selected ? 1 : 0,
+    borderColor: theme.colors.text,
+    opacity: pressed ? 0.85 : 1,
   }),
+  number: {
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 13.3,
+    color: theme.colors.textMuted,
+  },
 }))

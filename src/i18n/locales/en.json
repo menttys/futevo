@@ -11,14 +11,21 @@
     "vs": "vs",
     "unknownPlayer": "?",
     "optional": "optional",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back",
+    "clear": "Clear",
+    "live": "Live",
+    "win": "W",
+    "loss": "L",
+    "today": "Today",
+    "yesterday": "Yesterday"
   },
   "app": {
     "name": "Futevo",
     "wordmark": "FUTEVO"
   },
   "tabs": {
-    "dashboard": "Dashboard",
+    "dashboard": "Home",
     "matches": "Matches",
     "players": "Players",
     "settings": "Settings",
@@ -31,7 +38,8 @@
     "players": "Players",
     "settings": "Settings",
     "playerProfile": "Player profile",
-    "addPlayer": "Add player"
+    "addPlayer": "Add player",
+    "player": "Player"
   },
   "attackTypes": {
     "pingo": "Pingo",
@@ -44,7 +52,9 @@
   "auth": {
     "title": "Track every point",
     "subtitle": "Live score, court zones, and attack types — in one tap.",
-    "continueWithGoogle": "Continue with Google"
+    "continueWithGoogle": "Continue with Google",
+    "tagline": "Score every point.\nTrack every game.",
+    "version": "v{{version}} · Beta"
   },
   "splash": {
     "tagline": "Every point counts."
@@ -54,11 +64,29 @@
     "offline": "You're offline — changes will sync later."
   },
   "errors": {
-    "crashCaught": "Crash caught:"
+    "crashCaught": "Crash caught:",
+    "title": "That one got away",
+    "subtitle": "Something went wrong. Your scores are safe.",
+    "retry": "Try again"
   },
   "dashboard": {
     "recentMatches": "Recent matches",
-    "noMatches": "No matches played yet."
+    "noMatches": "No matches played yet.",
+    "greetingMorning": "Good morning, {{name}}",
+    "greetingAfternoon": "Good afternoon, {{name}}",
+    "greetingEvening": "Good evening, {{name}}",
+    "profile": "Profile",
+    "liveMeta": "to {{target}} · win by {{winBy}}",
+    "resume": "Resume scoring",
+    "startTitle": "Nothing live right now",
+    "startSubtitle": "Every point counts. Track the next one.",
+    "startMatch": "Start a match",
+    "statMatches": "Matches",
+    "statPoints": "Points",
+    "statTournaments": "Tournaments",
+    "tournaments": "Tournaments",
+    "seeAll": "See all",
+    "tournamentSubtitle": "{{duplas}} duplas · {{matches}} matches"
   },
   "matches": {
     "title": "Matches",
@@ -68,9 +96,17 @@
     "matchInProgress": "Match in progress",
     "tapToResume": "{{score}} · tap to resume",
     "scoreSeparator": "—",
-    "searchPlaceholder": "Search team, player or date",
+    "searchPlaceholder": "Search matches & tournaments",
     "noResultsTitle": "No matches found",
-    "noResultsSubtitle": "Try a different team, player or date."
+    "noResultsSubtitle": "Try a different team, player or date.",
+    "minutes": "{{count}} min",
+    "tournamentSubtitle": "{{duplas}} duplas · {{matches}} matches",
+    "filters": {
+      "all": "All",
+      "live": "Live",
+      "finished": "Finished",
+      "tournaments": "Tournaments"
+    }
   },
   "players": {
     "emptyTitle": "No players yet",
@@ -94,18 +130,29 @@
       "name": "Name",
       "delete": "Delete player",
       "deleteTitle": "Delete player?",
-      "deleteMessage": "This can't be undone."
+      "deleteMessage": "This can't be undone.",
+      "matches": "Matches",
+      "winRate": "Win rate",
+      "bestPartner": "Best partner",
+      "lastFive": "Last 5"
     },
     "searchPlaceholder": "Search players",
     "filterAll": "All",
     "added": "Player has been added",
-    "noResults": "No players match your search"
+    "noResults": "No players match your search",
+    "addPhoto": "Add photo",
+    "noMatches": "No matches yet",
+    "record": {
+      "one": "{{count}} match · {{rate}}% wins",
+      "other": "{{count}} matches · {{rate}}% wins"
+    },
+    "total": "{{count}} total"
   },
   "newMatch": {
     "pickPlayers": "Choose the players for Team A and Team B",
     "addPlayersFirst": "Add players in the Players tab first.",
     "targetScore": "Target score",
-    "tournamentOptional": "Tournament (optional)",
+    "tournamentOptional": "Tournament · optional",
     "newTournament": "+ New",
     "tournamentName": "Tournament name",
     "locationOptional": "Location (optional)",
@@ -124,14 +171,35 @@
     "leftShort": "L",
     "rightShort": "R",
     "selectSidePlayer": "Select {{team}} · {{side}} player",
-    "selectPlayer": "Select"
+    "selectPlayer": "Select",
+    "home": "Home",
+    "away": "Away",
+    "vs": "VS",
+    "winBy": "Win by",
+    "clubPlaceholder": "Club",
+    "teamNamePlaceholder": "Team name (optional)",
+    "newTournamentLabel": "New tournament"
   },
   "tournament": {
     "duplasAndClubs": "Duplas & clubs",
     "duplasEmpty": "Duplas appear here once they play a match.",
     "clubPlaceholder": "Club (optional)",
     "matches": "Matches",
-    "noMatches": "No matches yet."
+    "noMatches": "No matches yet.",
+    "standings": "Standings",
+    "duplaClub": "Dupla · club",
+    "record": "W–L",
+    "diff": "+/−",
+    "addClub": "Add club",
+    "editClub": "Edit the club for this dupla",
+    "duplasCount": {
+      "one": "{{count}} dupla",
+      "other": "{{count}} duplas"
+    },
+    "matchesCount": {
+      "one": "{{count}} match",
+      "other": "{{count}} matches"
+    }
   },
   "match": {
     "firstTo": "First to {{target}}, win by {{winBy}}",
@@ -155,12 +223,23 @@
     "tapToScore": "Tap to score",
     "tabs": {
       "players": "Players",
-      "pointLog": "Point log"
+      "pointLog": "Point log",
+      "summary": "Summary"
     },
     "stats": {
       "pointsScored": "Points scored"
     },
-    "defaultAttack": "Attack"
+    "defaultAttack": "Attack",
+    "final": "Final",
+    "landingZones": "Landing zones",
+    "momentum": "Momentum",
+    "noPoints": "No points yet.",
+    "pointFor": "Point · {{team}}",
+    "pointsPlayed": {
+      "one": "{{count}} point",
+      "other": "{{count}} points"
+    },
+    "share": "Share"
   },
   "point": {
     "title": "Point for Team {{team}}",
@@ -168,7 +247,13 @@
     "ballOut": "Ball out",
     "attackType": "Type of attack",
     "whoScored": "Who scored?",
-    "confirm": "Confirm point"
+    "confirm": "Confirm point",
+    "pointFor": "Point for",
+    "save": "Save point",
+    "stepWhere": "1 · Where did it land?",
+    "stepAttack": "2 · Which attack?",
+    "stepWho": "3 · Who scored?",
+    "courtNote": "Opponent's court · net at the top"
   },
   "court": {
     "net": "NET",
@@ -197,7 +282,13 @@
     "signOut": "Sign out",
     "language": "Language",
     "defaultName": "Player",
-    "defaultYou": "You"
+    "defaultYou": "You",
+    "data": "Data",
+    "synced": "All changes saved",
+    "syncing": "Syncing changes…",
+    "syncOffline": "Offline — saved on this device",
+    "syncSubtitle": "Matches, players, tournaments",
+    "signedInWith": "{{email}} · Google"
   },
   "gamified": {
     "hintPick": "Tap a player to pick who scores",
