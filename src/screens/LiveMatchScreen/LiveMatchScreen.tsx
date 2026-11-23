@@ -107,8 +107,8 @@ export function LiveMatchScreen() {
             onPress={() => scorePoint(side)}
             style={({ pressed }) => styles.pointButton(side === "B", pressed)}
           >
-            <Text style={styles.pointHint}>{t("match.tapToScore")}</Text>
-            <Text style={styles.pointLabel} numberOfLines={1}>
+            <Text style={side === "A" ? styles.pointHintOnDark : styles.pointHint}>{t("match.tapToScore")}</Text>
+            <Text style={side === "A" ? styles.pointLabelOnDark : styles.pointLabel} numberOfLines={1}>
               {t("match.pointFor", { team: side === "A" ? homeName : awayName })}
             </Text>
           </Pressable>

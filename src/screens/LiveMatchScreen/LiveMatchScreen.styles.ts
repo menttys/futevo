@@ -28,14 +28,14 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingBottom: Math.max(rt.insets.bottom, 16) + 12,
     gap: 12,
   },
-  // Two full-width tap targets: Home in butter, Away in brand yellow.
+  // Two full-width tap targets: Home in blue-black (cream text), Away in brand yellow.
   pointButton: (away: boolean, pressed: boolean) => ({
     height: 104,
     borderRadius: theme.radius.lg,
     alignItems: "center",
     justifyContent: "center",
     gap: 9,
-    backgroundColor: away ? theme.colors.primary : theme.colors.butter,
+    backgroundColor: away ? theme.colors.primary : theme.colors.teamA,
     opacity: pressed ? 0.85 : 1,
   }),
   pointHint: {
@@ -45,12 +45,27 @@ export const styles = StyleSheet.create((theme, rt) => ({
     textTransform: "uppercase",
     color: theme.colors.text,
   },
+  pointHintOnDark: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 11,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.white,
+  },
   pointLabel: {
     paddingHorizontal: 16,
     fontFamily: theme.fonts.display,
     fontSize: 18.5,
     letterSpacing: -0.4,
     color: theme.colors.text,
+    textAlign: "center",
+  },
+  pointLabelOnDark: {
+    paddingHorizontal: 16,
+    fontFamily: theme.fonts.display,
+    fontSize: 18.5,
+    letterSpacing: -0.4,
+    color: theme.colors.white,
     textAlign: "center",
   },
   actions: {
