@@ -6,7 +6,7 @@ export const TOKEN_SIZE = 44
 export const COURT_MARGIN = 36
 const CELL_GAP = 3
 
-// Court mode: the court is the interface. Cream zones, a blue-black net, the ball's flight as a dotted trail.
+// Court mode: the court is the interface. Cream zones, a pastel gradient net, the ball's flight as a dotted trail.
 export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
@@ -78,6 +78,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     backgroundColor: theme.colors.card,
     boxShadow: theme.shadows.card,
   }),
+  // The net is a row of colour segments that reads as one left-to-right gradient.
   net: (rect: CourtRect) => ({
     position: "absolute",
     left: rect.x - 4,
@@ -85,7 +86,12 @@ export const styles = StyleSheet.create((theme, rt) => ({
     top: rect.y + rect.height / 2 - 3,
     height: 6,
     borderRadius: 3,
-    backgroundColor: theme.colors.dark,
+    flexDirection: "row",
+    overflow: "hidden",
+  }),
+  netSegment: (color: string) => ({
+    flex: 1,
+    backgroundColor: color,
   }),
   // The landing zone turns brand yellow.
   zoneHighlight: (rect: CourtRect) => ({

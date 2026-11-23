@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { View } from "react-native"
 
 import { useNavigation } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 
+import type { TeamSide } from "@/@types/futevo"
 import { MeshBackground } from "@/components/MeshBackground"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { NewMatchForm } from "@/forms/NewMatchForm"
@@ -12,6 +13,7 @@ import { useMatches } from "@/hooks/useMatches"
 import { useTournaments } from "@/hooks/useTournaments"
 import { useLanguage } from "@/i18n"
 import { MatchesStackParamList } from "@/navigation/types"
+import { useNewMatchStore } from "@/store/newMatchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { findEntry } from "@/utils/tournament"
@@ -27,6 +29,13 @@ export function NewMatchScreen() {
   const tournaments = useTournamentStore((s) => s.tournaments) ?? []
   const { startMatch } = useMatches()
   const { createTournament, setEntryClub } = useTournaments()
+  const resetDraft = useNewMatchStore((s) => s.reset)
+
+  // Clear the slot draft when leaving this screen (back, or replaced by the live match).
+  useEffect(() => () => resetDraft(), [resetDraft])
+
+  const handlePickSlot = (side: TeamSide, index: number) =>
+    navigation.navigate("PlayerPicker", { side, index })
 
   const handleSubmit = ({
     newTournament,
@@ -39,7 +48,9 @@ export function NewMatchScreen() {
 
     if (tournamentId) {
       // Register each dupla on first appearance; existing entries stay locked.
-      const tournament = useTournamentStore.getState().tournaments?.find((tr) => tr.id === tournamentId)
+      const tournament = useTournamentStore
+        .getState()
+        .tournaments?.find((tr) => tr.id === tournamentId)
       if (!findEntry(tournament, params.teamA)) setEntryClub(tournamentId, params.teamA, clubA)
       if (!findEntry(tournament, params.teamB)) setEntryClub(tournamentId, params.teamB, clubB)
     }
@@ -56,7 +67,12 @@ export function NewMatchScreen() {
         onBack={navigation.canGoBack() ? () => navigation.goBack() : undefined}
         backLabel={t("common.back")}
       />
-      <NewMatchForm players={players} tournaments={tournaments} onSubmit={handleSubmit} />
+      <NewMatchForm
+        players={players}
+        tournaments={tournaments}
+        onSubmit={handleSubmit}
+        onPickSlot={handlePickSlot}
+      />
     </View>
   )
 }

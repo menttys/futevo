@@ -11,6 +11,7 @@ import { MeshBackground } from "@/components/MeshBackground"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { SegmentedControl } from "@/components/SegmentedControl"
+import { WaterBackground } from "@/components/WaterBackground"
 import { signout } from "@/hooks/useFirebase"
 import { useNetworkState } from "@/hooks/useNetworkState"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
@@ -22,9 +23,6 @@ import { useUserStore } from "@/store/userState"
 import { styles } from "./SettingsScreen.styles"
 
 const LANGUAGE_ORDER: LanguageCode[] = ["en", "es", "pt"]
-// The kit-tape footer: one mark spun 18° at a time.
-const TAPE = Array.from({ length: 10 }, (_, i) => i * 18)
-
 // Profile, language and sync status.
 export function SettingsScreen() {
   const { theme } = useUnistyles()
@@ -100,11 +98,7 @@ export function SettingsScreen() {
           style={styles.signOut}
         />
 
-        <View style={styles.tape} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          {TAPE.map((angle) => (
-            <FutevoMark key={angle} size={22} rotate={angle} />
-          ))}
-        </View>
+        <WaterBackground style={styles.water} />
       </ScrollView>
     </View>
   )

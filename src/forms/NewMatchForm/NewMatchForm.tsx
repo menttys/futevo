@@ -6,11 +6,12 @@ import { useUnistyles } from "react-native-unistyles"
 import { AppButton } from "@/components/AppButton"
 import { FutevoMark } from "@/components/FutevoMark"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
-import { PlayerPickerModal } from "@/components/PlayerPickerModal"
 import { SegmentedControl } from "@/components/SegmentedControl"
 import { DEFAULT_TARGET_SCORE, DEFAULT_WIN_BY } from "@/constants/App"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { ChevronDown, Plus, Trophy } from "@/lib/icons"
+import { useNewMatchStore } from "@/store/newMatchState"
 import { firstName } from "@/utils/matchLabels"
 import { findEntry } from "@/utils/tournament"
 
@@ -26,16 +27,16 @@ const WIN_BY = [1, 2]
 const today = () => new Date().toISOString().slice(0, 10)
 
 // Two symmetric teams, then the rules. Blue-black card = Home, yellow card = Away.
-export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormProps) {
+export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: NewMatchFormProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
-  // Index 0 = left side of the court, 1 = right side.
-  const [teamAIds, setTeamAIds] = useState<(string | undefined)[]>([undefined, undefined])
-  const [teamBIds, setTeamBIds] = useState<(string | undefined)[]>([undefined, undefined])
+  const tabBarInset = useTabBarInset()
+  // Index 0 = left side of the court, 1 = right side. Written by the player picker screen.
+  const teamAIds = useNewMatchStore((s) => s.teamA)
+  const teamBIds = useNewMatchStore((s) => s.teamB)
   const [targetScore, setTargetScore] = useState(DEFAULT_TARGET_SCORE)
   const [winBy, setWinBy] = useState(DEFAULT_WIN_BY)
   const [showTournament, setShowTournament] = useState(false)
-  const [picker, setPicker] = useState<{ side: Side; index: number } | undefined>()
   // undefined = friendly match, NEW_TOURNAMENT = create inline, otherwise a tournament id
   const [tournamentChoice, setTournamentChoice] = useState<string | undefined>()
   const [newName, setNewName] = useState("")
@@ -53,10 +54,6 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
   const teamB = toTeam(teamBIds)
   const slotLabel = (index: number) => (index === 0 ? t("newMatch.left") : t("newMatch.right"))
   const slotIds = (side: Side) => (side === "A" ? teamAIds : teamBIds)
-  const setSlot = (side: Side, index: number, id: string | undefined) => {
-    const set = side === "A" ? setTeamAIds : setTeamBIds
-    set((prev) => prev.map((v, i) => (i === index ? id : v)))
-  }
 
   // A dupla already registered in the tournament keeps its club (locked).
   const entryA = teamA ? findEntry(tournament, teamA) : undefined
@@ -123,14 +120,20 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
             style={[styles.nameField(home), styles.nameInput(home)]}
             value={value}
             onChangeText={onChange}
-            placeholder={inTournament ? t("newMatch.clubPlaceholder") : t("newMatch.teamNamePlaceholder")}
+            placeholder={
+              inTournament ? t("newMatch.clubPlaceholder") : t("newMatch.teamNamePlaceholder")
+            }
             placeholderTextColor={home ? theme.colors.onDarkMuted : theme.colors.textMuted}
             accessibilityLabel={home ? t("newMatch.home") : t("newMatch.away")}
             returnKeyType="done"
           />
         )}
         {inTournament && !entry && knownClubs.length > 0 ? (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestions}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.suggestions}
+          >
             {knownClubs.map((club) => (
               <Pressable
                 key={club}
@@ -151,7 +154,7 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                 key={index}
                 accessibilityRole="button"
                 accessibilityLabel={`${home ? t("newMatch.home") : t("newMatch.away")} · ${slotLabel(index)}`}
-                onPress={() => setPicker({ side, index })}
+                onPress={() => onPickSlot(side, index)}
                 style={({ pressed }) => styles.slot(home, pressed)}
               >
                 {player ? (
@@ -183,7 +186,9 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        {players.length === 0 ? <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text> : null}
+        {players.length === 0 ? (
+          <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text>
+        ) : null}
 
         {renderTeam("A")}
         <View style={styles.versus}>
@@ -230,12 +235,18 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
 
         {showTournament ? (
           <View style={styles.tournamentBody}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chipRow}
+            >
               <Pressable
                 style={styles.chip(tournamentChoice === undefined)}
                 onPress={() => setTournamentChoice(undefined)}
               >
-                <Text style={styles.chipLabel(tournamentChoice === undefined)}>{t("common.none")}</Text>
+                <Text style={styles.chipLabel(tournamentChoice === undefined)}>
+                  {t("common.none")}
+                </Text>
               </Pressable>
               {tournaments.map((tr) => (
                 <Pressable
@@ -246,7 +257,10 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   <Text style={styles.chipLabel(tournamentChoice === tr.id)}>{tr.name}</Text>
                 </Pressable>
               ))}
-              <Pressable style={styles.chip(isNew)} onPress={() => setTournamentChoice(NEW_TOURNAMENT)}>
+              <Pressable
+                style={styles.chip(isNew)}
+                onPress={() => setTournamentChoice(NEW_TOURNAMENT)}
+              >
                 <Text style={styles.chipLabel(isNew)}>{t("newMatch.newTournament")}</Text>
               </Pressable>
             </ScrollView>
@@ -286,48 +300,23 @@ export function NewMatchForm({ players, tournaments, onSubmit }: NewMatchFormPro
                   placeholder={t("newMatch.roundPlaceholder")}
                   placeholderTextColor={theme.colors.textMuted}
                 />
-                {!(teamA && teamB) ? <Text style={styles.hint}>{t("newMatch.pickFourForClubs")}</Text> : null}
+                {!(teamA && teamB) ? (
+                  <Text style={styles.hint}>{t("newMatch.pickFourForClubs")}</Text>
+                ) : null}
               </>
             ) : null}
           </View>
         ) : null}
       </ScrollView>
 
-      <View style={styles.footer}>
-        <AppButton label={t("newMatch.start")} disabled={!canSubmit} onPress={handleSubmit} style={styles.start} />
+      <View style={styles.footer(tabBarInset)}>
+        <AppButton
+          label={t("newMatch.start")}
+          disabled={!canSubmit}
+          onPress={handleSubmit}
+          style={styles.start}
+        />
       </View>
-
-      <PlayerPickerModal
-        visible={picker !== undefined}
-        title={
-          picker
-            ? t("newMatch.selectSidePlayer", {
-                team: picker.side === "A" ? t("newMatch.home") : t("newMatch.away"),
-                side: slotLabel(picker.index),
-              })
-            : undefined
-        }
-        players={players.filter((p) => {
-          if (!picker) return true
-          const taken = [
-            ...teamAIds.map((id, i) => (picker.side === "A" && i === picker.index ? undefined : id)),
-            ...teamBIds.map((id, i) => (picker.side === "B" && i === picker.index ? undefined : id)),
-          ]
-          return !taken.includes(p.id)
-        })}
-        selectedIds={
-          picker
-            ? slotIds(picker.side)
-                .slice(picker.index, picker.index + 1)
-                .filter((id): id is string => !!id)
-            : []
-        }
-        max={1}
-        slotLabels={[picker ? slotLabel(picker.index) : ""]}
-        slotColor={() => (picker?.side === "B" ? theme.colors.primary : theme.colors.dark)}
-        onChange={(ids) => picker && setSlot(picker.side, picker.index, ids[0])}
-        onClose={() => setPicker(undefined)}
-      />
     </View>
   )
 }

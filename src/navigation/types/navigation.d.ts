@@ -6,6 +6,7 @@ export type MatchesStackParamList = {
   NewMatch: undefined
   LiveMatch: { matchId: string }
   PointEntry: { matchId: string; team: TeamSide }
+  PlayerPicker: { side: TeamSide; index: number }
   GamifiedMatch: { matchId: string }
   MatchDetail: { matchId: string; from?: "Matches" | "Dashboard" }
   TournamentDetail: { tournamentId: string }

@@ -84,11 +84,8 @@ export const styles = StyleSheet.create((theme) => ({
   signOut: {
     backgroundColor: theme.colors.wash,
   },
-  tape: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: 4,
-    opacity: 0.8,
-    paddingTop: 2,
+  water: {
+    marginTop: 8,
+    borderRadius: theme.radius.lg,
   },
 }))

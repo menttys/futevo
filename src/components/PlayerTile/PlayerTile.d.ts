@@ -4,6 +4,4 @@ export type PlayerTileProps = {
   player: Player
   onPress: () => void
   selected?: boolean
-  badgeLabel?: string
-  badgeColor?: string
 }

@@ -20,19 +20,4 @@ export const styles = StyleSheet.create((theme) => ({
     fontSize: 14,
     color: theme.colors.text,
   },
-  badge: (color: string) => ({
-    position: "absolute",
-    top: -4,
-    right: -6,
-    backgroundColor: color,
-    borderRadius: theme.radius.full,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-  }),
-  // Readable on either slot colour: yellow text on blue-black, blue-black on yellow.
-  badgeText: (color: string) => ({
-    fontFamily: theme.fonts.bold,
-    fontSize: 10,
-    color: color === theme.colors.dark ? theme.colors.primary : theme.colors.text,
-  }),
 }))

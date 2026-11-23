@@ -18,6 +18,7 @@ const FULL_SCREEN_ROUTES = new Set<string>([
   MatchesRoutes.NEW_MATCH,
   MatchesRoutes.LIVE_MATCH,
   MatchesRoutes.POINT_ENTRY,
+  MatchesRoutes.PLAYER_PICKER,
   MatchesRoutes.GAMIFIED_MATCH,
 ])
 
@@ -36,7 +37,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   if (
     activeRoute.name === TabRoutes.MATCH_FLOW &&
     activeNested &&
-    (activeNested === MatchesRoutes.GAMIFIED_MATCH || (!sideBar && FULL_SCREEN_ROUTES.has(activeNested)))
+    (activeNested === MatchesRoutes.GAMIFIED_MATCH ||
+      (!sideBar && FULL_SCREEN_ROUTES.has(activeNested)))
   ) {
     return null
   }

@@ -207,13 +207,14 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 15,
     color: theme.colors.text,
   },
-  // Big yellow Start match pinned at the bottom.
-  footer: {
+  // Big yellow Start match pinned at the bottom. The floating tab bar overlays this
+  // area, so lift the footer above it when the bottom bar is shown (tabBarInset > 0).
+  footer: (tabBarInset: number) => ({
     ...WEB_CONTENT,
     paddingHorizontal: theme.gutter,
     paddingTop: 8,
-    paddingBottom: Math.max(rt.insets.bottom, 16) + 8,
-  },
+    paddingBottom: tabBarInset > 0 ? tabBarInset + 8 : Math.max(rt.insets.bottom, 16) + 8,
+  }),
   start: {
     minHeight: 52,
   },

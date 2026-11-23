@@ -49,7 +49,8 @@ type PendingPoint = {
   attackType?: AttackTypeId
 }
 
-// Same red-to-green band as the net on the stats court.
+// Net colours, left to right: mid-purple, lavender, sky blue, mint, soft yellow, yellow.
+const NET_COLORS = ["#8A6BD9", "#E9E3F6", "#8FD3F4", "#A8EBCB", "#FFE680", "#FFD400"]
 
 const COURT_ZONES: CourtZone[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const COURT_CELLS = (["B", "A"] as const).flatMap((side) =>
@@ -348,7 +349,11 @@ export function GamifiedMatchScreen() {
                 style={styles.net(court)}
                 pointerEvents="none"
                 accessibilityLabel={t("court.net")}
-              />
+              >
+                {NET_COLORS.map((color) => (
+                  <View key={color} style={styles.netSegment(color)} />
+                ))}
+              </View>
 
               {tokens.map((token) => {
                 const selected = token.player.id === selectedId || token.player.id === movingId

@@ -1,4 +1,4 @@
-import type { Player, Tournament } from "@/@types/futevo"
+import type { Player, TeamSide, Tournament } from "@/@types/futevo"
 
 export type NewMatchFormSubmit = {
   teamA: [string, string]
@@ -21,4 +21,6 @@ export type NewMatchFormProps = {
   players: Player[]
   tournaments: Tournament[]
   onSubmit: (params: NewMatchFormSubmit) => void
+  // Opens the player picker for one court slot. Index 0 = left, 1 = right.
+  onPickSlot: (side: TeamSide, index: number) => void
 }

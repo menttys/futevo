@@ -3,9 +3,9 @@ import React from "react"
 import { createStackNavigator } from "@react-navigation/stack"
 
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
+import { useLanguage } from "@/i18n"
 import { SettingsScreen } from "@/screens/SettingsScreen"
 import { theme } from "@/styles/theme"
-import { useLanguage } from "@/i18n"
 
 import { SettingsRoutes } from "./routes"
 import { SettingsStackParamList } from "./types/navigation"

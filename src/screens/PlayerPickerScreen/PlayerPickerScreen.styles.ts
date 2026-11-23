@@ -1,10 +1,13 @@
 import { StyleSheet } from "react-native-unistyles"
 
 export const styles = StyleSheet.create((theme, rt) => ({
-  overlay: {
+  root: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(10,17,31,0.5)",
+  },
+  // Tapping the empty area above the sheet dismisses it.
+  dismissArea: {
+    flex: 1,
   },
   sheet: {
     height: "80%",
@@ -15,23 +18,6 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingTop: 16,
     paddingBottom: Math.max(rt.insets.bottom, 16),
     gap: 12,
-  },
-  overlayWeb: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(10,17,31,0.5)",
-    padding: theme.spacing.md,
-  },
-  floating: {
-    width: "100%",
-    maxWidth: 560,
-    height: "80%",
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.xl,
-    padding: theme.gutter,
-    gap: 12,
-    boxShadow: "0 12px 40px rgba(10,17,31,0.35)",
   },
   header: {
     flexDirection: "row",
