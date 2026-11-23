@@ -21,7 +21,25 @@ const palette = {
   iconMuted: "rgba(10,17,31,0.62)", // inactive icons
   danger: "#C2185B",
   dangerAlt: "#D92D20",
+  success: "#1E9E62", // "ready" status dot
+  landingTint: "#FFF4CC", // court mode: the half a picked-up player can land on
+  // Court-mode net, left to right: mid-purple, lavender, sky blue, mint, soft yellow, yellow.
+  netPurple: "#8C6FDC",
+  netLavender: "#BBA9F1",
+  netSky: "#A7DBF5",
+  netMint: "#BDEFD5",
 } as const
+
+// Court-mode net stops. Exported on their own because Unistyles registers the theme natively
+// once at startup, so components read this constant rather than an array off the runtime theme.
+export const NET_GRADIENT: readonly string[] = [
+  palette.netPurple,
+  palette.netLavender,
+  palette.netSky,
+  palette.netMint,
+  palette.softYellow,
+  palette.sun,
+]
 
 export const theme = {
   colors: {
@@ -70,6 +88,10 @@ export const theme = {
     // danger
     danger: palette.danger,
     dangerAlt: palette.dangerAlt,
+    success: palette.success,
+
+    // court mode
+    landingTint: palette.landingTint,
 
     profileGradientStart: palette.sun,
 

@@ -291,12 +291,31 @@
     "signedInWith": "{{email}} · Google"
   },
   "gamified": {
-    "hintPick": "Toca a un jugador para elegir quién anota",
-    "hintDrag": "Arrastra desde {{name}} hasta donde cayó la pelota · mantén para moverlo",
-    "hintInvalid": "Suelta en la cancha del otro equipo, o fuera de las líneas para pelota fuera",
-    "pointFor": "Punto para {{name}}",
-    "landedIn": "Cayó en la cancha del equipo {{side}}, zona {{zone}}",
     "courtMode": "Modo cancha",
-    "hintMoving": "Arrastra hasta donde atacó el jugador y suelta"
+    "chipIdleTitle": "Toma un jugador",
+    "chipIdleSubtitle": "Toca y mantén una ficha",
+    "chipPickedTitle": "{{name}} · en la mano",
+    "chipPickedSubtitle": "Arrastra hasta la zona donde cayó",
+    "chipHoldingTitle": "{{name}} · sujetando",
+    "chipHoldingSubtitle": "Sobre la zona {{zone}} · lado {{team}}",
+    "chipPlacedTitle": "{{name}} → zona {{zone}}",
+    "chipPlacedSubtitle": "Caída marcada · listo para confirmar",
+    "chipCancelTitle": "Suelta para cancelar",
+    "chipCancelSubtitle": "{{name}} vuelve a su casilla",
+    "chipErrorTitle": "Error del rival",
+    "chipErrorSubtitle": "Toca a un jugador del equipo que gana el punto",
+    "hintIdle": "Toca una ficha para tomarla",
+    "hintPicked": "Mantén y arrastra hasta la zona donde cayó",
+    "hintValid": "Suelta para marcar la caída · desliza fuera de la cancha para cancelar",
+    "hintPlaced": "Toca otra zona para moverla",
+    "hintOff": "Suelta fuera de la cancha para cancelar",
+    "hintError": "Toca Error rival otra vez para volver",
+    "zoneLabel": "Zona {{zone}}",
+    "oppError": "Error rival",
+    "pointFor": "Punto para {{name}}",
+    "landedIn": "Cayó en la cancha de {{team}} · zona {{zone}}",
+    "chipMoveTitle": "{{name}} → ataque desde la zona {{zone}}",
+    "chipMoveSubtitle": "Suelta para marcar desde dónde salió el ataque",
+    "hintMove": "Suelta para mover al jugador aquí · suelta al otro lado de la red para la caída"
   }
 }

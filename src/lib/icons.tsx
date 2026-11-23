@@ -10,6 +10,7 @@ import {
   Check as _Check,
   Flag as _Flag,
   GoogleLogo as _GoogleLogo,
+  HandGrabbing as _HandGrabbing,
   House as _House,
   type Icon,
   type IconProps,
@@ -58,6 +59,7 @@ export const ChevronRight = wrap(_CaretRight)
 export const CourtMode = wrap(_SquareSplitVertical)
 export const Flag = wrap(_Flag)
 export const GoogleLogo = wrap(_GoogleLogo)
+export const HandGrab = wrap(_HandGrabbing)
 export const LogOut = wrap(_SignOut)
 export const Pencil = wrap(_PencilSimple)
 export const Plus = wrap(_Plus)

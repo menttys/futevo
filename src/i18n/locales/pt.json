@@ -291,12 +291,31 @@
     "signedInWith": "{{email}} · Google"
   },
   "gamified": {
-    "hintPick": "Toque em um jogador para escolher quem pontuou",
-    "hintDrag": "Arraste de {{name}} até onde a bola caiu · segure para mover",
-    "hintInvalid": "Solte na quadra do outro time, ou fora das linhas para bola fora",
-    "pointFor": "Ponto de {{name}}",
-    "landedIn": "Caiu na quadra do time {{side}}, zona {{zone}}",
     "courtMode": "Modo quadra",
-    "hintMoving": "Arraste até onde o jogador atacou e solte"
+    "chipIdleTitle": "Pegue um jogador",
+    "chipIdleSubtitle": "Toque e segure uma ficha",
+    "chipPickedTitle": "{{name}} · na mão",
+    "chipPickedSubtitle": "Arraste até a zona onde caiu",
+    "chipHoldingTitle": "{{name}} · segurando",
+    "chipHoldingSubtitle": "Sobre a zona {{zone}} · lado {{team}}",
+    "chipPlacedTitle": "{{name}} → zona {{zone}}",
+    "chipPlacedSubtitle": "Queda marcada · pronto para confirmar",
+    "chipCancelTitle": "Solte para cancelar",
+    "chipCancelSubtitle": "{{name}} volta para o seu quadrado",
+    "chipErrorTitle": "Erro do adversário",
+    "chipErrorSubtitle": "Toque em um jogador do time que ganha o ponto",
+    "hintIdle": "Toque em uma ficha para pegá-la",
+    "hintPicked": "Segure e arraste até a zona onde caiu",
+    "hintValid": "Solte para marcar a queda · deslize para fora da quadra para cancelar",
+    "hintPlaced": "Toque em outra zona para mudar",
+    "hintOff": "Solte fora da quadra para cancelar",
+    "hintError": "Toque em Erro adv. de novo para voltar",
+    "zoneLabel": "Zona {{zone}}",
+    "oppError": "Erro adv.",
+    "pointFor": "Ponto de {{name}}",
+    "landedIn": "Caiu na quadra de {{team}} · zona {{zone}}",
+    "chipMoveTitle": "{{name}} → ataque da zona {{zone}}",
+    "chipMoveSubtitle": "Solte para marcar de onde saiu o ataque",
+    "hintMove": "Solte para mover o jogador aqui · solte do outro lado da rede para a queda"
   }
 }

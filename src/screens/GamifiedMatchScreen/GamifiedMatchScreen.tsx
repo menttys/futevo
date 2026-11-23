@@ -5,52 +5,64 @@ import type { LayoutChangeEvent } from "react-native"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 import { Gesture, GestureDetector } from "react-native-gesture-handler"
-import Svg, { Circle, Line } from "react-native-svg"
+import Svg, { Path } from "react-native-svg"
 import { useUnistyles } from "react-native-unistyles"
 
 import type { AttackTypeId, CourtZone, Player, TeamSide } from "@/@types/futevo"
 import { AppButton } from "@/components/AppButton"
 import { AttackTypePicker } from "@/components/AttackTypePicker"
+import { CourtNet } from "@/components/CourtNet"
+import { CourtStatusChip } from "@/components/CourtStatusChip"
+import type { CourtStatusChipProps } from "@/components/CourtStatusChip/CourtStatusChip.d"
+import { FutevoMark } from "@/components/FutevoMark"
 import { MeshBackground } from "@/components/MeshBackground"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { useMatches } from "@/hooks/useMatches"
+import { useLanguage } from "@/i18n"
 import { Undo, X } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
+import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
-import type { CourtHit, CourtRect, Point2D } from "@/utils/courtGesture"
+import type { CourtHit, Point2D } from "@/utils/courtGesture"
+import { locateOnCourt, suggestAttackType, toCourtPosition, zoneRect } from "@/utils/courtGesture"
+import type { SelectionPhase } from "@/utils/courtSelection"
 import {
-  clampToOwnHalf,
-  locateOnCourt,
-  suggestAttackType,
-  toCourtPosition,
-  zoneRect,
-} from "@/utils/courtGesture"
-import { useLanguage } from "@/i18n"
+  arcPath,
+  dragPhase,
+  fitCourt,
+  homeZone,
+  netEdge,
+  opponentOf,
+  zoneCenter,
+} from "@/utils/courtSelection"
+import { firstName, sideLabel } from "@/utils/matchLabels"
 
-import { COURT_MARGIN, styles, TOKEN_SIZE } from "./GamifiedMatchScreen.styles"
+import type { CellTint, TokenVariant } from "./GamifiedMatchScreen.styles"
+import {
+  COURT_FIT,
+  LANDING_MARK_SIZE,
+  LIFTED_SIZE,
+  styles,
+  TOKEN_SIZE,
+} from "./GamifiedMatchScreen.styles"
 
 type NavigationProp = StackNavigationProp<MatchesStackParamList, "GamifiedMatch">
 type GamifiedRouteProp = RouteProp<MatchesStackParamList, "GamifiedMatch">
 
-type Token = { player: Player; team: TeamSide; center: Point2D }
+// Every player stands on a square of their own half.
+type Token = { player: Player; team: TeamSide; zone: CourtZone; center: Point2D }
 
-type Drag = { playerId: string; origin: Point2D; current: Point2D }
+// A token being carried: where the finger went down and where it is now.
+type Drag = { playerId: string; start: Point2D; current: Point2D }
 
-// A finished gesture waiting for the user to choose the attack type and confirm.
-type PendingPoint = {
-  player: Player
-  team: TeamSide
-  origin: Point2D
-  landing: Point2D
-  // null when the ball landed outside the court lines.
-  hit: CourtHit | null
-  attackType?: AttackTypeId
-}
+// A released landing, waiting for the points sheet to confirm it. `landing` is exactly where the
+// finger let go; `hit` is the zone that point falls in.
+type Placed = { playerId: string; hit: CourtHit; landing: Point2D; attackType?: AttackTypeId }
 
-// Net colours, left to right: mid-purple, lavender, sky blue, mint, soft yellow, yellow.
-const NET_COLORS = ["#8A6BD9", "#E9E3F6", "#8FD3F4", "#A8EBCB", "#FFE680", "#FFD400"]
+// "error": Opp. error was pressed with nobody picked up; the next token tapped wins the point.
+type ScreenPhase = SelectionPhase | "error"
 
 const COURT_ZONES: CourtZone[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const COURT_CELLS = (["B", "A"] as const).flatMap((side) =>
@@ -60,35 +72,32 @@ const COURT_CELLS = (["B", "A"] as const).flatMap((side) =>
 // Moving less than this between touch-down and release counts as a tap.
 const TAP_SLOP = 12
 const TOKEN_HIT_RADIUS = TOKEN_SIZE * 0.8
-// Holding a player this long (without moving) switches the drag from "aim the ball" to
-// "move the player".
-const HOLD_TO_MOVE_MS = 300
-// How far past its own baseline a player can be dragged (to take a serve).
-const BEHIND_BASELINE = 20
+// Stable fallback so the token memo doesn't recompute while players are loading.
+const NO_PLAYERS: Player[] = []
 
 export function GamifiedMatchScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<GamifiedRouteProp>().params
-  const allPlayers = usePlayerStore((s) => s.players) ?? []
+  const allPlayers = usePlayerStore((s) => s.players) ?? NO_PLAYERS
   const match = useMatchStore((s) => s.matches?.find((m) => m.id === matchId))
+  const tournamentId = match?.tournamentId
+  const tournament = useTournamentStore((s) =>
+    tournamentId ? s.tournaments?.find((entry) => entry.id === tournamentId) : undefined
+  )
   const { addPoint, undoLastPoint } = useMatches()
 
   const [arena, setArena] = useState({ width: 0, height: 0 })
-  const [selectedId, setSelectedId] = useState<string | undefined>()
   const [drag, setDrag] = useState<Drag | null>(null)
-  const [pending, setPending] = useState<PendingPoint | null>(null)
-  const [invalidDrop, setInvalidDrop] = useState(false)
-  // Where the user has moved each player to; players without an entry stand at their default spot.
-  const [positions, setPositions] = useState<Record<string, Point2D>>({})
-  const [movingId, setMovingId] = useState<string | undefined>()
+  const [placed, setPlaced] = useState<Placed | null>(null)
+  const [errorMode, setErrorMode] = useState(false)
+  // The square each player was moved to (where their attack starts); others stand on their home square.
+  const [squares, setSquares] = useState<Record<string, CourtZone>>({})
 
-  // Gesture callbacks fire between renders, so the in-flight drag lives in a ref.
-  const dragRef = useRef<
-    (Drag & { startedOnToken: boolean; mode: "pending" | "aim" | "move" }) | null
-  >(null)
-  const holdTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  // Gesture callbacks fire between renders, so the token being carried (and the last point the
+  // finger reached) lives in a ref.
+  const carryRef = useRef<{ playerId: string; start: Point2D; current: Point2D } | null>(null)
 
   useEffect(() => {
     if (match?.status === "completed") {
@@ -96,173 +105,165 @@ export function GamifiedMatchScreen() {
     }
   }, [match?.status, matchId, navigation])
 
-  const court: CourtRect = useMemo(
-    () => ({
-      x: COURT_MARGIN,
-      y: COURT_MARGIN,
-      width: Math.max(0, arena.width - COURT_MARGIN * 2),
-      height: Math.max(0, arena.height - COURT_MARGIN * 2),
-    }),
-    [arena]
-  )
+  const court = useMemo(() => fitCourt(arena, COURT_FIT.margin, COURT_FIT.maxCell), [arena])
 
-  // Each team's tuple order is the side it plays: [0] = left from its own point of view,
-  // so Team B (drawn upside down relative to Team A) has its left player on the screen's right.
+  // Each team's tuple order is the side it plays: [0] = left from its own point of view.
   const tokens: Token[] = useMemo(() => {
     if (!match) return []
-    const half = court.height / 2
     const place = (ids: [string, string], team: TeamSide): Token[] =>
       ids.flatMap((id, index) => {
         const player = allPlayers.find((p) => p.id === id)
         if (!player) return []
-        const leftFraction = team === "A" ? 0.25 : 0.75
-        const fraction = index === 0 ? leftFraction : 1 - leftFraction
-        const depth = court.y + (team === "A" ? half + half * 0.7 : half * 0.3)
-        const center = positions[id] ?? { x: court.x + court.width * fraction, y: depth }
-        return [{ player, team, center }]
+        const zone = squares[id] ?? homeZone(team, index === 0 ? 0 : 1)
+        return [{ player, team, zone, center: zoneCenter(team, zone, court) }]
       })
     return [...place(match.teamA, "A"), ...place(match.teamB, "B")]
-  }, [match, allPlayers, court, positions])
+  }, [match, allPlayers, court, squares])
 
   if (!match) return null
 
   const tokenAt = (point: Point2D): Token | undefined =>
     tokens.find(
-      (token) =>
-        Math.hypot(token.center.x - point.x, token.center.y - point.y) <= TOKEN_HIT_RADIUS
+      (token) => Math.hypot(token.center.x - point.x, token.center.y - point.y) <= TOKEN_HIT_RADIUS
     )
+  const tokenFor = (playerId: string | undefined): Token | undefined =>
+    playerId ? tokens.find((token) => token.player.id === playerId) : undefined
 
-  const resolveDrop = (player: Player, team: TeamSide, origin: Point2D, landing: Point2D) => {
-    const hit = locateOnCourt(landing, court)
-    // The ball has to end up on the opponent's side (or out) to be a point for this team.
-    if (hit && hit.side === team) {
-      setInvalidDrop(true)
-      return
+  // After a point: clear the landing and send everyone back to their home square for the next rally.
+  const resetSelection = () => {
+    setPlaced(null)
+    setErrorMode(false)
+    setSquares({})
+  }
+
+  // Dropping a player on another square of their own side moves them there: that square is where
+  // the attack is taken from. A teammate already standing there swaps onto the square just left.
+  const movePlayer = (token: Token, zone: CourtZone) => {
+    const teammate = tokens.find(
+      (other) =>
+        other.team === token.team && other.player.id !== token.player.id && other.zone === zone
+    )
+    setSquares((current) => ({
+      ...current,
+      [token.player.id]: zone,
+      ...(teammate ? { [teammate.player.id]: token.zone } : {}),
+    }))
+    // A landing already placed now flies from the mover's (or swapped teammate's) new square.
+    if (placed?.playerId === token.player.id) {
+      setPlaced(placeAt(token, placed.landing, placed.hit, zoneCenter(token.team, zone, court)))
+    } else if (teammate && placed?.playerId === teammate.player.id) {
+      setPlaced(
+        placeAt(teammate, placed.landing, placed.hit, zoneCenter(token.team, token.zone, court))
+      )
     }
-    setInvalidDrop(false)
-    setPending({
-      player,
-      team,
-      origin,
-      landing,
-      hit,
-      attackType: hit ? suggestAttackType(origin, landing, court, team) : undefined,
-    })
   }
 
-  const clearHoldTimer = () => {
-    if (holdTimer.current) clearTimeout(holdTimer.current)
-    holdTimer.current = undefined
+  const recordOpponentError = (team: TeamSide) => {
+    addPoint(match.id, team, { attackType: "opponentError" })
+    resetSelection()
   }
 
-  const gesture = Gesture.Pan()
+  // Dragging a token. onBegin fires on touch-down (before the pan activates), so the token
+  // lifts as soon as it is touched; the pan itself only activates once the finger moves.
+  const pan = Gesture.Pan()
     .runOnJS(true)
-    .minDistance(0)
-    .enabled(!pending)
+    .minDistance(TAP_SLOP)
     .onBegin((event) => {
       const point = { x: event.x, y: event.y }
-      const token = tokenAt(point)
-      const playerId = token?.player.id ?? selectedId
-      if (!playerId) return
-      const origin = token ? token.center : point
-      dragRef.current = {
-        playerId,
-        origin,
-        current: point,
-        startedOnToken: !!token,
-        mode: token ? "pending" : "aim",
-      }
-      if (token) {
-        holdTimer.current = setTimeout(() => {
-          const active = dragRef.current
-          if (active?.mode !== "pending") return
-          active.mode = "move"
-          setSelectedId(active.playerId)
-          setMovingId(active.playerId)
-        }, HOLD_TO_MOVE_MS)
-      }
+      const token = errorMode ? undefined : tokenAt(point)
+      if (!token) return
+      carryRef.current = { playerId: token.player.id, start: point, current: point }
+      setDrag({ playerId: token.player.id, start: point, current: point })
     })
     .onUpdate((event) => {
-      const active = dragRef.current
-      if (!active) return
-      active.current = { x: event.x, y: event.y }
-
-      if (active.mode === "move") {
-        const token = tokens.find((candidate) => candidate.player.id === active.playerId)
-        if (!token) return
-        const next = clampToOwnHalf(
-          active.current,
-          token.team,
-          court,
-          TOKEN_SIZE / 2,
-          BEHIND_BASELINE
-        )
-        setPositions((current) => ({ ...current, [active.playerId]: next }))
-        return
-      }
-
-      const travelled = Math.hypot(event.x - active.origin.x, event.y - active.origin.y)
-      if (travelled <= TAP_SLOP) return
-      // Moving before the hold timer fires means the user is aiming the ball.
-      if (active.mode === "pending") {
-        clearHoldTimer()
-        active.mode = "aim"
-      }
-      setInvalidDrop(false)
-      setDrag({ playerId: active.playerId, origin: active.origin, current: active.current })
+      const carry = carryRef.current
+      if (!carry) return
+      carry.current = { x: event.x, y: event.y }
+      setDrag({ playerId: carry.playerId, start: carry.start, current: carry.current })
     })
-    .onFinalize((event, success) => {
-      clearHoldTimer()
-      const active = dragRef.current
-      dragRef.current = null
+    // The drop is decided from the last point the finger was seen at, not from the final event or
+    // its `success` flag: a gesture that ends as cancelled (another recognizer, a system touch,
+    // a re-attach) would otherwise drop the landing and snap the token back.
+    .onFinalize(() => {
+      const carry = carryRef.current
+      carryRef.current = null
       setDrag(null)
-      setMovingId(undefined)
-      if (!active || !success || active.mode === "move") return
-
-      const landing = { x: event.x, y: event.y }
-      const travelled = Math.hypot(landing.x - active.origin.x, landing.y - active.origin.y)
-
-      if (travelled <= TAP_SLOP) {
-        // A tap on a token toggles the selection; a tap elsewhere does nothing.
-        if (active.startedOnToken) {
-          setInvalidDrop(false)
-          setSelectedId((current) => (current === active.playerId ? undefined : active.playerId))
-        }
-        return
-      }
-
-      const token = tokens.find((candidate) => candidate.player.id === active.playerId)
+      if (!carry) return
+      const token = tokenFor(carry.playerId)
       if (!token) return
-      setSelectedId(token.player.id)
-      resolveDrop(token.player, token.team, active.origin, landing)
+      // Never left the slop (a tap): dragPhase says "picked" and nothing changes.
+      const { phase, hit } = dragPhase(carry.start, carry.current, token.team, court, TAP_SLOP)
+      if (phase === "valid" && hit) {
+        // The landing stays exactly where the finger let go.
+        setPlaced(placeAt(token, carry.current, hit))
+      } else if (phase === "move" && hit) {
+        movePlayer(token, hit.zone)
+      }
+      // Released off the court: cancel.
+      else if (phase === "off") setPlaced(null)
     })
 
-  const handleCancelPending = () => setPending(null)
+  // Taps: pick the winning team after Opp. error, or move a placed landing to another square.
+  const tap = Gesture.Tap()
+    .runOnJS(true)
+    .maxDistance(TAP_SLOP)
+    .onEnd((event, success) => {
+      if (!success) return
+      const point = { x: event.x, y: event.y }
+      if (errorMode) {
+        const token = tokenAt(point)
+        if (token) recordOpponentError(token.team)
+        return
+      }
+      // Tapping the other side moves the landing to exactly where the tap was.
+      const placedToken = tokenFor(placed?.playerId)
+      const hit = locateOnCourt(point, court)
+      if (placedToken && hit && hit.side !== placedToken.team) {
+        setPlaced(placeAt(placedToken, point, hit))
+      }
+    })
+
+  const gesture = Gesture.Race(pan, tap)
+
+  // A new landing pre-selects the attack the landing depth suggests; the sheet can change it.
+  // `from` defaults to the player's current square.
+  function placeAt(token: Token, landing: Point2D, hit: CourtHit, from = token.center): Placed {
+    return {
+      playerId: token.player.id,
+      hit,
+      landing,
+      attackType: suggestAttackType(from, landing, court, token.team),
+    }
+  }
 
   const handleConfirm = () => {
-    if (!pending) return
-    // An ace is always a serve, so where the gesture started says nothing about it.
-    const trajectory = {
-      shotFrom:
-        pending.attackType === "ace" ? undefined : toCourtPosition(pending.origin, court),
-      landedAt: toCourtPosition(pending.landing, court),
-    }
-    addPoint(
-      match.id,
-      pending.team,
-      pending.hit
-        ? {
-            zone: pending.hit.zone,
-            attackType: pending.attackType,
-            scoringPlayerId: pending.player.id,
-            ...trajectory,
-          }
-        : { ballOut: true, ...trajectory }
+    const token = tokenFor(placed?.playerId)
+    if (!placed || !token) return
+    // An ace is always a serve, so where the shot started says nothing about it.
+    addPoint(match.id, token.team, {
+      zone: placed.hit.zone,
+      attackType: placed.attackType,
+      scoringPlayerId: token.player.id,
+      shotFrom: placed.attackType === "ace" ? undefined : toCourtPosition(token.center, court),
+      landedAt: toCourtPosition(placed.landing, court),
+    })
+    resetSelection()
+  }
+
+  // Tapping the selected chip again clears it, as on the points screen.
+  const handleSelectAttack = (next: AttackTypeId) =>
+    setPlaced((current) =>
+      current ? { ...current, attackType: current.attackType === next ? undefined : next } : current
     )
-    setPending(null)
-    setSelectedId(undefined)
-    // Next rally: everyone goes back to their starting spot.
-    setPositions({})
+
+  // With a player placed the error goes to their team; otherwise the next token tapped decides.
+  const handleOpponentError = () => {
+    const placedToken = tokenFor(placed?.playerId)
+    if (placedToken) {
+      recordOpponentError(placedToken.team)
+      return
+    }
+    setErrorMode((current) => !current)
   }
 
   const handleUndo = () => {
@@ -279,24 +280,124 @@ export function GamifiedMatchScreen() {
     setArena({ width, height })
   }
 
-  const selectedPlayer = allPlayers.find((p) => p.id === selectedId)
-  const line = drag ?? (pending ? { origin: pending.origin, current: pending.landing } : null)
-  const liveHit = drag ? locateOnCourt(drag.current, court) : (pending?.hit ?? null)
-  const draggingTeam = drag ? tokens.find((tk) => tk.player.id === drag.playerId)?.team : pending?.team
-  const highlight =
-    liveHit && liveHit.side !== draggingTeam ? zoneRect(liveHit.side, liveHit.zone, court) : null
+  // --- Derived selection state -------------------------------------------------------------
+  const dragToken = tokenFor(drag?.playerId)
+  const live =
+    drag && dragToken ? dragPhase(drag.start, drag.current, dragToken.team, court, TAP_SLOP) : null
+  const placedToken = tokenFor(placed?.playerId)
+  const phase: ScreenPhase = live
+    ? live.phase
+    : errorMode
+      ? "error"
+      : placed && placedToken
+        ? "placed"
+        : "idle"
+  const activeToken = dragToken ?? (phase === "placed" ? placedToken : undefined)
+  // The half the active player can land on; before anyone is picked, the top half.
+  const landingSide: TeamSide = activeToken ? opponentOf(activeToken.team) : "B"
+  const hoverHit = live && (live.phase === "valid" || live.phase === "move") ? live.hit : null
+  const shownPlaced = phase === "placed" ? placed : null
 
-  const hint = movingId
-    ? t("gamified.hintMoving")
-    : invalidDrop
-    ? t("gamified.hintInvalid")
-    : selectedPlayer
-      ? t("gamified.hintDrag", { name: selectedPlayer.name })
-      : t("gamified.hintPick")
+  const name = activeToken ? firstName(activeToken.player.name) : ""
+  const chipPlayer = activeToken
+    ? {
+        name: activeToken.player.name,
+        photoUri: activeToken.player.photoUri,
+        team: activeToken.team,
+      }
+    : undefined
+  const playerName = (id: string) => allPlayers.find((p) => p.id === id)?.name ?? ""
+
+  const chip: CourtStatusChipProps = (() => {
+    switch (phase) {
+      case "picked":
+        return {
+          title: t("gamified.chipPickedTitle", { name }),
+          subtitle: t("gamified.chipPickedSubtitle"),
+          tone: "active",
+          player: chipPlayer,
+        }
+      case "valid":
+        return {
+          title: t("gamified.chipHoldingTitle", { name }),
+          subtitle: t("gamified.chipHoldingSubtitle", {
+            zone: hoverHit?.zone,
+            team: sideLabel(match, tournament, landingSide, playerName),
+          }),
+          tone: "active",
+          player: chipPlayer,
+        }
+      case "move":
+        return {
+          title: t("gamified.chipMoveTitle", { name, zone: hoverHit?.zone }),
+          subtitle: t("gamified.chipMoveSubtitle"),
+          tone: "active",
+          player: chipPlayer,
+        }
+      case "off":
+        return {
+          title: t("gamified.chipCancelTitle"),
+          subtitle: t("gamified.chipCancelSubtitle", { name }),
+          tone: "error",
+          player: chipPlayer,
+        }
+      case "placed":
+        return {
+          title: t("gamified.chipPlacedTitle", { name, zone: placed?.hit.zone }),
+          subtitle: t("gamified.chipPlacedSubtitle"),
+          tone: "success",
+          player: chipPlayer,
+        }
+      case "error":
+        return {
+          title: t("gamified.chipErrorTitle"),
+          subtitle: t("gamified.chipErrorSubtitle"),
+          tone: "active",
+        }
+      case "idle":
+        return {
+          title: t("gamified.chipIdleTitle"),
+          subtitle: t("gamified.chipIdleSubtitle"),
+          tone: "active",
+        }
+    }
+  })()
+
+  const hint = {
+    idle: t("gamified.hintIdle"),
+    picked: t("gamified.hintPicked"),
+    valid: t("gamified.hintValid"),
+    move: t("gamified.hintMove"),
+    off: t("gamified.hintOff"),
+    placed: t("gamified.hintPlaced"),
+    error: t("gamified.hintError"),
+  }[phase]
+
+  // The dotted flight runs from the player's square to exactly where the finger is (or let go).
+  const flight =
+    live?.phase === "valid" && drag && dragToken
+      ? { from: dragToken.center, to: drag.current }
+      : shownPlaced && placedToken
+        ? { from: placedToken.center, to: shownPlaced.landing }
+        : null
+
+  // The sheet docks on the edge farther from the landing, so the landing stays visible.
+  const sheetAnchor = shownPlaced && shownPlaced.landing.y > arena.height / 2 ? "top" : "bottom"
 
   const canUndo = match.points.length > 0
-  // Landing in the lower half of the arena (Team A's side) puts the sheet on top, and vice versa.
-  const sheetAnchor = pending && pending.landing.y > arena.height / 2 ? "top" : "bottom"
+  const tone = (team: TeamSide) => (team === "A" ? "dark" : "yellow")
+
+  const renderToken = (token: Token, center: Point2D, variant: TokenVariant, key: string) => (
+    <View key={key} style={styles.token(center, variant)} pointerEvents="none">
+      {variant === "lifted" || variant === "off" ? <View style={styles.halo} /> : null}
+      <PlayerAvatar
+        name={token.player.name}
+        photoUri={token.player.photoUri}
+        size={variant === "lifted" || variant === "off" ? LIFTED_SIZE : TOKEN_SIZE}
+        tone={tone(token.team)}
+      />
+    </View>
+  )
 
   return (
     <View style={styles.root}>
@@ -329,124 +430,168 @@ export function GamifiedMatchScreen() {
         </Pressable>
       </View>
 
-      <Text style={[styles.hint, invalidDrop && styles.hintError]}>{hint}</Text>
+      {/* Above the court, so the finger never covers it. */}
+      <View style={styles.chipRow}>
+        <CourtStatusChip {...chip} />
+      </View>
 
       <GestureDetector gesture={gesture}>
         <View style={styles.arena} onLayout={handleLayout}>
           {arena.width > 0 ? (
             <>
-              {COURT_CELLS.map(({ side, zone }) => (
-                <View
-                  key={`${side}${zone}`}
-                  style={styles.cell(zoneRect(side, zone, court))}
-                  pointerEvents="none"
-                />
-              ))}
-              {highlight ? (
-                <View style={styles.zoneHighlight(highlight)} pointerEvents="none" />
-              ) : null}
-              <View
-                style={styles.net(court)}
-                pointerEvents="none"
-                accessibilityLabel={t("court.net")}
-              >
-                {NET_COLORS.map((color) => (
-                  <View key={color} style={styles.netSegment(color)} />
-                ))}
-              </View>
-
-              {tokens.map((token) => {
-                const selected = token.player.id === selectedId || token.player.id === movingId
+              {COURT_CELLS.map(({ side, zone }) => {
+                // The own-side square a carried player would move to.
+                const moveTarget =
+                  live?.phase === "move" && hoverHit?.side === side && hoverHit.zone === zone
+                const tint: CellTint = moveTarget
+                  ? "move"
+                  : live && live.phase !== "off" && side === landingSide
+                    ? "landing"
+                    : "none"
+                const occupied = tokens.some((token) => token.team === side && token.zone === zone)
+                const showNumber =
+                  (side === landingSide && !occupied && phase !== "error") || moveTarget
                 return (
                   <View
-                    key={token.player.id}
-                    style={styles.token(token.center.x, token.center.y)}
+                    key={`${side}${zone}`}
+                    style={styles.cell(zoneRect(side, zone, court), netEdge(side, zone), tint)}
                     pointerEvents="none"
                   >
-                    <PlayerAvatar
-                      name={token.player.name}
-                      photoUri={token.player.photoUri}
-                      size={TOKEN_SIZE}
-                      selected={selected}
-                      tone={token.team === "A" ? "dark" : "yellow"}
-                    />
-                    <Text style={styles.tokenName(selected)} numberOfLines={1}>
-                      {token.player.name}
-                    </Text>
+                    {showNumber ? <Text style={styles.zoneNumber}>{zone}</Text> : null}
                   </View>
                 )
               })}
 
-              {line ? (
+              <CourtNet style={styles.net(court)} accessibilityLabel={t("court.net")} />
+
+              {flight ? (
                 <Svg style={styles.overlay} pointerEvents="none">
-                  <Line
-                    x1={line.origin.x}
-                    y1={line.origin.y}
-                    x2={line.current.x}
-                    y2={line.current.y}
+                  <Path
+                    d={arcPath(flight.from, flight.to)}
                     stroke={theme.colors.dark}
                     strokeWidth={3}
-                    strokeDasharray="1 7"
+                    strokeDasharray="0.1 7"
                     strokeLinecap="round"
-                  />
-                  <Circle cx={line.origin.x} cy={line.origin.y} r={5} fill={theme.colors.dark} />
-                  <Circle
-                    cx={line.current.x}
-                    cy={line.current.y}
-                    r={11}
-                    fill={theme.colors.primary}
-                    stroke={theme.colors.dark}
-                    strokeWidth={2}
+                    fill="none"
                   />
                 </Svg>
               ) : null}
+
+              {shownPlaced ? (
+                <>
+                  <View
+                    style={styles.placedZone(
+                      zoneRect(shownPlaced.hit.side, shownPlaced.hit.zone, court),
+                      netEdge(shownPlaced.hit.side, shownPlaced.hit.zone)
+                    )}
+                    pointerEvents="none"
+                  >
+                    <Text
+                      style={styles.placedTag(
+                        shownPlaced.landing.y >
+                          zoneCenter(shownPlaced.hit.side, shownPlaced.hit.zone, court).y
+                      )}
+                    >
+                      {t("gamified.zoneLabel", { zone: shownPlaced.hit.zone })}
+                    </Text>
+                  </View>
+                  {/* Small brand mark exactly where the ball landed. */}
+                  <View style={styles.landingMark(shownPlaced.landing)} pointerEvents="none">
+                    <FutevoMark size={LANDING_MARK_SIZE} color={theme.colors.dark} />
+                  </View>
+                </>
+              ) : null}
+
+              {tokens.map((token) => {
+                const key = token.player.id
+                if (live && token.player.id === dragToken?.player.id) {
+                  // Lifted in place while still on its square; a ghost once it is carried away.
+                  return renderToken(
+                    token,
+                    token.center,
+                    live.phase === "picked" ? "lifted" : "ghost",
+                    key
+                  )
+                }
+                return renderToken(token, token.center, "rest", key)
+              })}
+
+              {live?.phase === "valid" && hoverHit ? (
+                <View
+                  style={styles.liftedZone(
+                    zoneRect(hoverHit.side, hoverHit.zone, court),
+                    netEdge(hoverHit.side, hoverHit.zone)
+                  )}
+                  pointerEvents="none"
+                >
+                  <Text style={styles.liftedTag}>
+                    {t("gamified.zoneLabel", { zone: hoverHit.zone })}
+                  </Text>
+                </View>
+              ) : null}
+
+              {/* Once carried off its square, the token follows the finger exactly. */}
+              {live && live.phase !== "picked" && drag && dragToken
+                ? renderToken(
+                    dragToken,
+                    drag.current,
+                    live.phase === "off" ? "off" : "lifted",
+                    "carried"
+                  )
+                : null}
             </>
           ) : null}
         </View>
       </GestureDetector>
 
-      {/* Always reserved, so the sheet (absolute) opening never resizes the arena. */}
-      <View style={styles.bottomSpacer} />
+      <Text style={styles.hint} numberOfLines={2}>
+        {hint}
+      </Text>
+      <View style={styles.footer}>
+        <AppButton
+          label={t("gamified.oppError")}
+          variant={errorMode ? "dark" : "wash"}
+          labelStyle="body"
+          onPress={handleOpponentError}
+          style={styles.footerButton}
+        />
+        <AppButton
+          label={t("point.confirm")}
+          variant={phase === "placed" ? "primary" : "wash"}
+          labelStyle="body"
+          disabled={phase !== "placed"}
+          onPress={handleConfirm}
+          style={styles.footerButton}
+        />
+      </View>
 
-      {pending ? (
-        <View
-          style={styles.sheet(sheetAnchor)}
-        >
+      {/* The points sheet: who scored, where it landed, and the attack type to confirm. */}
+      {shownPlaced && placedToken ? (
+        <View style={styles.sheet(sheetAnchor)}>
           <Text style={styles.sheetTitle}>
-            {t("gamified.pointFor", { name: pending.player.name })}
+            {t("gamified.pointFor", { name: placedToken.player.name })}
           </Text>
           <Text style={styles.sheetSubtitle}>
-            {pending.hit
-              ? t("gamified.landedIn", {
-                  side: pending.team === "A" ? "B" : "A",
-                  zone: pending.hit.zone,
-                })
-              : t("point.ballOut")}
+            {t("gamified.landedIn", {
+              team: sideLabel(match, tournament, shownPlaced.hit.side, playerName),
+              zone: shownPlaced.hit.zone,
+            })}
           </Text>
-          {pending.hit ? (
-            <>
-              <Text style={styles.sheetLabel}>{t("point.attackType")}</Text>
-              <AttackTypePicker
-                selected={pending.attackType}
-                onSelect={(next) =>
-                  setPending((current) =>
-                    current
-                      ? { ...current, attackType: current.attackType === next ? undefined : next }
-                      : current
-                  )
-                }
-              />
-            </>
-          ) : null}
+          <Text style={styles.sheetLabel}>{t("point.attackType")}</Text>
+          <AttackTypePicker selected={shownPlaced.attackType} onSelect={handleSelectAttack} />
           <View style={styles.sheetActions}>
             <AppButton
               label={t("common.cancel")}
               variant="wash"
               labelStyle="body"
-              onPress={handleCancelPending}
+              onPress={() => setPlaced(null)}
               style={styles.cancelButton}
             />
-            <AppButton label={t("point.confirm")} onPress={handleConfirm} style={styles.confirmButton} />
+            <AppButton
+              label={t("point.confirm")}
+              onPress={handleConfirm}
+              style={styles.confirmButton}
+            />
           </View>
         </View>
       ) : null}

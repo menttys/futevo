@@ -9,10 +9,8 @@ export const styles = StyleSheet.create((theme) => ({
     paddingLeft: 8,
     paddingRight: 12,
     borderRadius: theme.radius.full,
-    backgroundColor: selected ? theme.colors.butter : theme.colors.card,
+    backgroundColor: selected ? theme.colors.softYellow : theme.colors.card,
     boxShadow: selected ? undefined : theme.shadows.card,
-    borderWidth: selected ? 1.5 : 0,
-    borderColor: theme.colors.dark,
   }),
   name: {
     flex: 1,

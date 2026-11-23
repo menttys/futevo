@@ -291,12 +291,31 @@
     "signedInWith": "{{email}} · Google"
   },
   "gamified": {
-    "hintPick": "Tap a player to pick who scores",
-    "hintDrag": "Drag from {{name}} to where the ball landed · hold to move them",
-    "hintInvalid": "Drop on the other team's court, or outside the lines for ball out",
-    "pointFor": "Point for {{name}}",
-    "landedIn": "Landed on Team {{side}}'s court, zone {{zone}}",
     "courtMode": "Court mode",
-    "hintMoving": "Drag to where the player attacked from, then release"
+    "chipIdleTitle": "Pick up a player",
+    "chipIdleSubtitle": "Touch and hold a token",
+    "chipPickedTitle": "{{name}} · picked up",
+    "chipPickedSubtitle": "Drag to the landing zone",
+    "chipHoldingTitle": "{{name}} · holding",
+    "chipHoldingSubtitle": "Over zone {{zone}} · {{team}} side",
+    "chipPlacedTitle": "{{name}} → zone {{zone}}",
+    "chipPlacedSubtitle": "Landing placed · ready to confirm",
+    "chipCancelTitle": "Release to cancel",
+    "chipCancelSubtitle": "{{name}} goes back to their square",
+    "chipErrorTitle": "Opponent error",
+    "chipErrorSubtitle": "Tap a player on the team that wins it",
+    "hintIdle": "Touch a token to pick it up",
+    "hintPicked": "Hold and drag to the landing zone",
+    "hintValid": "Release to place the landing · slide off the court to cancel",
+    "hintPlaced": "Tap another zone to move it",
+    "hintOff": "Release outside the court to cancel",
+    "hintError": "Tap Opp. error again to go back",
+    "zoneLabel": "Zone {{zone}}",
+    "oppError": "Opp. error",
+    "pointFor": "Point for {{name}}",
+    "landedIn": "Landed on {{team}}'s court · zone {{zone}}",
+    "chipMoveTitle": "{{name}} → attack from zone {{zone}}",
+    "chipMoveSubtitle": "Release to set where the attack started",
+    "hintMove": "Release to move the player here · drop across the net for the landing"
   }
 }

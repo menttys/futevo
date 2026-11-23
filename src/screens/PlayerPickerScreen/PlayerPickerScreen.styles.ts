@@ -53,10 +53,11 @@ export const styles = StyleSheet.create((theme, rt) => ({
   list: {
     flex: 1,
   },
+  // No negative margin: the ScrollView clips anything outside its bounds, which
+  // was cutting off the outer edge of the left-column pills.
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    marginHorizontal: -4,
   },
   cell: {
     width: "50%",
