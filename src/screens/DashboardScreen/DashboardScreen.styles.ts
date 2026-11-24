@@ -12,6 +12,36 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.gutter,
     gap: 16,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+    gap: 20,
+  },
+  headerWide: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20,
+  },
+  colMain: {
+    flex: 2,
+  },
+  colSide: {
+    flex: 1,
+    gap: 16,
+  },
+  listWide: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 9,
+  },
+  cell: {
+    flexBasis: "48%",
+    flexGrow: 1,
+  },
   topBar: {
     flexDirection: "row",
     alignItems: "center",

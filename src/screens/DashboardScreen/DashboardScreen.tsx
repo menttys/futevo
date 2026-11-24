@@ -15,6 +15,7 @@ import { MeshBackground } from "@/components/MeshBackground"
 import { SectionHeader } from "@/components/SectionHeader"
 import { StatTile } from "@/components/StatTile"
 import { TournamentRow } from "@/components/TournamentRow"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { MatchesRoutes, SettingsRoutes, TabRoutes } from "@/navigation/routes"
@@ -32,6 +33,7 @@ type NavigationProp = BottomTabNavigationProp<TabParamList, "Dashboard">
 const EMPTY_MATCHES: Match[] = []
 const EMPTY_TOURNAMENTS: Tournament[] = []
 const RECENT_COUNT = 3
+const RECENT_COUNT_WIDE = 6
 
 function greetingKey(hour: number) {
   if (hour < 12) return "dashboard.greetingMorning"
@@ -42,6 +44,7 @@ function greetingKey(hour: number) {
 export function DashboardScreen() {
   const insets = useSafeAreaInsets()
   const tabBarInset = useTabBarInset()
+  const wide = useSideTabBar()
   const { theme } = useUnistyles()
   const { t, currentLanguage } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
@@ -75,7 +78,10 @@ export function DashboardScreen() {
     [matches]
   )
 
-  const pointsLogged = useMemo(() => matches.reduce((sum, m) => sum + m.points.length, 0), [matches])
+  const pointsLogged = useMemo(
+    () => matches.reduce((sum, m) => sum + m.points.length, 0),
+    [matches]
+  )
 
   const latestTournament = useMemo(
     () => [...tournaments].sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0],
@@ -110,105 +116,216 @@ export function DashboardScreen() {
     <View style={styles.root}>
       <MeshBackground />
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingTop: insets.top + 4, paddingBottom: tabBarInset + 16 }]}
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: insets.top + 4, paddingBottom: tabBarInset + 16 },
+        ]}
       >
-        <View style={styles.topBar}>
-          <View style={styles.brand}>
-            <FutevoMark size={30} />
-            <Text style={styles.wordmark}>{t("app.name")}</Text>
-          </View>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("dashboard.profile")}
-            onPress={() => navigation.navigate(TabRoutes.SETTINGS, { screen: SettingsRoutes.SETTINGS_HOME })}
-            style={styles.avatar}
-          >
-            <Text style={styles.avatarText}>{name.charAt(0).toUpperCase()}</Text>
-          </Pressable>
-        </View>
-
-        <View>
-          <Text style={styles.date}>{today}</Text>
-          <Text style={styles.greeting}>{t(greetingKey(new Date().getHours()), { name })}</Text>
-        </View>
-
-        {liveMatch ? (
-          <LiveMatchCard
-            homeName={sideLabel(liveMatch, tournamentOf(liveMatch), "A", playerName)}
-            awayName={sideLabel(liveMatch, tournamentOf(liveMatch), "B", playerName)}
-            scoreA={liveMatch.scoreA}
-            scoreB={liveMatch.scoreB}
-            liveLabel={t("common.live")}
-            meta={t("dashboard.liveMeta", { target: liveMatch.targetScore, winBy: liveMatch.winBy })}
-            actionLabel={t("dashboard.resume")}
-            onPress={() => openMatch(liveMatch)}
-          />
-        ) : (
-          <View style={styles.startCard}>
-            <FutevoMark size={170} rotate={14} color={theme.colors.dark} style={styles.startWatermark} />
-            <Text style={styles.startTitle}>{t("dashboard.startTitle")}</Text>
-            <Text style={styles.startSubtitle}>{t("dashboard.startSubtitle")}</Text>
-            <AppButton
-              label={t("dashboard.startMatch")}
-              variant="cream"
-              labelStyle="body"
-              onPress={() => navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })}
-            />
+        {wide ? null : (
+          <View style={styles.topBar}>
+            <View style={styles.brand}>
+              <FutevoMark size={30} />
+              <Text style={styles.wordmark}>{t("app.name")}</Text>
+            </View>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("dashboard.profile")}
+              onPress={() =>
+                navigation.navigate(TabRoutes.SETTINGS, { screen: SettingsRoutes.SETTINGS_HOME })
+              }
+              style={styles.avatar}
+            >
+              <Text style={styles.avatarText}>{name.charAt(0).toUpperCase()}</Text>
+            </Pressable>
           </View>
         )}
 
-        <View style={styles.stats}>
-          <StatTile value={String(matches.length)} label={t("dashboard.statMatches")} />
-          <StatTile value={String(pointsLogged)} label={t("dashboard.statPoints")} />
-          <StatTile value={String(tournaments.length)} label={t("dashboard.statTournaments")} />
-        </View>
+        {wide ? (
+          <View style={styles.headerWide}>
+            <View>
+              <Text style={styles.date}>{today}</Text>
+              <Text style={styles.greeting}>{t(greetingKey(new Date().getHours()), { name })}</Text>
+            </View>
 
-        {latestTournament ? (
-          <View>
-            <SectionHeader
-              title={t("dashboard.tournaments")}
-              actionLabel={t("dashboard.seeAll")}
-              onAction={() => navigation.navigate(TabRoutes.MATCHES)}
-            />
-            <TournamentRow
-              variant="yellow"
-              name={latestTournament.name}
-              subtitle={t("dashboard.tournamentSubtitle", {
-                duplas: latestTournament.entries.length,
-                matches: matches.filter((m) => m.tournamentId === latestTournament.id).length,
-              })}
+            <AppButton
+              label={t("tabs.newMatch")}
               onPress={() =>
-                navigation.navigate(TabRoutes.MATCH_FLOW, {
-                  screen: MatchesRoutes.TOURNAMENT_DETAIL,
-                  params: { tournamentId: latestTournament.id },
-                })
+                navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
               }
             />
           </View>
-        ) : null}
+        ) : (
+          <View>
+            <Text style={styles.date}>{today}</Text>
+            <Text style={styles.greeting}>{t(greetingKey(new Date().getHours()), { name })}</Text>
+          </View>
+        )}
+
+        {wide ? (
+          <View style={styles.row}>
+            <View style={styles.colMain}>
+              {liveMatch ? (
+                <LiveMatchCard
+                  homeName={sideLabel(liveMatch, tournamentOf(liveMatch), "A", playerName)}
+                  awayName={sideLabel(liveMatch, tournamentOf(liveMatch), "B", playerName)}
+                  scoreA={liveMatch.scoreA}
+                  scoreB={liveMatch.scoreB}
+                  liveLabel={t("common.live")}
+                  meta={t("dashboard.liveMeta", {
+                    target: liveMatch.targetScore,
+                    winBy: liveMatch.winBy,
+                  })}
+                  actionLabel={t("dashboard.resume")}
+                  onPress={() => openMatch(liveMatch)}
+                />
+              ) : (
+                <View style={styles.startCard}>
+                  <FutevoMark
+                    size={170}
+                    rotate={14}
+                    color={theme.colors.dark}
+                    style={styles.startWatermark}
+                  />
+                  <Text style={styles.startTitle}>{t("dashboard.startTitle")}</Text>
+                  <Text style={styles.startSubtitle}>{t("dashboard.startSubtitle")}</Text>
+                  <AppButton
+                    label={t("dashboard.startMatch")}
+                    variant="cream"
+                    labelStyle="body"
+                    onPress={() =>
+                      navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
+                    }
+                  />
+                </View>
+              )}
+            </View>
+            <View style={styles.colSide}>
+              <View style={styles.stats}>
+                <StatTile value={String(matches.length)} label={t("dashboard.statMatches")} />
+                <StatTile value={String(pointsLogged)} label={t("dashboard.statPoints")} />
+                <StatTile
+                  value={String(tournaments.length)}
+                  label={t("dashboard.statTournaments")}
+                />
+              </View>
+
+              {latestTournament ? (
+                <View>
+                  <SectionHeader
+                    title={t("dashboard.tournaments")}
+                    actionLabel={t("dashboard.seeAll")}
+                    onAction={() => navigation.navigate(TabRoutes.MATCHES)}
+                  />
+                  <TournamentRow
+                    variant="yellow"
+                    name={latestTournament.name}
+                    subtitle={t("dashboard.tournamentSubtitle", {
+                      duplas: latestTournament.entries.length,
+                      matches: matches.filter((m) => m.tournamentId === latestTournament.id).length,
+                    })}
+                    onPress={() =>
+                      navigation.navigate(TabRoutes.MATCH_FLOW, {
+                        screen: MatchesRoutes.TOURNAMENT_DETAIL,
+                        params: { tournamentId: latestTournament.id },
+                      })
+                    }
+                  />
+                </View>
+              ) : null}
+            </View>
+          </View>
+        ) : (
+          <>
+            {liveMatch ? (
+              <LiveMatchCard
+                homeName={sideLabel(liveMatch, tournamentOf(liveMatch), "A", playerName)}
+                awayName={sideLabel(liveMatch, tournamentOf(liveMatch), "B", playerName)}
+                scoreA={liveMatch.scoreA}
+                scoreB={liveMatch.scoreB}
+                liveLabel={t("common.live")}
+                meta={t("dashboard.liveMeta", {
+                  target: liveMatch.targetScore,
+                  winBy: liveMatch.winBy,
+                })}
+                actionLabel={t("dashboard.resume")}
+                onPress={() => openMatch(liveMatch)}
+              />
+            ) : (
+              <View style={styles.startCard}>
+                <FutevoMark
+                  size={170}
+                  rotate={14}
+                  color={theme.colors.dark}
+                  style={styles.startWatermark}
+                />
+                <Text style={styles.startTitle}>{t("dashboard.startTitle")}</Text>
+                <Text style={styles.startSubtitle}>{t("dashboard.startSubtitle")}</Text>
+                <AppButton
+                  label={t("dashboard.startMatch")}
+                  variant="cream"
+                  labelStyle="body"
+                  onPress={() =>
+                    navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
+                  }
+                />
+              </View>
+            )}
+
+            <View style={styles.stats}>
+              <StatTile value={String(matches.length)} label={t("dashboard.statMatches")} />
+              <StatTile value={String(pointsLogged)} label={t("dashboard.statPoints")} />
+              <StatTile value={String(tournaments.length)} label={t("dashboard.statTournaments")} />
+            </View>
+
+            {latestTournament ? (
+              <View>
+                <SectionHeader
+                  title={t("dashboard.tournaments")}
+                  actionLabel={t("dashboard.seeAll")}
+                  onAction={() => navigation.navigate(TabRoutes.MATCHES)}
+                />
+                <TournamentRow
+                  variant="yellow"
+                  name={latestTournament.name}
+                  subtitle={t("dashboard.tournamentSubtitle", {
+                    duplas: latestTournament.entries.length,
+                    matches: matches.filter((m) => m.tournamentId === latestTournament.id).length,
+                  })}
+                  onPress={() =>
+                    navigation.navigate(TabRoutes.MATCH_FLOW, {
+                      screen: MatchesRoutes.TOURNAMENT_DETAIL,
+                      params: { tournamentId: latestTournament.id },
+                    })
+                  }
+                />
+              </View>
+            ) : null}
+          </>
+        )}
 
         <View>
           <SectionHeader title={t("dashboard.recentMatches")} />
           {completed.length === 0 ? (
             <Text style={styles.empty}>{t("dashboard.noMatches")}</Text>
           ) : (
-            <View style={styles.list}>
-              {completed.slice(0, RECENT_COUNT).map((match) => (
-                <MatchRow
-                  key={match.id}
-                  homeName={sideLabel(match, tournamentOf(match), "A", playerName)}
-                  awayName={sideLabel(match, tournamentOf(match), "B", playerName)}
-                  scoreA={match.scoreA}
-                  scoreB={match.scoreB}
-                  subtitle={dayLabel(
-                    match.completedAt ?? match.createdAt,
-                    { today: t("common.today"), yesterday: t("common.yesterday") },
-                    currentLanguage
-                  )}
-                  winLabel={t("common.win")}
-                  lossLabel={t("common.loss")}
-                  onPress={() => openMatch(match)}
-                />
+            <View style={wide ? styles.listWide : styles.list}>
+              {completed.slice(0, wide ? RECENT_COUNT_WIDE : RECENT_COUNT).map((match) => (
+                <View key={match.id} style={wide ? styles.cell : undefined}>
+                  <MatchRow
+                    homeName={sideLabel(match, tournamentOf(match), "A", playerName)}
+                    awayName={sideLabel(match, tournamentOf(match), "B", playerName)}
+                    scoreA={match.scoreA}
+                    scoreB={match.scoreB}
+                    subtitle={dayLabel(
+                      match.completedAt ?? match.createdAt,
+                      { today: t("common.today"), yesterday: t("common.yesterday") },
+                      currentLanguage
+                    )}
+                    winLabel={t("common.win")}
+                    lossLabel={t("common.loss")}
+                    onPress={() => openMatch(match)}
+                  />
+                </View>
               ))}
             </View>
           )}
