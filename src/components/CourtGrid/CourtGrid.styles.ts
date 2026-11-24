@@ -4,6 +4,11 @@ export const styles = StyleSheet.create((theme) => ({
   grid: {
     gap: 8,
   },
+  // Same height as the court-mode net strip.
+  net: {
+    height: 8,
+    width: "100%",
+  },
   row: {
     flexDirection: "row",
     gap: 8,

@@ -1,6 +1,7 @@
 import { getApp, getApps, initializeApp } from "firebase/app"
 import {
   getAuth,
+  deleteUser,
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
@@ -58,4 +59,8 @@ export async function signInWithGoogle(): Promise<void> {
 
 export async function signOutUser(): Promise<void> {
   await signOut(auth)
+}
+
+export async function deleteAuthUser(): Promise<void> {
+  if (auth.currentUser) await deleteUser(auth.currentUser)
 }

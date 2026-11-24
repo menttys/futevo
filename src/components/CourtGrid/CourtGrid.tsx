@@ -2,6 +2,7 @@ import React from "react"
 import { Pressable, Text, View } from "react-native"
 
 import type { CourtZone } from "@/@types/futevo"
+import { CourtNet } from "@/components/CourtNet"
 import { FutevoMark } from "@/components/FutevoMark"
 import { useLanguage } from "@/i18n"
 
@@ -20,6 +21,7 @@ export function CourtGrid({ side, selectedZone, onSelectZone, style }: CourtGrid
 
   return (
     <View style={[styles.grid, style]}>
+      <CourtNet style={styles.net} accessibilityLabel={t("court.net")} />
       {ROWS.map((row, rowIndex) => (
         <View key={rowIndex} style={styles.row}>
           {row.map((zone) => {

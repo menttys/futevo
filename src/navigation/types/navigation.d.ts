@@ -5,6 +5,7 @@ import type { TeamSide } from "@/@types/futevo"
 export type MatchesStackParamList = {
   NewMatch: undefined
   LiveMatch: { matchId: string }
+  MatchStatus: { matchId: string }
   PointEntry: { matchId: string; team: TeamSide }
   PlayerPicker: { side: TeamSide; index: number }
   GamifiedMatch: { matchId: string }

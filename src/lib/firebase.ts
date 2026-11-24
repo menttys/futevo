@@ -31,3 +31,7 @@ export async function signInWithGoogle(): Promise<void> {
 export async function signOutUser(): Promise<void> {
   await signOut(auth)
 }
+
+export async function deleteAuthUser(): Promise<void> {
+  await auth.currentUser?.delete()
+}

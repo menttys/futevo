@@ -71,20 +71,26 @@ export function PointEntryScreen() {
   const handleConfirm = () => {
     if (!canConfirm) return
     addPoint(match.id, team, ballOut ? { ballOut: true } : { zone, attackType, scoringPlayerId })
-    // Always land on the live match (navigate pops back to it, or opens it when this
-    // screen was the entry point, e.g. a deep link). A finishing point goes to the result.
     const updated = useMatchStore.getState().matches?.find((m) => m.id === match.id)
     if (updated?.status === "completed") {
+      // A finishing point goes to the result.
       navigation.navigate("MatchDetail", { matchId: match.id })
-    } else {
-      navigation.navigate("LiveMatch", { matchId: match.id })
+      return
     }
+    // Live match directly below the sheet: just close the sheet to return to it.
+    const { routes, index } = navigation.getState()
+    if (routes[index - 1]?.name === "LiveMatch") {
+      navigation.goBack()
+      return
+    }
+    // Otherwise (e.g. a deep link) open the live match.
+    navigation.navigate("LiveMatch", { matchId: match.id })
   }
 
   return (
     <View style={styles.root}>
       <Pressable
-        style={styles.scrim}
+        style={styles.dismissArea}
         onPress={() => navigation.goBack()}
         accessibilityRole="button"
         accessibilityLabel={t("common.cancel")}

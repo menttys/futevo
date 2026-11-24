@@ -239,7 +239,13 @@
       "one": "{{count}} punto",
       "other": "{{count}} puntos"
     },
-    "share": "Compartir"
+    "share": "Compartir",
+    "status": "Estado del partido",
+    "fullStats": "Estadísticas",
+    "streak": "Racha",
+    "biggestLead": "Mayor ventaja",
+    "topAttack": "Mejor ataque",
+    "streakNote": "{{team}} en racha"
   },
   "point": {
     "title": "Punto del Equipo {{team}}",
@@ -288,7 +294,11 @@
     "syncing": "Sincronizando cambios…",
     "syncOffline": "Sin conexión — guardado en este dispositivo",
     "syncSubtitle": "Partidos, jugadores, torneos",
-    "signedInWith": "{{email}} · Google"
+    "signedInWith": "{{email}} · Google",
+    "deleteAccount": "Eliminar cuenta",
+    "deleteAccountTitle": "¿Eliminar cuenta?",
+    "deleteAccountMessage": "Esto elimina permanentemente tu cuenta y todos tus jugadores, partidos y torneos. No se puede deshacer.",
+    "deleteAccountConfirm": "Eliminar cuenta"
   },
   "gamified": {
     "courtMode": "Modo cancha",

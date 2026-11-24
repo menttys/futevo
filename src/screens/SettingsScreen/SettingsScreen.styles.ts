@@ -9,6 +9,7 @@ export const styles = StyleSheet.create((theme) => ({
   },
   content: {
     ...WEB_CONTENT,
+    flexGrow: 1,
     paddingHorizontal: theme.gutter,
     gap: 14,
   },
@@ -82,10 +83,15 @@ export const styles = StyleSheet.create((theme) => ({
     color: theme.colors.textMuted,
   },
   signOut: {
+    marginTop: "auto",
     backgroundColor: theme.colors.wash,
   },
-  water: {
-    marginTop: 8,
-    borderRadius: theme.radius.lg,
+  // Faint brand watermark row: dark at low opacity reads as a slightly darker tone of the background.
+  tape: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 4,
+    opacity: 0.07,
+    paddingTop: 2,
   },
 }))

@@ -14,6 +14,7 @@ export enum TabRoutes {
 export enum MatchesRoutes {
   NEW_MATCH = "NewMatch",
   LIVE_MATCH = "LiveMatch",
+  MATCH_STATUS = "MatchStatus",
   POINT_ENTRY = "PointEntry",
   PLAYER_PICKER = "PlayerPicker",
   GAMIFIED_MATCH = "GamifiedMatch",

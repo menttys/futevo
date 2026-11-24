@@ -5,14 +5,9 @@ export const styles = StyleSheet.create((theme, rt) => ({
     flex: 1,
     justifyContent: "flex-end",
   },
-  scrim: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: theme.colors.dark,
-    opacity: 0.5,
+  // Tapping the empty area above the sheet dismisses it. The dimming is the card overlay.
+  dismissArea: {
+    flex: 1,
   },
   sheet: {
     width: "100%",

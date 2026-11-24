@@ -1,6 +1,6 @@
 import React from "react"
 
-import { CardStyleInterpolators, createStackNavigator } from "@react-navigation/stack"
+import { createStackNavigator } from "@react-navigation/stack"
 
 import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import { useLanguage } from "@/i18n"
@@ -10,6 +10,7 @@ import { PlayersScreen } from "@/screens/PlayersScreen"
 import { theme } from "@/styles/theme"
 
 import { PlayersRoutes } from "./routes"
+import { SHEET_OPTIONS } from "./sheetOptions"
 import { PlayersStackParamList } from "./types/navigation"
 
 const Stack = createStackNavigator<PlayersStackParamList>()
@@ -40,11 +41,8 @@ export function PlayersStack() {
         name={PlayersRoutes.ADD_PLAYER}
         component={AddPlayerScreen}
         options={{
+          ...SHEET_OPTIONS,
           title: t("screens.addPlayer"),
-          // A short sheet over the players list.
-          presentation: "transparentModal",
-          cardStyle: { backgroundColor: "transparent" },
-          cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
         }}
       />
     </Stack.Navigator>

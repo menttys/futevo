@@ -7,6 +7,7 @@ import { useUnistyles } from "react-native-unistyles"
 
 import type { TeamSide } from "@/@types/futevo"
 import { AppButton } from "@/components/AppButton"
+import { MatchStatusCard } from "@/components/MatchStatusCard"
 import { MeshBackground } from "@/components/MeshBackground"
 import { ScoreBoard } from "@/components/ScoreBoard"
 import { ScreenHeader } from "@/components/ScreenHeader"
@@ -153,6 +154,13 @@ export function LiveMatchScreen() {
             })}
           </ScrollView>
         ) : null}
+
+        <MatchStatusCard
+          match={match}
+          homeName={homeName}
+          awayName={awayName}
+          onPress={() => navigation.navigate("MatchStatus", { matchId: match.id })}
+        />
       </ScrollView>
     </View>
   )

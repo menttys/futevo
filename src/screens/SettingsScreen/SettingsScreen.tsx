@@ -11,18 +11,20 @@ import { MeshBackground } from "@/components/MeshBackground"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { SegmentedControl } from "@/components/SegmentedControl"
-import { WaterBackground } from "@/components/WaterBackground"
-import { signout } from "@/hooks/useFirebase"
+import { deleteAccount, signout } from "@/hooks/useFirebase"
 import { useNetworkState } from "@/hooks/useNetworkState"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
-import { Check, LogOut, WifiSlash } from "@/lib/icons"
+import { Check, LogOut, Trash2, WifiSlash } from "@/lib/icons"
 import { useUserStore } from "@/store/userState"
+import { confirmAction } from "@/utils/confirmAction"
 
 import { styles } from "./SettingsScreen.styles"
 
 const LANGUAGE_ORDER: LanguageCode[] = ["en", "es", "pt"]
+// Brand watermark footer: one mark spun 18° at a time, tone-on-tone with the background.
+const TAPE = Array.from({ length: 10 }, (_, i) => i * 18)
 // Profile, language and sync status.
 export function SettingsScreen() {
   const { theme } = useUnistyles()
@@ -31,6 +33,18 @@ export function SettingsScreen() {
   const { isOffline, hasPendingWrites } = useNetworkState()
   const insets = useSafeAreaInsets()
   const tabBarInset = useTabBarInset()
+
+  const handleDeleteAccount = () => {
+    if (!user) return
+    confirmAction({
+      title: t("settings.deleteAccountTitle"),
+      message: t("settings.deleteAccountMessage"),
+      confirmLabel: t("settings.deleteAccountConfirm"),
+      onConfirm: () => {
+        deleteAccount(user.uid).catch(console.error)
+      },
+    })
+  }
 
   const syncTitle = isOffline ? t("settings.syncOffline") : hasPendingWrites ? t("settings.syncing") : t("settings.synced")
 
@@ -98,7 +112,21 @@ export function SettingsScreen() {
           style={styles.signOut}
         />
 
-        <WaterBackground style={styles.water} />
+        {user ? (
+          <AppButton
+            label={t("settings.deleteAccount")}
+            variant="danger"
+            labelStyle="body"
+            onPress={handleDeleteAccount}
+            icon={<Trash2 size={18} color={theme.colors.danger} />}
+          />
+        ) : null}
+
+        <View style={styles.tape} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          {TAPE.map((angle) => (
+            <FutevoMark key={angle} size={22} rotate={angle} color={theme.colors.dark} />
+          ))}
+        </View>
       </ScrollView>
     </View>
   )

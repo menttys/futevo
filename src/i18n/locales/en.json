@@ -239,7 +239,13 @@
       "one": "{{count}} point",
       "other": "{{count}} points"
     },
-    "share": "Share"
+    "share": "Share",
+    "status": "Match status",
+    "fullStats": "Full stats",
+    "streak": "Streak",
+    "biggestLead": "Biggest lead",
+    "topAttack": "Top attack",
+    "streakNote": "{{team}} on a run"
   },
   "point": {
     "title": "Point for Team {{team}}",
@@ -288,7 +294,11 @@
     "syncing": "Syncing changes…",
     "syncOffline": "Offline — saved on this device",
     "syncSubtitle": "Matches, players, tournaments",
-    "signedInWith": "{{email}} · Google"
+    "signedInWith": "{{email}} · Google",
+    "deleteAccount": "Delete account",
+    "deleteAccountTitle": "Delete account?",
+    "deleteAccountMessage": "This permanently deletes your account and all your players, matches and tournaments. This can't be undone.",
+    "deleteAccountConfirm": "Delete account"
   },
   "gamified": {
     "courtMode": "Court mode",

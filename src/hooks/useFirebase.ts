@@ -2,8 +2,8 @@ import { useCallback } from "react"
 
 import type { AuthUser, Match, Player, Tournament } from "@/@types/futevo"
 import { Collections } from "@/constants/Collections"
-import { db, signInWithGoogle, signOutUser, subscribeToAuth } from "@/lib/firebase"
-import { collection, onSnapshot, query, where } from "@/lib/firestore"
+import { db, deleteAuthUser, signInWithGoogle, signOutUser, subscribeToAuth } from "@/lib/firebase"
+import { collection, deleteDoc, getDocs, onSnapshot, query, where } from "@/lib/firestore"
 import { useMatchStore } from "@/store/matchState"
 import { useNetworkStore } from "@/store/networkState"
 import { usePlayerStore } from "@/store/playerState"
@@ -33,6 +33,19 @@ export const signinWithGoogle = signInWithGoogle
 export async function signout() {
   teardownFirestoreListeners()
   await signOutUser()
+}
+
+// Removes the user's players, matches and tournaments while still signed in
+// (Firestore rules need the auth token), then deletes the auth account.
+export async function deleteAccount(uid: string) {
+  teardownFirestoreListeners()
+  await Promise.all(
+    Object.values(Collections).map(async (name) => {
+      const snap = await getDocs(query(collection(db, name), where("userId", "==", uid)))
+      await Promise.all(snap.docs.map((d) => deleteDoc(d.ref)))
+    })
+  )
+  await deleteAuthUser()
 }
 
 const useFirebase = () => {

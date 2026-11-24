@@ -27,6 +27,14 @@ export const styles = StyleSheet.create((theme, rt) => ({
   overlay: {
     flex: 1,
     justifyContent: "flex-end",
+  },
+  // The dimmer sits behind the sheet and fades with the open animation.
+  scrim: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: "rgba(10,17,31,0.5)",
   },
   sheet: {
@@ -43,7 +51,6 @@ export const styles = StyleSheet.create((theme, rt) => ({
     alignItems: "center",
     justifyContent: "center",
     padding: theme.spacing.lg,
-    backgroundColor: "rgba(10,17,31,0.4)",
   },
   floating: {
     width: "100%",

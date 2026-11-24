@@ -25,7 +25,7 @@ export function AddPlayerScreen() {
   return (
     <KeyboardAvoidingView style={styles.root} behavior={IS_IOS ? "padding" : undefined}>
       <Pressable
-        style={styles.scrim}
+        style={styles.dismissArea}
         onPress={() => navigation.goBack()}
         accessibilityRole="button"
         accessibilityLabel={t("common.close")}

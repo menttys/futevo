@@ -239,7 +239,13 @@
       "one": "{{count}} ponto",
       "other": "{{count}} pontos"
     },
-    "share": "Compartilhar"
+    "share": "Compartilhar",
+    "status": "Status da partida",
+    "fullStats": "Estatísticas",
+    "streak": "Sequência",
+    "biggestLead": "Maior vantagem",
+    "topAttack": "Melhor ataque",
+    "streakNote": "{{team}} em sequência"
   },
   "point": {
     "title": "Ponto da Dupla {{team}}",
@@ -288,7 +294,11 @@
     "syncing": "Sincronizando alterações…",
     "syncOffline": "Offline — salvo neste aparelho",
     "syncSubtitle": "Partidas, jogadores, torneios",
-    "signedInWith": "{{email}} · Google"
+    "signedInWith": "{{email}} · Google",
+    "deleteAccount": "Excluir conta",
+    "deleteAccountTitle": "Excluir conta?",
+    "deleteAccountMessage": "Isto exclui permanentemente sua conta e todos os seus jogadores, partidas e torneios. Não pode ser desfeito.",
+    "deleteAccountConfirm": "Excluir conta"
   },
   "gamified": {
     "courtMode": "Modo quadra",

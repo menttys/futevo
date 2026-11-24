@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
 import {
+  Animated,
+  Easing,
   FlatList,
   Modal,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  useWindowDimensions,
   type NativeSyntheticEvent,
   type TextInputKeyPressEventData,
 } from "react-native"
@@ -24,6 +27,10 @@ export function CountryPicker({ label, value, onChange }: CountryPickerProps) {
   const { theme } = useUnistyles()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState("")
+  // 0 = closed, 1 = open. Drives the scrim fade and the sheet slide together, on the same
+  // timing as the stack sheets, so the backdrop no longer slides with the content.
+  const progress = useRef(new Animated.Value(0)).current
+  const { height: screenHeight } = useWindowDimensions()
   const countries = useMemo(() => getCountries(currentLanguage), [currentLanguage])
 
   const display = value
@@ -51,10 +58,29 @@ export function CountryPicker({ label, value, onChange }: CountryPickerProps) {
     listRef.current?.scrollToIndex({ index: activeIndex, viewPosition: 0.5, animated: false })
   }, [activeIndex, items.length])
 
+  useEffect(() => {
+    if (!open) return
+    Animated.timing(progress, {
+      toValue: 1,
+      duration: 450,
+      easing: Easing.out(Easing.cubic),
+      useNativeDriver: !IS_WEB,
+    }).start()
+  }, [open, progress])
+
+  // Slides the sheet down and fades the scrim, then unmounts the modal.
   const close = () => {
-    setOpen(false)
-    setQuery("")
-    setActiveIndex(-1)
+    Animated.timing(progress, {
+      toValue: 0,
+      duration: 180,
+      easing: Easing.in(Easing.cubic),
+      useNativeDriver: !IS_WEB,
+    }).start(({ finished }) => {
+      if (!finished) return
+      setOpen(false)
+      setQuery("")
+      setActiveIndex(-1)
+    })
   }
 
   const handleQueryChange = (value: string) => {
@@ -88,18 +114,28 @@ export function CountryPicker({ label, value, onChange }: CountryPickerProps) {
       <TouchableOpacity style={styles.field} onPress={() => setOpen(true)} activeOpacity={0.85}>
         <Text style={[styles.fieldText, !value && styles.fieldTextEmpty]}>{display}</Text>
       </TouchableOpacity>
-      <Modal
-        visible={open}
-        transparent
-        animationType={IS_WEB ? "fade" : "slide"}
-        onRequestClose={close}
-      >
+      <Modal visible={open} transparent animationType="none" onRequestClose={close}>
         <TouchableOpacity
           style={IS_WEB ? styles.overlayWeb : styles.overlay}
           activeOpacity={1}
           onPress={close}
         >
-          <View style={IS_WEB ? styles.floating : styles.sheet} onStartShouldSetResponder={() => true}>
+          <Animated.View pointerEvents="none" style={[styles.scrim, { opacity: progress }]} />
+          <Animated.View
+            style={[
+              IS_WEB ? styles.floating : styles.sheet,
+              IS_WEB
+                ? { opacity: progress }
+                : {
+                    transform: [
+                      {
+                        translateY: progress.interpolate({ inputRange: [0, 1], outputRange: [screenHeight, 0] }),
+                      },
+                    ],
+                  },
+            ]}
+            onStartShouldSetResponder={() => true}
+          >
             <TextInput
               style={styles.search}
               value={query}
@@ -126,7 +162,7 @@ export function CountryPicker({ label, value, onChange }: CountryPickerProps) {
                 </TouchableOpacity>
               )}
             />
-          </View>
+          </Animated.View>
         </TouchableOpacity>
       </Modal>
     </View>
