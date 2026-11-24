@@ -77,8 +77,6 @@ export const styles = StyleSheet.create((theme, rt) => ({
   },
   finish: {
     flex: 1,
-    backgroundColor: theme.colors.wash,
-    borderWidth: 1,
   },
   chips: {
     gap: 8,

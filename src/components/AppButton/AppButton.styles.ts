@@ -11,6 +11,7 @@ export const styles = StyleSheet.create((theme) => {
     wash: theme.colors.wash,
     danger: "transparent",
     away: theme.colors.purple,
+    magenta: theme.colors.danger,
   }
   const foreground: Record<AppButtonVariant, string> = {
     primary: theme.colors.text,
@@ -20,6 +21,7 @@ export const styles = StyleSheet.create((theme) => {
     wash: theme.colors.text,
     danger: theme.colors.danger,
     away: theme.colors.white,
+    magenta: theme.colors.white,
   }
   return {
     button: (variant: AppButtonVariant, disabled: boolean, pressed: boolean) => ({

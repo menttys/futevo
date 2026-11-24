@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo } from "react"
-import { Pressable, ScrollView, Text, View } from "react-native"
+import { ScrollView, Text, View } from "react-native"
 
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import { StackNavigationProp } from "@react-navigation/stack"
 
-import type { TeamSide } from "@/@types/futevo"
 import { ATTACK_TYPES } from "@/@types/futevo"
 import { AttackBars } from "@/components/AttackBars"
 import { MeshBackground } from "@/components/MeshBackground"
@@ -26,8 +25,7 @@ import { styles } from "./MatchStatusScreen.styles"
 type NavigationProp = StackNavigationProp<MatchesStackParamList, "MatchStatus">
 type MatchStatusRouteProp = RouteProp<MatchesStackParamList, "MatchStatus">
 
-// The live match's full status — same summary as a finished match — with the Point buttons
-// kept at the bottom so scoring never needs a trip back.
+// The live match's full status — same summary as a finished match.
 export function MatchStatusScreen() {
   const { t } = useLanguage()
   const tabBarInset = useTabBarInset()
@@ -58,7 +56,6 @@ export function MatchStatusScreen() {
   const playerName = (id: string) => players?.find((p) => p.id === id)?.name ?? t("common.unknownPlayer")
   const homeName = sideLabel(match, tournament, "A", playerName)
   const awayName = sideLabel(match, tournament, "B", playerName)
-  const scorePoint = (team: TeamSide) => navigation.navigate("PointEntry", { matchId: match.id, team })
 
   return (
     <View style={styles.root}>
@@ -69,7 +66,7 @@ export function MatchStatusScreen() {
         backLabel={t("common.back")}
       />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
         <ScoreBoard
           homeName={homeName}
           awayName={awayName}
@@ -98,22 +95,6 @@ export function MatchStatusScreen() {
           </View>
         </View>
       </ScrollView>
-
-      <View style={[styles.footer, { paddingBottom: tabBarInset + 8 }]}>
-        {(["A", "B"] as const).map((side) => (
-          <Pressable
-            key={side}
-            accessibilityRole="button"
-            onPress={() => scorePoint(side)}
-            style={({ pressed }) => styles.pointButton(side === "B", pressed)}
-          >
-            <Text style={side === "A" ? styles.hintOnDark : styles.hint}>{t("match.tapToScore")}</Text>
-            <Text style={side === "A" ? styles.labelOnDark : styles.label} numberOfLines={1}>
-              {t("match.pointFor", { team: side === "A" ? homeName : awayName })}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
     </View>
   )
 }

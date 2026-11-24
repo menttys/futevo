@@ -1,7 +1,7 @@
 import type { ReactNode } from "react"
 import type { StyleProp, ViewStyle } from "react-native"
 
-export type AppButtonVariant = "primary" | "cream" | "outline" | "dark" | "wash" | "danger" | "away"
+export type AppButtonVariant = "primary" | "cream" | "outline" | "dark" | "wash" | "danger" | "away" | "magenta"
 
 export type AppButtonProps = {
   label: string

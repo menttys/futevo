@@ -72,6 +72,8 @@ export function LiveMatchScreen() {
 
   const scorePoint = (team: TeamSide) => navigation.navigate("PointEntry", { matchId: match.id, team })
   const canUndo = match.points.length > 0
+  // A completed match takes no more points, so the tap-to-score buttons are hidden.
+  const isFull = match.status === "completed"
   const recent = match.points.slice(-RECENT_POINTS).reverse()
 
   return (
@@ -103,7 +105,7 @@ export function LiveMatchScreen() {
           rightNote={t("match.firstTo", { target: match.targetScore, winBy: match.winBy })}
         />
 
-        {(["A", "B"] as const).map((side) => (
+        {!isFull && (["A", "B"] as const).map((side) => (
           <Pressable
             key={side}
             accessibilityRole="button"
@@ -120,19 +122,19 @@ export function LiveMatchScreen() {
         <View style={styles.actions}>
           <AppButton
             label={t("match.undo")}
-            variant="wash"
+            variant="away"
             labelStyle="body"
             disabled={!canUndo}
             onPress={handleUndo}
-            icon={<Undo size={18} color={theme.colors.text} />}
+            icon={<Undo size={18} color={theme.colors.white} />}
             style={styles.action}
           />
           <AppButton
             label={t("match.finish")}
-            variant="outline"
+            variant="magenta"
             labelStyle="body"
             onPress={handleFinish}
-            icon={<Flag size={18} color={theme.colors.text} />}
+            icon={<Flag size={18} color={theme.colors.white} />}
             style={styles.finish}
           />
         </View>
