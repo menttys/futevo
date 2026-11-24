@@ -89,4 +89,45 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 12,
     color: theme.colors.text,
   },
+  // desktop web
+  wideGrid: {
+    flex: 1,
+    width: "100%",
+    maxWidth: 1208,
+    alignSelf: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 80,
+    paddingHorizontal: 44,
+  },
+  wideBrand: {
+    flex: 1,
+    gap: 14,
+  },
+  wideWordmark: {
+    marginTop: 16,
+    fontFamily: theme.fonts.display,
+    fontSize: 65,
+    letterSpacing: -1.4,
+    color: theme.colors.text,
+  },
+  wideTagline: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 26,
+    lineHeight: 34,
+    color: theme.colors.text,
+  },
+  wideLanguages: {
+    marginTop: 40,
+  },
+  wideForm: {
+    width: 420,
+    gap: 18,
+  },
+  wideTitle: {
+    fontFamily: theme.fonts.display,
+    fontSize: 21,
+    letterSpacing: -0.4,
+    color: theme.colors.text,
+  },
 }))

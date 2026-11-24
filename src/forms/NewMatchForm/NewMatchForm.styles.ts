@@ -31,12 +31,46 @@ export const styles = StyleSheet.create((theme, rt) => ({
     gap: 8,
   },
   footerWide: {
-    alignItems: "flex-end",
-    paddingHorizontal: 44,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginTop: 4,
   },
   startWide: {
-    minHeight: 52,
-    minWidth: 260,
+    minWidth: 170,
+  },
+  rulesCard: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 24,
+    padding: 22,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  ruleTargetWide: {
+    flex: 1.6,
+  },
+  ruleWinByWide: {
+    flex: 0.9,
+  },
+  ruleTournamentWide: {
+    flex: 1.4,
+  },
+  tournamentSelect: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    height: 44,
+    paddingHorizontal: 18,
+    borderRadius: theme.radius.full,
+    backgroundColor: theme.colors.wash,
+  },
+  tournamentSelectValue: {
+    flex: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 15,
+    color: theme.colors.text,
   },
   hint: {
     fontFamily: theme.fonts.regular,

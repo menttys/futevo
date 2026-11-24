@@ -5,4 +5,6 @@ export type MatchStatusCardProps = {
   homeName: string
   awayName: string
   onPress: () => void
+  // Desktop: adds the landing-zone grid and attack bars under the momentum chart.
+  detailed?: boolean
 }

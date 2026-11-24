@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native-unistyles"
 
 import { WEB_CONTENT } from "@/constants/Platform"
 
-export const styles = StyleSheet.create((theme) => ({
+export const styles = StyleSheet.create((theme, rt) => ({
   root: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -23,24 +23,52 @@ export const styles = StyleSheet.create((theme) => ({
   },
   row: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "stretch",
     gap: 20,
   },
   colMain: {
     flex: 2,
   },
+  recentRow: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20,
+    marginTop: 20,
+  },
+  statsWide: {
+    gap: 14,
+  },
+  tileWide: {
+    paddingHorizontal: 18,
+    paddingVertical: 15,
+  },
+  headerButton: {
+    paddingHorizontal: 20,
+  },
+  statGrid: {
+    gap: 14,
+  },
+  startCardWide: {
+    minHeight: 240,
+    padding: 24,
+    justifyContent: "flex-end",
+  },
+  startButtonWide: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 22,
+  },
   colSide: {
     flex: 1,
-    gap: 16,
+    gap: 14,
   },
   listWide: {
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 9,
+    justifyContent: "space-between",
+    rowGap: 10,
   },
   cell: {
-    flexBasis: "48%",
-    flexGrow: 1,
+    width: "49.3%",
   },
   topBar: {
     flexDirection: "row",
@@ -81,7 +109,7 @@ export const styles = StyleSheet.create((theme) => ({
   greeting: {
     marginTop: 8,
     fontFamily: theme.fonts.display,
-    fontSize: 22,
+    fontSize: rt.screen.width >= 1024 ? 28 : 22,
     lineHeight: 24,
     letterSpacing: -0.45,
     color: theme.colors.text,

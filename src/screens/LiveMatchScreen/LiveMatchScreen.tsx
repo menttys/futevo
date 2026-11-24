@@ -19,6 +19,7 @@ import { CourtMode, Flag, Undo } from "@/lib/icons"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
+import { useSettingsStore } from "@/store/settingsState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
 import { firstName, pointSummary, sideLabel } from "@/utils/matchLabels"
@@ -34,6 +35,7 @@ export function LiveMatchScreen() {
   const { theme } = useUnistyles()
   const tabBarInset = useTabBarInset()
   const wide = useSideTabBar()
+  const shortcuts = useSettingsStore((s) => s.keyboardShortcuts)
   const keyHandler = useRef<(key: string) => void>(() => {})
   const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
@@ -53,7 +55,7 @@ export function LiveMatchScreen() {
 
   // Desktop shortcuts: A home point, L away point, Z undo. Ignored while typing in a field.
   useEffect(() => {
-    if (!wide) return
+    if (!wide || !shortcuts) return
     const onKey = (e: KeyboardEvent) => {
       const el = e.target as HTMLElement | null
       if (e.metaKey || e.ctrlKey || e.altKey) return
@@ -63,7 +65,7 @@ export function LiveMatchScreen() {
     }
     window.addEventListener("keydown", onKey)
     return () => window.removeEventListener("keydown", onKey)
-  }, [wide])
+  }, [wide, shortcuts])
 
   if (!match) return null
 
@@ -110,7 +112,16 @@ export function LiveMatchScreen() {
         onBack={() => navigation.goBack()}
         backLabel={t("common.back")}
         right={
-          wide ? undefined : (
+          wide ? (
+            <AppButton
+              label={t("match.finish")}
+              variant="outline"
+              labelStyle="body"
+              onPress={handleFinish}
+              icon={<Flag size={18} color={theme.colors.text} />}
+              style={styles.headerButton}
+            />
+          ) : (
             <Pressable
               accessibilityRole="button"
               onPress={() => navigation.navigate("GamifiedMatch", { matchId: match.id })}
@@ -123,7 +134,13 @@ export function LiveMatchScreen() {
         }
       />
 
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          wide && styles.contentWide,
+          { paddingBottom: tabBarInset + 16 },
+        ]}
+      >
         {wide ? (
           <View style={styles.row}>
             <View style={styles.colMain}>
@@ -148,7 +165,9 @@ export function LiveMatchScreen() {
                     ]}
                   >
                     <Text style={side === "A" ? styles.pointHintOnDark : styles.pointHint}>
-                      {side === "A" ? "A" : "L"}
+                      {shortcuts
+                        ? t("match.clickOrPress", { key: side === "A" ? "A" : "L" })
+                        : t("match.tapToScore")}
                     </Text>
                     <Text
                       style={side === "A" ? styles.pointLabelOnDark : styles.pointLabel}
@@ -159,37 +178,30 @@ export function LiveMatchScreen() {
                   </Pressable>
                 ))}
               </View>
-              <View style={styles.actions}>
+              <View style={styles.undoRow}>
                 <AppButton
-                  label={t("match.undo")}
-                  variant="away"
+                  label={t("match.undoLast")}
+                  variant="wash"
                   labelStyle="body"
                   disabled={!canUndo}
                   onPress={handleUndo}
-                  icon={<Undo size={18} color={theme.colors.white} />}
-                  style={styles.action}
+                  icon={<Undo size={18} color={theme.colors.text} />}
+                  style={styles.headerButton}
                 />
-                <AppButton
-                  label={t("match.finish")}
-                  variant="magenta"
-                  labelStyle="body"
-                  onPress={handleFinish}
-                  icon={<Flag size={18} color={theme.colors.white} />}
-                  style={styles.finish}
-                />
+                {shortcuts ? <Text style={styles.hint}>{t("match.shortcutsHint")}</Text> : null}
               </View>
-
-              <Text style={styles.hint}>{t("match.shortcutsHint")}</Text>
             </View>
             <View style={styles.colSide}>
               <MatchStatusCard
+                detailed
                 match={match}
                 homeName={homeName}
                 awayName={awayName}
                 onPress={() => navigation.navigate("MatchStatus", { matchId: match.id })}
               />
               {recent.length > 0 ? (
-                <View style={styles.chipsWrap}>
+                <View style={styles.lastCard}>
+                  <Text style={styles.lastLabel}>{t("match.lastPoints")}</Text>
                   {recent.map((point) => {
                     const scorer = point.scoringPlayerId
                       ? playerName(point.scoringPlayerId)
@@ -199,10 +211,23 @@ export function LiveMatchScreen() {
                       : point.attackType
                         ? t(`attackTypes.${point.attackType}`)
                         : undefined
+                    const detail = [
+                      how,
+                      point.zone ? t("match.zone", { zone: point.zone }).toLowerCase() : undefined,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")
                     return (
-                      <View key={point.id} style={styles.chip}>
-                        <Text style={styles.chipLabel}>
-                          {pointSummary(point, [scorer ? firstName(scorer) : undefined, how])}
+                      <View key={point.id} style={styles.lastRow}>
+                        <View style={styles.lastDot(point.team === "B")} />
+                        <Text
+                          style={styles.lastScore}
+                        >{`${point.scoreAAfter}–${point.scoreBAfter}`}</Text>
+                        <Text style={styles.lastPlayer} numberOfLines={1}>
+                          {scorer ? firstName(scorer) : point.team === "A" ? homeName : awayName}
+                        </Text>
+                        <Text style={styles.lastDetail} numberOfLines={1}>
+                          {detail}
                         </Text>
                       </View>
                     )

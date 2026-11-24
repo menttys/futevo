@@ -29,6 +29,50 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 65,
     lineHeight: 72,
   },
+  headerActions: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  headerButton: {
+    minHeight: 44,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  bannerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+    marginTop: 6,
+  },
+  bannerSide: {
+    flex: 1,
+    minWidth: 0,
+  },
+  nameWide: {
+    fontSize: 16,
+  },
+  legend: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 10,
+  },
+  legendDot: (away: boolean) => ({
+    width: 10,
+    height: 10,
+    borderRadius: 2,
+    marginLeft: away ? 10 : 0,
+    backgroundColor: away ? theme.colors.purple : theme.colors.dark,
+  }),
+  legendLabel: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.text,
+  },
+  statsRow: {
+    flexDirection: "row",
+    gap: 16,
+  },
   tabsWide: {
     width: 460,
   },

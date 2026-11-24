@@ -25,14 +25,25 @@ import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { confirmAction } from "@/utils/confirmAction"
-import type { CourtHit, Point2D } from "@/utils/courtGesture"
-import { locateOnCourt, suggestAttackType, toCourtPosition, zoneRect } from "@/utils/courtGesture"
-import type { SelectionPhase } from "@/utils/courtSelection"
+import type { CourtToken, PlacedLanding, Squares } from "@/utils/courtActions"
+import {
+  confirmedPoint,
+  tokenAt as findTokenAt,
+  OPPONENT_ERROR_POINT,
+  resolveDrop,
+  resolveOpponentError,
+  resolveTap,
+  screenPhase,
+  squareFor,
+  TAP_SLOP,
+  toggleAttack,
+} from "@/utils/courtActions"
+import type { Point2D } from "@/utils/courtGesture"
+import { zoneRect } from "@/utils/courtGesture"
 import {
   arcPath,
   dragPhase,
   fitCourt,
-  homeZone,
   netEdge,
   opponentOf,
   zoneCenter,
@@ -51,26 +62,17 @@ import {
 type NavigationProp = StackNavigationProp<MatchesStackParamList, "GamifiedMatch">
 type GamifiedRouteProp = RouteProp<MatchesStackParamList, "GamifiedMatch">
 
-// Every player stands on a square of their own half.
-type Token = { player: Player; team: TeamSide; zone: CourtZone; center: Point2D }
+// Every player stands on a square of their own half. The rules live in utils/courtActions.
+type Token = CourtToken & { player: Player }
 
 // A token being carried: where the finger went down and where it is now.
 type Drag = { playerId: string; start: Point2D; current: Point2D }
-
-// A released landing, waiting for the points sheet to confirm it. `landing` is exactly where the
-// finger let go; `hit` is the zone that point falls in.
-type Placed = { playerId: string; hit: CourtHit; landing: Point2D; attackType?: AttackTypeId }
-
-// "error": Opp. error was pressed with nobody picked up; the next token tapped wins the point.
-type ScreenPhase = SelectionPhase | "error"
 
 const COURT_ZONES: CourtZone[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const COURT_CELLS = (["B", "A"] as const).flatMap((side) =>
   COURT_ZONES.map((zone) => ({ side, zone }))
 )
 
-// Moving less than this between touch-down and release counts as a tap.
-const TAP_SLOP = 12
 const TOKEN_HIT_RADIUS = TOKEN_SIZE * 0.8
 // Stable fallback so the token memo doesn't recompute while players are loading.
 const NO_PLAYERS: Player[] = []
@@ -90,10 +92,10 @@ export function GamifiedMatchScreen() {
 
   const [arena, setArena] = useState({ width: 0, height: 0 })
   const [drag, setDrag] = useState<Drag | null>(null)
-  const [placed, setPlaced] = useState<Placed | null>(null)
+  const [placed, setPlaced] = useState<PlacedLanding | null>(null)
   const [errorMode, setErrorMode] = useState(false)
   // The square each player was moved to (where their attack starts); others stand on their home square.
-  const [squares, setSquares] = useState<Record<string, CourtZone>>({})
+  const [squares, setSquares] = useState<Squares>({})
 
   // Gesture callbacks fire between renders, so the token being carried (and the last point the
   // finger reached) lives in a ref.
@@ -114,8 +116,8 @@ export function GamifiedMatchScreen() {
       ids.flatMap((id, index) => {
         const player = allPlayers.find((p) => p.id === id)
         if (!player) return []
-        const zone = squares[id] ?? homeZone(team, index === 0 ? 0 : 1)
-        return [{ player, team, zone, center: zoneCenter(team, zone, court) }]
+        const zone = squareFor(id, team, index === 0 ? 0 : 1, squares)
+        return [{ id, player, team, zone, center: zoneCenter(team, zone, court) }]
       })
     return [...place(match.teamA, "A"), ...place(match.teamB, "B")]
   }, [match, allPlayers, court, squares])
@@ -123,11 +125,9 @@ export function GamifiedMatchScreen() {
   if (!match) return null
 
   const tokenAt = (point: Point2D): Token | undefined =>
-    tokens.find(
-      (token) => Math.hypot(token.center.x - point.x, token.center.y - point.y) <= TOKEN_HIT_RADIUS
-    )
+    findTokenAt(tokens, point, TOKEN_HIT_RADIUS)
   const tokenFor = (playerId: string | undefined): Token | undefined =>
-    playerId ? tokens.find((token) => token.player.id === playerId) : undefined
+    playerId ? tokens.find((token) => token.id === playerId) : undefined
 
   // After a point: clear the landing and send everyone back to their home square for the next rally.
   const resetSelection = () => {
@@ -136,30 +136,8 @@ export function GamifiedMatchScreen() {
     setSquares({})
   }
 
-  // Dropping a player on another square of their own side moves them there: that square is where
-  // the attack is taken from. A teammate already standing there swaps onto the square just left.
-  const movePlayer = (token: Token, zone: CourtZone) => {
-    const teammate = tokens.find(
-      (other) =>
-        other.team === token.team && other.player.id !== token.player.id && other.zone === zone
-    )
-    setSquares((current) => ({
-      ...current,
-      [token.player.id]: zone,
-      ...(teammate ? { [teammate.player.id]: token.zone } : {}),
-    }))
-    // A landing already placed now flies from the mover's (or swapped teammate's) new square.
-    if (placed?.playerId === token.player.id) {
-      setPlaced(placeAt(token, placed.landing, placed.hit, zoneCenter(token.team, zone, court)))
-    } else if (teammate && placed?.playerId === teammate.player.id) {
-      setPlaced(
-        placeAt(teammate, placed.landing, placed.hit, zoneCenter(token.team, token.zone, court))
-      )
-    }
-  }
-
   const recordOpponentError = (team: TeamSide) => {
-    addPoint(match.id, team, { attackType: "opponentError" })
+    addPoint(match.id, team, OPPONENT_ERROR_POINT)
     resetSelection()
   }
 
@@ -191,79 +169,57 @@ export function GamifiedMatchScreen() {
       if (!carry) return
       const token = tokenFor(carry.playerId)
       if (!token) return
-      // Never left the slop (a tap): dragPhase says "picked" and nothing changes.
-      const { phase, hit } = dragPhase(carry.start, carry.current, token.team, court, TAP_SLOP)
-      if (phase === "valid" && hit) {
-        // The landing stays exactly where the finger let go.
-        setPlaced(placeAt(token, carry.current, hit))
-      } else if (phase === "move" && hit) {
-        movePlayer(token, hit.zone)
-      }
-      // Released off the court: cancel.
-      else if (phase === "off") setPlaced(null)
+      const outcome = resolveDrop({
+        token,
+        tokens,
+        start: carry.start,
+        end: carry.current,
+        court,
+        squares,
+        placed,
+      })
+      if (outcome.kind === "place") setPlaced(outcome.placed)
+      else if (outcome.kind === "move") {
+        setSquares(outcome.squares)
+        setPlaced(outcome.placed)
+      } else if (outcome.kind === "cancel") setPlaced(null)
     })
 
-  // Taps: pick the winning team after Opp. error, or move a placed landing to another square.
+  // Taps: pick the winning team after Opp. error, or move a placed landing to another spot.
   const tap = Gesture.Tap()
     .runOnJS(true)
     .maxDistance(TAP_SLOP)
     .onEnd((event, success) => {
       if (!success) return
-      const point = { x: event.x, y: event.y }
-      if (errorMode) {
-        const token = tokenAt(point)
-        if (token) recordOpponentError(token.team)
-        return
-      }
-      // Tapping the other side moves the landing to exactly where the tap was.
-      const placedToken = tokenFor(placed?.playerId)
-      const hit = locateOnCourt(point, court)
-      if (placedToken && hit && hit.side !== placedToken.team) {
-        setPlaced(placeAt(placedToken, point, hit))
-      }
+      const outcome = resolveTap({
+        point: { x: event.x, y: event.y },
+        tokens,
+        court,
+        placed,
+        errorMode,
+        hitRadius: TOKEN_HIT_RADIUS,
+      })
+      if (outcome.kind === "opponentError") recordOpponentError(outcome.team)
+      else if (outcome.kind === "moveLanding") setPlaced(outcome.placed)
     })
 
   const gesture = Gesture.Race(pan, tap)
 
-  // A new landing pre-selects the attack the landing depth suggests; the sheet can change it.
-  // `from` defaults to the player's current square.
-  function placeAt(token: Token, landing: Point2D, hit: CourtHit, from = token.center): Placed {
-    return {
-      playerId: token.player.id,
-      hit,
-      landing,
-      attackType: suggestAttackType(from, landing, court, token.team),
-    }
-  }
-
   const handleConfirm = () => {
     const token = tokenFor(placed?.playerId)
     if (!placed || !token) return
-    // An ace is always a serve, so where the shot started says nothing about it.
-    addPoint(match.id, token.team, {
-      zone: placed.hit.zone,
-      attackType: placed.attackType,
-      scoringPlayerId: token.player.id,
-      shotFrom: placed.attackType === "ace" ? undefined : toCourtPosition(token.center, court),
-      landedAt: toCourtPosition(placed.landing, court),
-    })
+    addPoint(match.id, token.team, confirmedPoint(placed, token, court))
     resetSelection()
   }
 
-  // Tapping the selected chip again clears it, as on the points screen.
   const handleSelectAttack = (next: AttackTypeId) =>
-    setPlaced((current) =>
-      current ? { ...current, attackType: current.attackType === next ? undefined : next } : current
-    )
+    setPlaced((current) => (current ? toggleAttack(current, next) : current))
 
   // With a player placed the error goes to their team; otherwise the next token tapped decides.
   const handleOpponentError = () => {
-    const placedToken = tokenFor(placed?.playerId)
-    if (placedToken) {
-      recordOpponentError(placedToken.team)
-      return
-    }
-    setErrorMode((current) => !current)
+    const outcome = resolveOpponentError(placed, tokens)
+    if (outcome.kind === "record") recordOpponentError(outcome.team)
+    else setErrorMode((current) => !current)
   }
 
   const handleUndo = () => {
@@ -285,13 +241,7 @@ export function GamifiedMatchScreen() {
   const live =
     drag && dragToken ? dragPhase(drag.start, drag.current, dragToken.team, court, TAP_SLOP) : null
   const placedToken = tokenFor(placed?.playerId)
-  const phase: ScreenPhase = live
-    ? live.phase
-    : errorMode
-      ? "error"
-      : placed && placedToken
-        ? "placed"
-        : "idle"
+  const phase = screenPhase(live?.phase ?? null, errorMode, !!placed && !!placedToken)
   const activeToken = dragToken ?? (phase === "placed" ? placedToken : undefined)
   // The half the active player can land on; before anyone is picked, the top half.
   const landingSide: TeamSide = activeToken ? opponentOf(activeToken.team) : "B"

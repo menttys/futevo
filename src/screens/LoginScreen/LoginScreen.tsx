@@ -6,6 +6,7 @@ import { useUnistyles } from "react-native-unistyles"
 
 import { FutevoMark } from "@/components/FutevoMark"
 import { signinWithGoogle } from "@/hooks/useFirebase"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
 import { ChevronRight, GoogleLogo } from "@/lib/icons"
@@ -19,6 +20,59 @@ const LOGIN_LANGUAGES: LanguageCode[] = ["en", "es", "pt"]
 export const LoginScreen = () => {
   const { theme } = useUnistyles()
   const { t, currentLanguage, changeLanguage, languages } = useLanguage()
+  const wide = useSideTabBar()
+
+  const googleButton = (
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => signinWithGoogle().catch(console.error)}
+      style={({ pressed }) => styles.google(pressed)}
+    >
+      <View style={styles.googleDisc}>
+        <GoogleLogo size={16} weight="bold" color={theme.colors.white} />
+      </View>
+      <Text style={styles.googleLabel}>{t("auth.continueWithGoogle")}</Text>
+      <ChevronRight size={18} color={theme.colors.text} />
+    </Pressable>
+  )
+
+  const languageSwitch = (
+    <View style={styles.languages}>
+      {LOGIN_LANGUAGES.map((code) => (
+        <Pressable
+          key={code}
+          accessibilityRole="button"
+          accessibilityLabel={languages[code].nativeName}
+          accessibilityState={{ selected: code === currentLanguage }}
+          onPress={() => changeLanguage(code)}
+          style={styles.language(code === currentLanguage)}
+        >
+          <Text style={styles.languageLabel}>{code.toUpperCase()}</Text>
+        </Pressable>
+      ))}
+    </View>
+  )
+
+  // Desktop web: brand on the left, the sign-in column on the right, inside the 1120px column.
+  if (wide) {
+    return (
+      <View style={styles.root}>
+        <View style={styles.wideGrid}>
+          <View style={styles.wideBrand}>
+            <FutevoMark size={80} />
+            <Text style={styles.wideWordmark}>{t("app.name")}</Text>
+            <Text style={styles.wideTagline}>{t("auth.tagline")}</Text>
+            <View style={styles.wideLanguages}>{languageSwitch}</View>
+          </View>
+          <View style={styles.wideForm}>
+            <Text style={styles.wideTitle}>{t("auth.signIn")}</Text>
+            {googleButton}
+            <Text style={styles.version}>{t("auth.version", { version: VERSION })}</Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
 
   return (
     <View style={styles.root}>
@@ -31,33 +85,10 @@ export const LoginScreen = () => {
       </View>
 
       <View style={styles.bottom}>
-        <Pressable
-          accessibilityRole="button"
-          onPress={() => signinWithGoogle().catch(console.error)}
-          style={({ pressed }) => styles.google(pressed)}
-        >
-          <View style={styles.googleDisc}>
-            <GoogleLogo size={16} weight="bold" color={theme.colors.white} />
-          </View>
-          <Text style={styles.googleLabel}>{t("auth.continueWithGoogle")}</Text>
-          <ChevronRight size={18} color={theme.colors.text} />
-        </Pressable>
+        {googleButton}
 
         <View style={styles.footer}>
-          <View style={styles.languages}>
-            {LOGIN_LANGUAGES.map((code) => (
-              <Pressable
-                key={code}
-                accessibilityRole="button"
-                accessibilityLabel={languages[code].nativeName}
-                accessibilityState={{ selected: code === currentLanguage }}
-                onPress={() => changeLanguage(code)}
-                style={styles.language(code === currentLanguage)}
-              >
-                <Text style={styles.languageLabel}>{code.toUpperCase()}</Text>
-              </Pressable>
-            ))}
-          </View>
+          {languageSwitch}
           <Text style={styles.version}>{t("auth.version", { version: VERSION })}</Text>
         </View>
       </View>

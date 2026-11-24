@@ -13,6 +13,105 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingHorizontal: theme.gutter,
     gap: 12,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+    gap: 20,
+  },
+  nameWide: {
+    fontSize: 32,
+    lineHeight: 36,
+  },
+  tabsWide: {
+    width: 360,
+  },
+  headerButton: {
+    minHeight: 44,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  bannerWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 28,
+    paddingVertical: 28,
+  },
+  bannerBodyWide: {
+    flex: 1,
+    paddingTop: 0,
+  },
+  leaderTile: {
+    minWidth: 120,
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: theme.radius.md,
+    backgroundColor: theme.colors.card,
+  },
+  leaderValue: {
+    fontFamily: theme.fonts.display,
+    fontSize: 20,
+    letterSpacing: -0.4,
+    color: theme.colors.text,
+  },
+  leaderLabel: {
+    marginTop: 6,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  bodyWide: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 24,
+  },
+  mainWide: {
+    flex: 1,
+    minWidth: 0,
+    gap: 10,
+  },
+  sideWide: {
+    width: 340,
+    gap: 18,
+  },
+  tableHeadWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingHorizontal: 18,
+  },
+  standingWide: {
+    paddingHorizontal: 18,
+    paddingVertical: 13,
+  },
+  wRank: {
+    width: 22,
+  },
+  wDupla: {
+    flex: 1.2,
+    paddingLeft: 0,
+  },
+  wClub: {
+    flex: 1,
+  },
+  wNum: {
+    width: 56,
+    textAlign: "center",
+  },
+  wPts: {
+    width: 40,
+    textAlign: "right",
+  },
+  clubWide: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 13.5,
+    color: theme.colors.textMuted,
+  },
+  points: {
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 12.6,
+    color: theme.colors.text,
+  },
   banner: {
     backgroundColor: theme.colors.primary,
     borderRadius: theme.radius.lg,

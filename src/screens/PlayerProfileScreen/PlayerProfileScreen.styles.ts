@@ -25,6 +25,72 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingHorizontal: theme.gutter,
     gap: 14,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+  },
+  columns: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20,
+  },
+  leftCard: {
+    width: 380,
+    gap: 14,
+    padding: 18,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+    overflow: "hidden",
+  },
+  rightColumn: {
+    flex: 1,
+    gap: 14,
+  },
+  pairRow: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: 14,
+  },
+  pairCard: {
+    flex: 1,
+  },
+  cardLabelSpaced: {
+    marginTop: 18,
+  },
+  partners: {
+    gap: 12,
+  },
+  partnerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  partnerName: {
+    flex: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: theme.colors.text,
+  },
+  partnerMeta: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 12.5,
+    color: theme.colors.textMuted,
+  },
+  zonesCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 24,
+  },
+  zonesGrid: {
+    width: 280,
+  },
+  insight: {
+    flex: 1,
+    fontFamily: theme.fonts.regular,
+    fontSize: 14,
+    lineHeight: 21,
+    color: theme.colors.text,
+  },
   // Large avatar with a faint mark behind it.
   hero: {
     alignItems: "center",
@@ -85,7 +151,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
     gap: 10,
   },
   card: {
-    padding: 14,
+    padding: 18,
     borderRadius: theme.radius.card,
     backgroundColor: theme.colors.card,
     boxShadow: theme.shadows.card,

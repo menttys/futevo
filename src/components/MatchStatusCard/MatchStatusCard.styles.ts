@@ -9,6 +9,15 @@ export const styles = StyleSheet.create((theme) => ({
     gap: 10,
     opacity: pressed ? 0.85 : 1,
   }),
+  detail: {
+    flexDirection: "row",
+    gap: 14,
+    marginTop: 4,
+  },
+  detailCol: {
+    flex: 1,
+    gap: 8,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",

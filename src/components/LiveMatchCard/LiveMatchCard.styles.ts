@@ -87,4 +87,105 @@ export const styles = StyleSheet.create((theme) => ({
   compactScoreAway: {
     color: theme.colors.purple,
   },
+  // desktop dashboard card
+  wideCard: {
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.lg,
+    paddingHorizontal: 24,
+    paddingTop: 22,
+    paddingBottom: 22,
+    overflow: "hidden",
+    gap: 14,
+    minHeight: 240,
+  },
+  wideWatermark: {
+    position: "absolute",
+    right: -60,
+    top: -40,
+    opacity: 0.1,
+  },
+  wideSides: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 16,
+  },
+  wideSide: {
+    flex: 1,
+    minWidth: 0,
+  },
+  wideName: (away: boolean) => ({
+    fontFamily: theme.fonts.semibold,
+    fontSize: 15,
+    color: away ? theme.colors.purple : theme.colors.text,
+  }),
+  wideDetail: {
+    marginTop: 3,
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.text,
+  },
+  wideScore: (away: boolean) => ({
+    marginTop: 6,
+    fontFamily: theme.fonts.display,
+    fontSize: 57,
+    lineHeight: 64,
+    letterSpacing: -1.2,
+    color: away ? theme.colors.purple : theme.colors.text,
+    fontVariant: ["tabular-nums"],
+  }),
+  wideAction: {
+    alignSelf: "flex-end",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginTop: "auto",
+  },
+  wideActionLabel: {
+    fontFamily: theme.fonts.bold,
+    fontSize: 14,
+    color: theme.colors.text,
+  },
+  // desktop one-line live row
+  bar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+    height: 56,
+    paddingHorizontal: 20,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.primary,
+    overflow: "hidden",
+  },
+  barWatermark: {
+    position: "absolute",
+    right: 40,
+    top: -50,
+    opacity: 0.1,
+  },
+  barName: (away: boolean) => ({
+    flexShrink: 1,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 15,
+    color: away ? theme.colors.purple : theme.colors.text,
+  }),
+  barVs: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.textMuted,
+  },
+  barMeta: {
+    flexShrink: 1,
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
+    color: theme.colors.text,
+  },
+  barSpacer: {
+    flex: 1,
+  },
+  barScore: {
+    fontFamily: theme.fonts.display,
+    fontSize: 25,
+    letterSpacing: -0.5,
+    color: theme.colors.text,
+    fontVariant: ["tabular-nums"],
+  },
 }))

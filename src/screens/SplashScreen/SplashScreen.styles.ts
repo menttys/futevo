@@ -18,6 +18,18 @@ export const styles = StyleSheet.create((theme, rt) => ({
     letterSpacing: -0.75,
     color: theme.colors.text,
   },
+  wordmarkWide: {
+    marginTop: 20,
+    fontSize: 54,
+    letterSpacing: -1.1,
+  },
+  taglineWide: {
+    fontSize: 18,
+  },
+  dotsWide: {
+    paddingBottom: 0,
+    marginTop: 46,
+  },
   tagline: {
     fontFamily: theme.fonts.regular,
     fontSize: 15,

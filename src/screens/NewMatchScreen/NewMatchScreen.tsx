@@ -72,6 +72,7 @@ export function NewMatchScreen() {
         tournaments={tournaments}
         onSubmit={handleSubmit}
         onPickSlot={handlePickSlot}
+        onCancel={navigation.canGoBack() ? () => navigation.goBack() : undefined}
       />
     </View>
   )

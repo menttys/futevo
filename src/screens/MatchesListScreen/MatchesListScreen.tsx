@@ -5,6 +5,7 @@ import type { BottomTabNavigationProp } from "@react-navigation/bottom-tabs"
 import { useNavigation } from "@react-navigation/native"
 import { FlashList } from "@shopify/flash-list"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
+import { useUnistyles } from "react-native-unistyles"
 
 import type { Match, Tournament } from "@/@types/futevo"
 import { AppButton } from "@/components/AppButton"
@@ -15,11 +16,13 @@ import { MatchRow } from "@/components/MatchRow"
 import { MeshBackground } from "@/components/MeshBackground"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { SearchField } from "@/components/SearchField"
-import { SectionLabel } from "@/components/SectionHeader"
+import { SectionHeader, SectionLabel } from "@/components/SectionHeader"
+import { StatTile } from "@/components/StatTile"
 import { TournamentRow } from "@/components/TournamentRow"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
+import { Plus } from "@/lib/icons"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
 import type { TabParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
@@ -46,6 +49,7 @@ export function MatchesListScreen() {
   const insets = useSafeAreaInsets()
   const tabBarInset = useTabBarInset()
   const wide = useSideTabBar()
+  const { theme } = useUnistyles()
   const { t, currentLanguage } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const matches = useMatchStore((s) => s.matches) ?? EMPTY_MATCHES
@@ -93,7 +97,8 @@ export function MatchesListScreen() {
         entries.push({ at: m.createdAt, row: { type: "match", key: m.id, match: m } })
       }
     }
-    if (filter === "all" || filter === "tournaments") {
+    // On desktop the tournaments sit in their own column, so "All" lists only matches.
+    if ((filter === "all" && !wide) || filter === "tournaments") {
       for (const tr of tournaments) {
         if (!tournamentHits(tr)) continue
         entries.push({ at: tr.createdAt, row: { type: "tournament", key: tr.id, tournament: tr } })
@@ -125,7 +130,7 @@ export function MatchesListScreen() {
       out.push(e.row)
     }
     return out
-  }, [matches, tournaments, filter, query, playerName, tournamentOf, t, currentLanguage])
+  }, [matches, tournaments, filter, query, playerName, tournamentOf, t, currentLanguage, wide])
 
   const openMatch = useCallback(
     (match: Match) => {
@@ -177,9 +182,10 @@ export function MatchesListScreen() {
         return (
           <View style={styles.item}>
             <LiveMatchCard
-              variant="compact"
+              variant={wide ? "bar" : "compact"}
               homeName={homeName}
               awayName={awayName}
+              meta={[tournament?.name, m.round].filter(Boolean).join(" · ") || undefined}
               scoreA={m.scoreA}
               scoreB={m.scoreB}
               liveLabel={t("common.live")}
@@ -207,7 +213,7 @@ export function MatchesListScreen() {
         </View>
       )
     },
-    [matches, navigation, openMatch, playerName, tournamentOf, t, currentLanguage]
+    [matches, navigation, openMatch, playerName, tournamentOf, t, currentLanguage, wide]
   )
 
   const onNewMatch = () =>
@@ -223,6 +229,16 @@ export function MatchesListScreen() {
     return out
   }, [rows])
 
+  // Desktop side column: this week's numbers.
+  const week = useMemo(() => {
+    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()
+    const recent = matches.filter((m) => m.createdAt >= since)
+    return {
+      played: recent.filter((m) => m.status === "completed").length,
+      points: recent.reduce((sum, m) => sum + m.points.length, 0),
+    }
+  }, [matches])
+
   const isSearching = query.trim().length > 0 || filter !== "all"
 
   return (
@@ -233,7 +249,16 @@ export function MatchesListScreen() {
           variant="large"
           title={t("matches.title")}
           style={styles.title}
-          right={wide ? <AppButton label={t("tabs.newMatch")} onPress={onNewMatch} /> : undefined}
+          right={
+            wide ? (
+              <AppButton
+                label={t("tabs.newMatch")}
+                icon={<Plus size={18} color={theme.colors.text} />}
+                onPress={onNewMatch}
+                style={styles.headerButton}
+              />
+            ) : undefined
+          }
         />
         {wide ? (
           <View style={styles.filtersWide}>
@@ -290,37 +315,78 @@ export function MatchesListScreen() {
             { paddingBottom: 32 },
           ]}
         >
-          {groups.length === 0 ? (
-            <EmptyState
-              title={isSearching ? t("matches.noResultsTitle") : t("matches.emptyTitle")}
-              subtitle={isSearching ? t("matches.noResultsSubtitle") : t("matches.emptySubtitle")}
-              actionLabel={isSearching ? undefined : t("tabs.newMatch")}
-              onAction={
-                isSearching
-                  ? undefined
-                  : () =>
-                      navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
-              }
-            />
-          ) : (
-            groups.map((g) => (
-              <View key={g.key}>
-                <SectionLabel title={g.label} style={styles.dayLabel} />
-                <View style={styles.grid}>
-                  {g.items.map((item) => {
-                    const full =
-                      item.type === "tournament" ||
-                      (item.type === "match" && item.match.status === "in_progress")
-                    return (
-                      <View key={item.key} style={full ? styles.cellFull : styles.cell}>
-                        {renderItem({ item })}
-                      </View>
-                    )
-                  })}
+          <View style={styles.bodyWide}>
+            <View style={styles.main}>
+              {groups.length === 0 ? (
+                <EmptyState
+                  title={isSearching ? t("matches.noResultsTitle") : t("matches.emptyTitle")}
+                  subtitle={
+                    isSearching ? t("matches.noResultsSubtitle") : t("matches.emptySubtitle")
+                  }
+                  actionLabel={isSearching ? undefined : t("tabs.newMatch")}
+                  onAction={
+                    isSearching
+                      ? undefined
+                      : () =>
+                          navigation.navigate(TabRoutes.MATCH_FLOW, {
+                            screen: MatchesRoutes.NEW_MATCH,
+                          })
+                  }
+                />
+              ) : (
+                groups.map((g) => (
+                  <View key={g.key}>
+                    <SectionLabel title={g.label} style={styles.dayLabel} />
+                    <View style={styles.grid}>
+                      {g.items.map((item) => {
+                        const full =
+                          item.type === "tournament" ||
+                          (item.type === "match" && item.match.status === "in_progress")
+                        return (
+                          <View key={item.key} style={full ? styles.cellFull : styles.cell}>
+                            {renderItem({ item })}
+                          </View>
+                        )
+                      })}
+                    </View>
+                  </View>
+                ))
+              )}
+            </View>
+            <View style={styles.side}>
+              {tournaments.length > 0 ? (
+                <View>
+                  <SectionHeader title={t("matches.filters.tournaments")} />
+                  <View style={styles.sideList}>
+                    {tournaments.map((tr, index) => (
+                      <TournamentRow
+                        key={tr.id}
+                        variant={index === 0 ? "yellow" : "butter"}
+                        name={tr.name}
+                        subtitle={t("matches.tournamentSubtitle", {
+                          duplas: tr.entries.length,
+                          matches: matches.filter((m) => m.tournamentId === tr.id).length,
+                        })}
+                        onPress={() =>
+                          navigation.navigate(TabRoutes.MATCH_FLOW, {
+                            screen: MatchesRoutes.TOURNAMENT_DETAIL,
+                            params: { tournamentId: tr.id },
+                          })
+                        }
+                      />
+                    ))}
+                  </View>
+                </View>
+              ) : null}
+              <View style={styles.weekCard}>
+                <SectionLabel title={t("matches.thisWeek")} />
+                <View style={styles.weekTiles}>
+                  <StatTile value={String(week.played)} label={t("matches.played")} />
+                  <StatTile value={String(week.points)} label={t("matches.points")} />
                 </View>
               </View>
-            ))
-          )}
+            </View>
+          </View>
         </ScrollView>
       ) : (
         <View style={styles.listWrapper}>

@@ -12,6 +12,45 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.gutter,
     gap: 12,
   },
+  headerWide: {
+    paddingHorizontal: 44,
+    paddingTop: 30,
+    gap: 20,
+  },
+  headerRight: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  filtersWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  searchWide: {
+    width: 360,
+  },
+  chipsWide: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  listContentWide: {
+    paddingHorizontal: 44,
+    paddingBottom: 32,
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  // Three fixed columns: 32% + 2% gap + 32% + 2% gap + 32%.
+  cell: (last: boolean) => ({
+    width: "32%",
+    marginRight: last ? 0 : "2%",
+  }),
+  headerButton: {
+    paddingHorizontal: 20,
+  },
   title: {
     paddingHorizontal: 0,
     paddingBottom: 0,

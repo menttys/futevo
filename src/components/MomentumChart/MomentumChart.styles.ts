@@ -19,7 +19,7 @@ export const styles = StyleSheet.create((theme) => ({
     flex: 1,
     justifyContent: "flex-end",
   },
-  // Home leads above the line in blue-black, Away below it in brand yellow.
+  // Home leads above the line in blue-black, Away below it in deep purple.
   up: (pct: number) => ({
     height: `${pct}%`,
     backgroundColor: theme.colors.text,
@@ -28,7 +28,7 @@ export const styles = StyleSheet.create((theme) => ({
   }),
   down: (pct: number) => ({
     height: `${pct}%`,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.purple,
     borderBottomLeftRadius: 3,
     borderBottomRightRadius: 3,
   }),

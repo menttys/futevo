@@ -8,16 +8,34 @@ export const styles = StyleSheet.create((theme) => ({
     paddingBottom: 20,
     paddingHorizontal: open ? 14 : 0,
     gap: 6,
-    backgroundColor: "rgba(255,253,246,0.4)",
-    boxShadow: "1px 0 0 rgba(10,17,31,0.08), 2px 0 12px rgba(10,17,31,0.04)",
+    overflow: "hidden",
+    // --fv-shadow-sidebar from the handoff tokens.
+    boxShadow: "inset -1px 0 0 rgba(10,17,31,0.08), 3px 0 12px rgba(10,17,31,0.05)",
+    zIndex: 1,
   }),
+  mesh: (width: number, height: number) => ({
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width,
+    height,
+  }),
+  tint: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: "rgba(255,253,246,0.4)",
+  },
   logo: (open: boolean) => ({
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
     height: 34,
     paddingHorizontal: open ? 6 : 0,
-    marginBottom: 8,
+    // Measured from the handoff: mark → New match 24px, New match → first item 18px.
+    marginBottom: 18,
   }),
   wordmark: {
     fontFamily: theme.fonts.displayBold,
@@ -33,7 +51,7 @@ export const styles = StyleSheet.create((theme) => ({
     width: open ? "100%" : 42,
     borderRadius: theme.radius.full,
     backgroundColor: theme.colors.primary,
-    marginBottom: 4,
+    marginBottom: 12,
   }),
   newMatchLabel: {
     fontFamily: theme.fonts.bold,
@@ -62,7 +80,7 @@ export const styles = StyleSheet.create((theme) => ({
     alignItems: "center",
     gap: 10,
     paddingHorizontal: open ? 4 : 0,
-    marginTop: 6,
+    marginTop: 2,
   }),
   avatar: {
     width: 34,
@@ -73,8 +91,8 @@ export const styles = StyleSheet.create((theme) => ({
     backgroundColor: theme.colors.primary,
   },
   avatarText: {
-    fontFamily: theme.fonts.bold,
-    fontSize: 13,
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 12,
     color: theme.colors.text,
   },
   profileText: { flex: 1 },

@@ -41,7 +41,9 @@ export function computePlayerRecord(
   recent = 5
 ): PlayerRecord {
   const played = matches
-    .filter((m) => m.status === "completed" && (m.teamA.includes(playerId) || m.teamB.includes(playerId)))
+    .filter(
+      (m) => m.status === "completed" && (m.teamA.includes(playerId) || m.teamB.includes(playerId))
+    )
     .sort((a, b) => (b.completedAt ?? b.createdAt).localeCompare(a.completedAt ?? a.createdAt))
 
   const partners = new Map<string, number>()
@@ -68,4 +70,73 @@ export function computePlayerRecord(
   })
 
   return { played: played.length, wins, bestPartnerId, lastResults: results.slice(0, recent) }
+}
+
+export type PlayerInsights = {
+  // Longest run of consecutive wins.
+  bestStreak: number
+  // Attack types this player scored with, most used first.
+  attacks: { label: string; count: number }[]
+  // Partners by matches played together, most first (top 3).
+  partners: { id: Player["id"]; played: number; wins: number }[]
+  // Points this player scored, for the landing-zone grid.
+  points: MatchPoint[]
+  topZone?: number
+}
+
+export function playerInsights(
+  playerId: Player["id"],
+  matches: Match[],
+  attackLabel: (id: AttackTypeId) => string
+): PlayerInsights {
+  const played = matches
+    .filter(
+      (m) => m.status === "completed" && (m.teamA.includes(playerId) || m.teamB.includes(playerId))
+    )
+    .sort((a, b) => (a.completedAt ?? a.createdAt).localeCompare(b.completedAt ?? b.createdAt))
+
+  let bestStreak = 0
+  let run = 0
+  const partners = new Map<string, { played: number; wins: number }>()
+  for (const m of played) {
+    const side = m.teamA.includes(playerId) ? "A" : "B"
+    const won = (m.winner ?? (m.scoreA > m.scoreB ? "A" : "B")) === side
+    run = won ? run + 1 : 0
+    bestStreak = Math.max(bestStreak, run)
+    const partner = (side === "A" ? m.teamA : m.teamB).find((id) => id !== playerId)
+    if (partner) {
+      const row = partners.get(partner) ?? { played: 0, wins: 0 }
+      row.played += 1
+      if (won) row.wins += 1
+      partners.set(partner, row)
+    }
+  }
+
+  const points = matches.flatMap((m) => m.points.filter((p) => p.scoringPlayerId === playerId))
+  const attackCounts = new Map<AttackTypeId, number>()
+  const zoneCounts = new Map<number, number>()
+  points.forEach((p) => {
+    if (p.attackType) attackCounts.set(p.attackType, (attackCounts.get(p.attackType) ?? 0) + 1)
+    if (p.zone) zoneCounts.set(p.zone, (zoneCounts.get(p.zone) ?? 0) + 1)
+  })
+  let topZone: number | undefined
+  zoneCounts.forEach((count, zone) => {
+    if (topZone === undefined || count > (zoneCounts.get(topZone) ?? 0)) topZone = zone
+  })
+
+  return {
+    bestStreak,
+    attacks: ATTACK_TYPES.map((a) => ({
+      label: attackLabel(a.id),
+      count: attackCounts.get(a.id) ?? 0,
+    }))
+      .filter((a) => a.count > 0)
+      .sort((a, b) => b.count - a.count),
+    partners: [...partners.entries()]
+      .map(([id, row]) => ({ id, ...row }))
+      .sort((a, b) => b.played - a.played)
+      .slice(0, 3),
+    points,
+    topZone,
+  }
 }

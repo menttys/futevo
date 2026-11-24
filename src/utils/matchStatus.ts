@@ -34,3 +34,14 @@ export function attackTally(points: MatchPoint[]): Map<AttackTypeId, number> {
   })
   return counts
 }
+
+// Longest run of consecutive points by either side.
+export function longestStreak(points: MatchPoint[]): number {
+  let best = 0
+  let run = 0
+  points.forEach((p, i) => {
+    run = i > 0 && points[i - 1].team === p.team ? run + 1 : 1
+    best = Math.max(best, run)
+  })
+  return best
+}

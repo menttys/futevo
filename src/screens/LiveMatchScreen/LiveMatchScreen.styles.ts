@@ -92,6 +92,9 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 12,
     color: theme.colors.text,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+  },
   row: {
     flexDirection: "row",
     alignItems: "flex-start",
@@ -103,6 +106,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   },
   colSide: {
     width: 380,
+    flexShrink: 0,
     gap: 12,
   },
   pointRow: {
@@ -112,6 +116,7 @@ export const styles = StyleSheet.create((theme, rt) => ({
   pointButtonWide: {
     flex: 1,
     height: 132,
+    gap: 6,
   },
   hint: {
     fontFamily: theme.fonts.regular,
@@ -122,5 +127,59 @@ export const styles = StyleSheet.create((theme, rt) => ({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 8,
+  },
+  headerButton: {
+    minHeight: 44,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  undoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 14,
+  },
+  lastCard: {
+    gap: 12,
+    padding: 18,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  lastLabel: {
+    fontFamily: theme.fonts.semibold,
+    fontSize: 10.5,
+    letterSpacing: 1.3,
+    textTransform: "uppercase",
+    color: theme.colors.text,
+  },
+  lastRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  lastDot: (away: boolean) => ({
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: away ? theme.colors.purple : theme.colors.dark,
+  }),
+  lastScore: {
+    width: 48,
+    fontFamily: theme.fonts.displayBold,
+    fontSize: 11,
+    color: theme.colors.text,
+    fontVariant: ["tabular-nums"],
+  },
+  lastPlayer: {
+    width: 70,
+    fontFamily: theme.fonts.semibold,
+    fontSize: 14,
+    color: theme.colors.text,
+  },
+  lastDetail: {
+    flex: 1,
+    fontFamily: theme.fonts.regular,
+    fontSize: 13,
+    color: theme.colors.textMuted,
   },
 }))

@@ -13,6 +13,36 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.gutter,
     gap: 14,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+    gap: 20,
+  },
+  columns: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20,
+  },
+  column: {
+    flex: 1,
+    gap: 14,
+  },
+  signOutWide: {
+    marginTop: 0,
+    backgroundColor: "transparent",
+    alignSelf: "flex-start",
+    paddingHorizontal: 22,
+  },
+  rowControl: {
+    width: 220,
+  },
+  rowControlSmall: {
+    width: 120,
+  },
+  divider: {
+    height: 1,
+    marginHorizontal: 16,
+    backgroundColor: theme.colors.wash,
+  },
   title: {
     paddingHorizontal: 0,
     paddingBottom: 0,

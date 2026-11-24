@@ -7,12 +7,12 @@ import { AppButton } from "@/components/AppButton"
 import { FutevoMark } from "@/components/FutevoMark"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { SegmentedControl } from "@/components/SegmentedControl"
-import { DEFAULT_TARGET_SCORE, DEFAULT_WIN_BY } from "@/constants/App"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { ChevronDown, Plus, Trophy } from "@/lib/icons"
 import { useNewMatchStore } from "@/store/newMatchState"
+import { useSettingsStore } from "@/store/settingsState"
 import { firstName } from "@/utils/matchLabels"
 import { findEntry } from "@/utils/tournament"
 
@@ -28,7 +28,13 @@ const WIN_BY = [1, 2]
 const today = () => new Date().toISOString().slice(0, 10)
 
 // Two symmetric teams, then the rules. Blue-black card = Home, yellow card = Away.
-export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: NewMatchFormProps) {
+export function NewMatchForm({
+  players,
+  tournaments,
+  onSubmit,
+  onPickSlot,
+  onCancel,
+}: NewMatchFormProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const tabBarInset = useTabBarInset()
@@ -36,8 +42,10 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
   // Index 0 = left side of the court, 1 = right side. Written by the player picker screen.
   const teamAIds = useNewMatchStore((s) => s.teamA)
   const teamBIds = useNewMatchStore((s) => s.teamB)
-  const [targetScore, setTargetScore] = useState(DEFAULT_TARGET_SCORE)
-  const [winBy, setWinBy] = useState(DEFAULT_WIN_BY)
+  const [targetScore, setTargetScore] = useState(
+    () => useSettingsStore.getState().defaultTargetScore
+  )
+  const [winBy, setWinBy] = useState(() => useSettingsStore.getState().defaultWinBy)
   const [showTournament, setShowTournament] = useState(false)
   // undefined = friendly match, NEW_TOURNAMENT = create inline, otherwise a tournament id
   const [tournamentChoice, setTournamentChoice] = useState<string | undefined>()
@@ -205,40 +213,78 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
           {renderTeam("B")}
         </View>
 
-        <View style={styles.rules}>
-          <View style={styles.ruleTarget}>
-            <Text style={styles.fieldLabel}>{t("newMatch.targetScore")}</Text>
-            <SegmentedControl
-              options={TARGET_SCORES.map((s) => ({ value: s, label: String(s) }))}
-              value={targetScore}
-              onChange={setTargetScore}
-            />
+        {wide ? (
+          <View style={styles.rulesCard}>
+            <View style={styles.ruleTargetWide}>
+              <Text style={styles.fieldLabel}>{t("newMatch.targetScore")}</Text>
+              <SegmentedControl
+                options={TARGET_SCORES.map((s) => ({ value: s, label: String(s) }))}
+                value={targetScore}
+                onChange={setTargetScore}
+              />
+            </View>
+            <View style={styles.ruleWinByWide}>
+              <Text style={styles.fieldLabel}>{t("newMatch.winBy")}</Text>
+              <SegmentedControl
+                options={WIN_BY.map((w) => ({ value: w, label: String(w) }))}
+                value={winBy}
+                onChange={setWinBy}
+              />
+            </View>
+            <View style={styles.ruleTournamentWide}>
+              <Text style={styles.fieldLabel}>{t("newMatch.tournamentOptional")}</Text>
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ expanded: showTournament }}
+                onPress={() => setShowTournament((v) => !v)}
+                style={styles.tournamentSelect}
+              >
+                <Trophy size={18} color={theme.colors.text} />
+                <Text style={styles.tournamentSelectValue} numberOfLines={1}>
+                  {tournamentLabel}
+                </Text>
+                <ChevronDown size={18} color={theme.colors.text} />
+              </Pressable>
+            </View>
           </View>
-          <View style={styles.ruleWinBy}>
-            <Text style={styles.fieldLabel}>{t("newMatch.winBy")}</Text>
-            <SegmentedControl
-              options={WIN_BY.map((w) => ({ value: w, label: String(w) }))}
-              value={winBy}
-              onChange={setWinBy}
-            />
-          </View>
-        </View>
+        ) : (
+          <>
+            <View style={styles.rules}>
+              <View style={styles.ruleTarget}>
+                <Text style={styles.fieldLabel}>{t("newMatch.targetScore")}</Text>
+                <SegmentedControl
+                  options={TARGET_SCORES.map((s) => ({ value: s, label: String(s) }))}
+                  value={targetScore}
+                  onChange={setTargetScore}
+                />
+              </View>
+              <View style={styles.ruleWinBy}>
+                <Text style={styles.fieldLabel}>{t("newMatch.winBy")}</Text>
+                <SegmentedControl
+                  options={WIN_BY.map((w) => ({ value: w, label: String(w) }))}
+                  value={winBy}
+                  onChange={setWinBy}
+                />
+              </View>
+            </View>
 
-        <Pressable
-          accessibilityRole="button"
-          accessibilityState={{ expanded: showTournament }}
-          onPress={() => setShowTournament((v) => !v)}
-          style={styles.tournamentCard}
-        >
-          <Trophy size={20} color={theme.colors.text} />
-          <View style={styles.tournamentText}>
-            <Text style={styles.tournamentEyebrow}>{t("newMatch.tournamentOptional")}</Text>
-            <Text style={styles.tournamentValue} numberOfLines={1}>
-              {tournamentLabel}
-            </Text>
-          </View>
-          <ChevronDown size={18} color={theme.colors.text} />
-        </Pressable>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityState={{ expanded: showTournament }}
+              onPress={() => setShowTournament((v) => !v)}
+              style={styles.tournamentCard}
+            >
+              <Trophy size={20} color={theme.colors.text} />
+              <View style={styles.tournamentText}>
+                <Text style={styles.tournamentEyebrow}>{t("newMatch.tournamentOptional")}</Text>
+                <Text style={styles.tournamentValue} numberOfLines={1}>
+                  {tournamentLabel}
+                </Text>
+              </View>
+              <ChevronDown size={18} color={theme.colors.text} />
+            </Pressable>
+          </>
+        )}
 
         {showTournament ? (
           <View style={styles.tournamentBody}>
@@ -314,16 +360,36 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
             ) : null}
           </View>
         ) : null}
+        {wide ? (
+          <View style={styles.footerWide}>
+            {onCancel ? (
+              <AppButton
+                label={t("common.cancel")}
+                variant="wash"
+                labelStyle="body"
+                onPress={onCancel}
+              />
+            ) : null}
+            <AppButton
+              label={t("newMatch.start")}
+              disabled={!canSubmit}
+              onPress={handleSubmit}
+              style={styles.startWide}
+            />
+          </View>
+        ) : null}
       </ScrollView>
 
-      <View style={[styles.footer(tabBarInset), wide && styles.footerWide]}>
-        <AppButton
-          label={t("newMatch.start")}
-          disabled={!canSubmit}
-          onPress={handleSubmit}
-          style={wide ? styles.startWide : styles.start}
-        />
-      </View>
+      {wide ? null : (
+        <View style={styles.footer(tabBarInset)}>
+          <AppButton
+            label={t("newMatch.start")}
+            disabled={!canSubmit}
+            onPress={handleSubmit}
+            style={styles.start}
+          />
+        </View>
+      )}
     </View>
   )
 }

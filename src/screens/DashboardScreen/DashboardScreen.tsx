@@ -18,6 +18,7 @@ import { TournamentRow } from "@/components/TournamentRow"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
+import { Plus } from "@/lib/icons"
 import { MatchesRoutes, SettingsRoutes, TabRoutes } from "@/navigation/routes"
 import type { TabParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
@@ -105,6 +106,10 @@ export function DashboardScreen() {
     [navigation]
   )
 
+  const onNewMatch = () =>
+    navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
+  const duplaLine = (ids: string[]) => ids.map((id) => firstName(playerName(id))).join(" · ")
+
   const name = firstName(user?.displayName ?? t("settings.defaultYou"))
   const today = new Date().toLocaleDateString(currentLanguage, {
     weekday: "long",
@@ -118,7 +123,8 @@ export function DashboardScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.content,
-          { paddingTop: insets.top + 4, paddingBottom: tabBarInset + 16 },
+          wide && styles.contentWide,
+          { paddingTop: insets.top + (wide ? 30 : 4), paddingBottom: tabBarInset + 16 },
         ]}
       >
         {wide ? null : (
@@ -149,9 +155,9 @@ export function DashboardScreen() {
 
             <AppButton
               label={t("tabs.newMatch")}
-              onPress={() =>
-                navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
-              }
+              icon={<Plus size={18} color={theme.colors.text} />}
+              onPress={onNewMatch}
+              style={styles.headerButton}
             />
           </View>
         ) : (
@@ -166,8 +172,11 @@ export function DashboardScreen() {
             <View style={styles.colMain}>
               {liveMatch ? (
                 <LiveMatchCard
+                  variant="wide"
                   homeName={sideLabel(liveMatch, tournamentOf(liveMatch), "A", playerName)}
                   awayName={sideLabel(liveMatch, tournamentOf(liveMatch), "B", playerName)}
+                  homeDetail={duplaLine(liveMatch.teamA)}
+                  awayDetail={duplaLine(liveMatch.teamB)}
                   scoreA={liveMatch.scoreA}
                   scoreB={liveMatch.scoreB}
                   liveLabel={t("common.live")}
@@ -179,9 +188,9 @@ export function DashboardScreen() {
                   onPress={() => openMatch(liveMatch)}
                 />
               ) : (
-                <View style={styles.startCard}>
+                <View style={[styles.startCard, styles.startCardWide]}>
                   <FutevoMark
-                    size={170}
+                    size={300}
                     rotate={14}
                     color={theme.colors.dark}
                     style={styles.startWatermark}
@@ -192,45 +201,54 @@ export function DashboardScreen() {
                     label={t("dashboard.startMatch")}
                     variant="cream"
                     labelStyle="body"
-                    onPress={() =>
-                      navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
-                    }
+                    onPress={onNewMatch}
+                    style={styles.startButtonWide}
                   />
                 </View>
               )}
             </View>
             <View style={styles.colSide}>
-              <View style={styles.stats}>
-                <StatTile value={String(matches.length)} label={t("dashboard.statMatches")} />
-                <StatTile value={String(pointsLogged)} label={t("dashboard.statPoints")} />
-                <StatTile
-                  value={String(tournaments.length)}
-                  label={t("dashboard.statTournaments")}
-                />
-              </View>
-
-              {latestTournament ? (
-                <View>
-                  <SectionHeader
-                    title={t("dashboard.tournaments")}
-                    actionLabel={t("dashboard.seeAll")}
-                    onAction={() => navigation.navigate(TabRoutes.MATCHES)}
+              <View style={styles.statGrid}>
+                <View style={[styles.stats, styles.statsWide]}>
+                  <StatTile
+                    value={String(matches.length)}
+                    label={t("dashboard.statMatches")}
+                    style={styles.tileWide}
                   />
-                  <TournamentRow
-                    variant="yellow"
-                    name={latestTournament.name}
-                    subtitle={t("dashboard.tournamentSubtitle", {
-                      duplas: latestTournament.entries.length,
-                      matches: matches.filter((m) => m.tournamentId === latestTournament.id).length,
-                    })}
-                    onPress={() =>
-                      navigation.navigate(TabRoutes.MATCH_FLOW, {
-                        screen: MatchesRoutes.TOURNAMENT_DETAIL,
-                        params: { tournamentId: latestTournament.id },
-                      })
-                    }
+                  <StatTile
+                    value={String(pointsLogged)}
+                    label={t("dashboard.statPoints")}
+                    style={styles.tileWide}
                   />
                 </View>
+                <View style={[styles.stats, styles.statsWide]}>
+                  <StatTile
+                    value={String(tournaments.length)}
+                    label={t("dashboard.statTournaments")}
+                    style={styles.tileWide}
+                  />
+                  <StatTile
+                    value={String(players?.length ?? 0)}
+                    label={t("dashboard.statPlayers")}
+                    style={styles.tileWide}
+                  />
+                </View>
+              </View>
+              {latestTournament ? (
+                <TournamentRow
+                  variant="butter"
+                  name={latestTournament.name}
+                  subtitle={t("dashboard.tournamentSubtitle", {
+                    duplas: latestTournament.entries.length,
+                    matches: matches.filter((m) => m.tournamentId === latestTournament.id).length,
+                  })}
+                  onPress={() =>
+                    navigation.navigate(TabRoutes.MATCH_FLOW, {
+                      screen: MatchesRoutes.TOURNAMENT_DETAIL,
+                      params: { tournamentId: latestTournament.id },
+                    })
+                  }
+                />
               ) : null}
             </View>
           </View>
@@ -303,32 +321,39 @@ export function DashboardScreen() {
           </>
         )}
 
-        <View>
-          <SectionHeader title={t("dashboard.recentMatches")} />
-          {completed.length === 0 ? (
-            <Text style={styles.empty}>{t("dashboard.noMatches")}</Text>
-          ) : (
-            <View style={wide ? styles.listWide : styles.list}>
-              {completed.slice(0, wide ? RECENT_COUNT_WIDE : RECENT_COUNT).map((match) => (
-                <View key={match.id} style={wide ? styles.cell : undefined}>
-                  <MatchRow
-                    homeName={sideLabel(match, tournamentOf(match), "A", playerName)}
-                    awayName={sideLabel(match, tournamentOf(match), "B", playerName)}
-                    scoreA={match.scoreA}
-                    scoreB={match.scoreB}
-                    subtitle={dayLabel(
-                      match.completedAt ?? match.createdAt,
-                      { today: t("common.today"), yesterday: t("common.yesterday") },
-                      currentLanguage
-                    )}
-                    winLabel={t("common.win")}
-                    lossLabel={t("common.loss")}
-                    onPress={() => openMatch(match)}
-                  />
-                </View>
-              ))}
-            </View>
-          )}
+        <View style={wide ? styles.recentRow : undefined}>
+          <View style={wide ? styles.colMain : undefined}>
+            <SectionHeader
+              title={t("dashboard.recentMatches")}
+              actionLabel={wide ? t("dashboard.allMatches") : undefined}
+              onAction={wide ? () => navigation.navigate(TabRoutes.MATCHES) : undefined}
+            />
+            {completed.length === 0 ? (
+              <Text style={styles.empty}>{t("dashboard.noMatches")}</Text>
+            ) : (
+              <View style={wide ? styles.listWide : styles.list}>
+                {completed.slice(0, wide ? RECENT_COUNT_WIDE : RECENT_COUNT).map((match) => (
+                  <View key={match.id} style={wide ? styles.cell : undefined}>
+                    <MatchRow
+                      homeName={sideLabel(match, tournamentOf(match), "A", playerName)}
+                      awayName={sideLabel(match, tournamentOf(match), "B", playerName)}
+                      scoreA={match.scoreA}
+                      scoreB={match.scoreB}
+                      subtitle={dayLabel(
+                        match.completedAt ?? match.createdAt,
+                        { today: t("common.today"), yesterday: t("common.yesterday") },
+                        currentLanguage
+                      )}
+                      winLabel={t("common.win")}
+                      lossLabel={t("common.loss")}
+                      onPress={() => openMatch(match)}
+                    />
+                  </View>
+                ))}
+              </View>
+            )}
+          </View>
+          {wide ? <View style={styles.colSide} /> : null}
         </View>
       </ScrollView>
     </View>

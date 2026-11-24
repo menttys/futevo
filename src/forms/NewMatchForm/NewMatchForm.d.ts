@@ -23,4 +23,6 @@ export type NewMatchFormProps = {
   onSubmit: (params: NewMatchFormSubmit) => void
   // Opens the player picker for one court slot. Index 0 = left, 1 = right.
   onPickSlot: (side: TeamSide, index: number) => void
+  // Desktop shows a Cancel button next to Start match.
+  onCancel?: () => void
 }

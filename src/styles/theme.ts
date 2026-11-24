@@ -19,6 +19,7 @@ const palette = {
   onDarkMuted: "rgba(255,250,240,0.6)", // placeholders on a blue-black card
   muted: "rgba(10,17,31,0.72)", // secondary text and labels
   iconMuted: "rgba(10,17,31,0.62)", // inactive icons
+  iconIdle: "rgba(10,17,31,0.55)", // inactive desktop menu icons (--fv-icon-idle)
   danger: "#C2185B",
   dangerAlt: "#D92D20",
   success: "#1E9E62", // "ready" status dot
@@ -71,6 +72,7 @@ export const theme = {
     text: palette.ink,
     textMuted: palette.muted,
     iconMuted: palette.iconMuted,
+    iconIdle: palette.iconIdle,
 
     // base
     dark: palette.ink,

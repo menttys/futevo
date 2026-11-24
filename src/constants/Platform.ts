@@ -13,8 +13,10 @@ export const DETACH_INACTIVE_SCREENS = IS_WEB
 export const WEB_SIDE_BAR_MIN_WIDTH = 1024
 
 // On wide web viewports content stops growing at this width and is centered in
-// the space beside the tab bar instead of stretching edge to edge.
-export const WEB_MAX_CONTENT_WIDTH = 1120
+// the space beside the tab bar instead of stretching edge to edge. The handoff's
+// 1120px is the content itself; the 44px side padding sits outside it.
+export const WEB_CONTENT_PADDING = 44
+export const WEB_MAX_CONTENT_WIDTH = 1120 + WEB_CONTENT_PADDING * 2
 
 // Spread into a scroller's contentContainerStyle: the scene itself stays full width so the
 // browser scrollbar sits at the window edge, while the content is centered inside it.

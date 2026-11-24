@@ -1,5 +1,5 @@
 import React from "react"
-import { ScrollView, Text, View } from "react-native"
+import { ScrollView, Switch, Text, View } from "react-native"
 
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useUnistyles } from "react-native-unistyles"
@@ -13,10 +13,12 @@ import { ScreenHeader } from "@/components/ScreenHeader"
 import { SegmentedControl } from "@/components/SegmentedControl"
 import { deleteAccount, signout } from "@/hooks/useFirebase"
 import { useNetworkState } from "@/hooks/useNetworkState"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
 import { Check, LogOut, Trash2, WifiSlash } from "@/lib/icons"
+import { useSettingsStore } from "@/store/settingsState"
 import { useUserStore } from "@/store/userState"
 import { confirmAction } from "@/utils/confirmAction"
 
@@ -33,6 +35,13 @@ export function SettingsScreen() {
   const { isOffline, hasPendingWrites } = useNetworkState()
   const insets = useSafeAreaInsets()
   const tabBarInset = useTabBarInset()
+  const defaultTargetScore = useSettingsStore((s) => s.defaultTargetScore)
+  const defaultWinBy = useSettingsStore((s) => s.defaultWinBy)
+  const keyboardShortcuts = useSettingsStore((s) => s.keyboardShortcuts)
+  const setDefaultTargetScore = useSettingsStore((s) => s.setDefaultTargetScore)
+  const setDefaultWinBy = useSettingsStore((s) => s.setDefaultWinBy)
+  const setKeyboardShortcuts = useSettingsStore((s) => s.setKeyboardShortcuts)
+  const wide = useSideTabBar()
 
   const handleDeleteAccount = () => {
     if (!user) return
@@ -46,87 +55,251 @@ export function SettingsScreen() {
     })
   }
 
-  const syncTitle = isOffline ? t("settings.syncOffline") : hasPendingWrites ? t("settings.syncing") : t("settings.synced")
+  const syncTitle = isOffline
+    ? t("settings.syncOffline")
+    : hasPendingWrites
+      ? t("settings.syncing")
+      : t("settings.synced")
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
       <MeshBackground />
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          wide && styles.contentWide,
+          { paddingBottom: tabBarInset + 16, paddingTop: wide ? 30 : 0 },
+        ]}
+      >
         <ScreenHeader variant="large" title={t("screens.settings")} style={styles.title} />
 
-        {user ? (
-          <View style={styles.profile}>
-            <GradientFill from={theme.colors.softYellow} to={theme.colors.butter} />
-            <FutevoMark size={120} rotate={16} color={theme.colors.primary} style={styles.profileMark} />
-            <PlayerAvatar
-              name={user.displayName ?? t("settings.defaultYou")}
-              photoUri={user.photoURL ?? undefined}
-              size={56}
-              tone="yellow"
-            />
-            <View style={styles.profileText}>
-              <Text style={styles.name} numberOfLines={1}>
-                {user.displayName ?? t("settings.defaultName")}
-              </Text>
-              {user.email ? (
-                <Text style={styles.email} numberOfLines={1}>
-                  {t("settings.signedInWith", { email: user.email })}
-                </Text>
+        {wide ? (
+          <View style={styles.columns}>
+            <View style={styles.column}>
+              {user ? (
+                <View style={styles.profile}>
+                  <GradientFill from={theme.colors.softYellow} to={theme.colors.butter} />
+                  <FutevoMark
+                    size={120}
+                    rotate={16}
+                    color={theme.colors.primary}
+                    style={styles.profileMark}
+                  />
+                  <PlayerAvatar
+                    name={user.displayName ?? t("settings.defaultYou")}
+                    photoUri={user.photoURL ?? undefined}
+                    size={56}
+                    tone="yellow"
+                  />
+                  <View style={styles.profileText}>
+                    <Text style={styles.name} numberOfLines={1}>
+                      {user.displayName ?? t("settings.defaultName")}
+                    </Text>
+                    {user.email ? (
+                      <Text style={styles.email} numberOfLines={1}>
+                        {t("settings.signedInWith", { email: user.email })}
+                      </Text>
+                    ) : null}
+                  </View>
+                </View>
+              ) : null}
+
+              <View>
+                <Text style={styles.label}>{t("settings.language")}</Text>
+                <SegmentedControl
+                  options={LANGUAGE_ORDER.map((code) => ({
+                    value: code,
+                    label: languages[code].nativeName,
+                  }))}
+                  value={currentLanguage}
+                  onChange={changeLanguage}
+                />
+              </View>
+              <View>
+                <Text style={styles.label}>{t("settings.data")}</Text>
+                <View style={styles.card}>
+                  <View style={styles.row}>
+                    <View style={styles.rowText}>
+                      <Text style={styles.rowTitle}>{syncTitle}</Text>
+                      <Text style={styles.rowSubtitle}>{t("settings.syncSubtitle")}</Text>
+                    </View>
+                    {isOffline ? (
+                      <WifiSlash size={20} color={theme.colors.text} />
+                    ) : (
+                      <Check size={20} color={theme.colors.text} />
+                    )}
+                  </View>
+                </View>
+              </View>
+
+              <AppButton
+                label={t("settings.signOut")}
+                variant="outline"
+                labelStyle="body"
+                onPress={() => signout().catch(console.error)}
+                icon={<LogOut size={18} color={theme.colors.text} />}
+                style={[styles.signOut, styles.signOutWide]}
+              />
+
+              {user ? (
+                <AppButton
+                  label={t("settings.deleteAccount")}
+                  variant="danger"
+                  labelStyle="body"
+                  onPress={handleDeleteAccount}
+                  icon={<Trash2 size={18} color={theme.colors.danger} />}
+                />
               ) : null}
             </View>
-          </View>
-        ) : null}
-
-        <View>
-          <Text style={styles.label}>{t("settings.language")}</Text>
-          <SegmentedControl
-            options={LANGUAGE_ORDER.map((code) => ({ value: code, label: languages[code].nativeName }))}
-            value={currentLanguage}
-            onChange={changeLanguage}
-          />
-        </View>
-
-        <View>
-          <Text style={styles.label}>{t("settings.data")}</Text>
-          <View style={styles.card}>
-            <View style={styles.row}>
-              <View style={styles.rowText}>
-                <Text style={styles.rowTitle}>{syncTitle}</Text>
-                <Text style={styles.rowSubtitle}>{t("settings.syncSubtitle")}</Text>
+            <View style={styles.column}>
+              <View>
+                <Text style={styles.label}>{t("settings.scoring")}</Text>
+                <View style={styles.card}>
+                  <View style={styles.row}>
+                    <View style={styles.rowText}>
+                      <Text style={styles.rowTitle}>{t("settings.defaultTarget")}</Text>
+                      <Text style={styles.rowSubtitle}>{t("settings.defaultTargetHint")}</Text>
+                    </View>
+                    <SegmentedControl
+                      options={[12, 15, 18, 21].map((v) => ({ value: v, label: String(v) }))}
+                      value={defaultTargetScore}
+                      onChange={setDefaultTargetScore}
+                      style={styles.rowControl}
+                    />
+                  </View>
+                  <View style={styles.divider} />
+                  <View style={styles.row}>
+                    <View style={styles.rowText}>
+                      <Text style={styles.rowTitle}>{t("newMatch.winBy")}</Text>
+                      <Text style={styles.rowSubtitle}>{t("settings.winByHint")}</Text>
+                    </View>
+                    <SegmentedControl
+                      options={[1, 2].map((v) => ({ value: v, label: String(v) }))}
+                      value={defaultWinBy}
+                      onChange={setDefaultWinBy}
+                      style={styles.rowControlSmall}
+                    />
+                  </View>
+                  <View style={styles.divider} />
+                  <View style={styles.row}>
+                    <View style={styles.rowText}>
+                      <Text style={styles.rowTitle}>{t("settings.keyboardShortcuts")}</Text>
+                      <Text style={styles.rowSubtitle}>{t("settings.keyboardShortcutsHint")}</Text>
+                    </View>
+                    <Switch
+                      value={keyboardShortcuts}
+                      onValueChange={setKeyboardShortcuts}
+                      trackColor={{ true: theme.colors.primary, false: "#D6D2CB" }}
+                      thumbColor={keyboardShortcuts ? theme.colors.dark : theme.colors.card}
+                      // react-native-web colours the "on" thumb with its own prop.
+                      {...{ activeThumbColor: theme.colors.dark }}
+                      accessibilityLabel={t("settings.keyboardShortcuts")}
+                    />
+                  </View>
+                </View>
               </View>
-              {isOffline ? (
-                <WifiSlash size={20} color={theme.colors.text} />
-              ) : (
-                <Check size={20} color={theme.colors.text} />
-              )}
+              <View
+                style={styles.tape}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+              >
+                {TAPE.map((angle) => (
+                  <FutevoMark key={angle} size={22} rotate={angle} color={theme.colors.dark} />
+                ))}
+              </View>
             </View>
           </View>
-        </View>
+        ) : (
+          <>
+            {user ? (
+              <View style={styles.profile}>
+                <GradientFill from={theme.colors.softYellow} to={theme.colors.butter} />
+                <FutevoMark
+                  size={120}
+                  rotate={16}
+                  color={theme.colors.primary}
+                  style={styles.profileMark}
+                />
+                <PlayerAvatar
+                  name={user.displayName ?? t("settings.defaultYou")}
+                  photoUri={user.photoURL ?? undefined}
+                  size={56}
+                  tone="yellow"
+                />
+                <View style={styles.profileText}>
+                  <Text style={styles.name} numberOfLines={1}>
+                    {user.displayName ?? t("settings.defaultName")}
+                  </Text>
+                  {user.email ? (
+                    <Text style={styles.email} numberOfLines={1}>
+                      {t("settings.signedInWith", { email: user.email })}
+                    </Text>
+                  ) : null}
+                </View>
+              </View>
+            ) : null}
 
-        <AppButton
-          label={t("settings.signOut")}
-          variant="outline"
-          labelStyle="body"
-          onPress={() => signout().catch(console.error)}
-          icon={<LogOut size={18} color={theme.colors.text} />}
-          style={styles.signOut}
-        />
+            <View>
+              <Text style={styles.label}>{t("settings.language")}</Text>
+              <SegmentedControl
+                options={LANGUAGE_ORDER.map((code) => ({
+                  value: code,
+                  label: languages[code].nativeName,
+                }))}
+                value={currentLanguage}
+                onChange={changeLanguage}
+              />
+            </View>
 
-        {user ? (
-          <AppButton
-            label={t("settings.deleteAccount")}
-            variant="danger"
-            labelStyle="body"
-            onPress={handleDeleteAccount}
-            icon={<Trash2 size={18} color={theme.colors.danger} />}
-          />
-        ) : null}
+            <View>
+              <Text style={styles.label}>{t("settings.data")}</Text>
+              <View style={styles.card}>
+                <View style={styles.row}>
+                  <View style={styles.rowText}>
+                    <Text style={styles.rowTitle}>{syncTitle}</Text>
+                    <Text style={styles.rowSubtitle}>{t("settings.syncSubtitle")}</Text>
+                  </View>
+                  {isOffline ? (
+                    <WifiSlash size={20} color={theme.colors.text} />
+                  ) : (
+                    <Check size={20} color={theme.colors.text} />
+                  )}
+                </View>
+              </View>
+            </View>
 
-        <View style={styles.tape} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-          {TAPE.map((angle) => (
-            <FutevoMark key={angle} size={22} rotate={angle} color={theme.colors.dark} />
-          ))}
-        </View>
+            <AppButton
+              label={t("settings.signOut")}
+              variant="outline"
+              labelStyle="body"
+              onPress={() => signout().catch(console.error)}
+              icon={<LogOut size={18} color={theme.colors.text} />}
+              style={styles.signOut}
+            />
+
+            {user ? (
+              <AppButton
+                label={t("settings.deleteAccount")}
+                variant="danger"
+                labelStyle="body"
+                onPress={handleDeleteAccount}
+                icon={<Trash2 size={18} color={theme.colors.danger} />}
+              />
+            ) : null}
+          </>
+        )}
+
+        {wide ? null : (
+          <View
+            style={styles.tape}
+            accessibilityElementsHidden
+            importantForAccessibility="no-hide-descendants"
+          >
+            {TAPE.map((angle) => (
+              <FutevoMark key={angle} size={22} rotate={angle} color={theme.colors.dark} />
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   )

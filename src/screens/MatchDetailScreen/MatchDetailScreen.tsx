@@ -7,6 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack"
 import { useUnistyles } from "react-native-unistyles"
 
 import { ATTACK_TYPES, Player } from "@/@types/futevo"
+import { AppButton } from "@/components/AppButton"
 import { AttackBars } from "@/components/AttackBars"
 import { CourtHeatMap } from "@/components/CourtHeatMap"
 import { FutevoMark } from "@/components/FutevoMark"
@@ -17,8 +18,10 @@ import { PlayerStatsList } from "@/components/PlayerStatsList"
 import { PointLog } from "@/components/PointLog"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { SegmentedControl } from "@/components/SegmentedControl"
+import { StatTile } from "@/components/StatTile"
 import { TournamentRow } from "@/components/TournamentRow"
 import { ZoneHeatGrid } from "@/components/ZoneHeatGrid"
+import { useMatches } from "@/hooks/useMatches"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
@@ -29,6 +32,7 @@ import { useMatchStore } from "@/store/matchState"
 import { usePlayerStore } from "@/store/playerState"
 import { useTournamentStore } from "@/store/tournamentState"
 import { firstName, matchMinutes, sideLabel } from "@/utils/matchLabels"
+import { longestStreak } from "@/utils/matchStatus"
 import { clubForSide } from "@/utils/tournament"
 
 import { styles } from "./MatchDetailScreen.styles"
@@ -55,6 +59,7 @@ export function MatchDetailScreen() {
     s.tournaments?.find((tr) => tr.id === match?.tournamentId)
   )
   const [tab, setTab] = useState<Tab>("summary")
+  const { startMatch } = useMatches()
 
   const tally = useMemo(() => {
     if (!match) return []
@@ -105,6 +110,22 @@ export function MatchDetailScreen() {
     }).catch(() => undefined)
   }
 
+  const onRematch = () => {
+    const next = startMatch({
+      teamA: match.teamA,
+      teamB: match.teamB,
+      targetScore: match.targetScore,
+      winBy: match.winBy,
+      tournamentId: match.tournamentId,
+      teamNameA: match.teamNameA,
+      teamNameB: match.teamNameB,
+    })
+    navigation.navigate("LiveMatch", { matchId: next.id })
+  }
+
+  const aces = match.points.filter((p) => p.attackType === "ace").length
+  const ballOuts = match.points.filter((p) => p.ballOut).length
+
   return (
     <View style={styles.root}>
       <MeshBackground />
@@ -113,14 +134,33 @@ export function MatchDetailScreen() {
         onBack={goBack}
         backLabel={t("common.back")}
         right={
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={t("match.share")}
-            onPress={onShare}
-            style={styles.iconButton}
-          >
-            <ShareIcon size={18} color={theme.colors.text} />
-          </Pressable>
+          wide ? (
+            <View style={styles.headerActions}>
+              <AppButton
+                label={t("match.share")}
+                variant="wash"
+                labelStyle="body"
+                icon={<ShareIcon size={18} color={theme.colors.text} />}
+                onPress={onShare}
+                style={styles.headerButton}
+              />
+              <AppButton
+                label={t("match.rematch")}
+                labelStyle="body"
+                onPress={onRematch}
+                style={styles.headerButton}
+              />
+            </View>
+          ) : (
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={t("match.share")}
+              onPress={onShare}
+              style={styles.iconButton}
+            >
+              <ShareIcon size={18} color={theme.colors.text} />
+            </Pressable>
+          )
         }
       />
 
@@ -148,34 +188,61 @@ export function MatchDetailScreen() {
             ) : null}
           </View>
 
-          <View style={styles.sides}>
-            <View style={styles.side}>
-              <View style={styles.nameRow}>
-                {match.winner === "A" ? <Trophy size={15} color={theme.colors.text} /> : null}
-                <Text style={styles.name(false)} numberOfLines={1}>
-                  {homeName}
-                </Text>
+          {wide ? (
+            <View style={styles.bannerRow}>
+              <Text style={[styles.score(false), styles.scoreWide]}>{match.scoreA}</Text>
+              <View style={styles.bannerSide}>
+                <View style={styles.nameRow}>
+                  {match.winner === "A" ? <Trophy size={17} color={theme.colors.text} /> : null}
+                  <Text style={[styles.name(false), styles.nameWide]} numberOfLines={1}>
+                    {homeName}
+                  </Text>
+                </View>
+                <Text style={styles.dupla}>{dupla(teamAPlayers)}</Text>
               </View>
-              {hasClubs("A") ? <Text style={styles.dupla}>{dupla(teamAPlayers)}</Text> : null}
-            </View>
-            <View style={[styles.side, styles.sideRight]}>
-              <View style={styles.nameRow}>
-                {match.winner === "B" ? <Trophy size={15} color={theme.colors.purple} /> : null}
-                <Text style={styles.name(true)} numberOfLines={1}>
-                  {awayName}
-                </Text>
+              <View style={[styles.bannerSide, styles.sideRight]}>
+                <View style={styles.nameRow}>
+                  {match.winner === "B" ? <Trophy size={17} color={theme.colors.purple} /> : null}
+                  <Text style={[styles.name(true), styles.nameWide]} numberOfLines={1}>
+                    {awayName}
+                  </Text>
+                </View>
+                <Text style={styles.dupla}>{dupla(teamBPlayers)}</Text>
               </View>
-              {hasClubs("B") ? <Text style={styles.dupla}>{dupla(teamBPlayers)}</Text> : null}
+              <Text style={[styles.score(true), styles.scoreWide]}>{match.scoreB}</Text>
             </View>
-          </View>
+          ) : (
+            <>
+              <View style={styles.sides}>
+                <View style={styles.side}>
+                  <View style={styles.nameRow}>
+                    {match.winner === "A" ? <Trophy size={15} color={theme.colors.text} /> : null}
+                    <Text style={styles.name(false)} numberOfLines={1}>
+                      {homeName}
+                    </Text>
+                  </View>
+                  {hasClubs("A") ? <Text style={styles.dupla}>{dupla(teamAPlayers)}</Text> : null}
+                </View>
+                <View style={[styles.side, styles.sideRight]}>
+                  <View style={styles.nameRow}>
+                    {match.winner === "B" ? <Trophy size={15} color={theme.colors.purple} /> : null}
+                    <Text style={styles.name(true)} numberOfLines={1}>
+                      {awayName}
+                    </Text>
+                  </View>
+                  {hasClubs("B") ? <Text style={styles.dupla}>{dupla(teamBPlayers)}</Text> : null}
+                </View>
+              </View>
 
-          <View style={styles.scores}>
-            <Text style={[styles.score(false), wide && styles.scoreWide]}>{match.scoreA}</Text>
-            <Text style={[styles.score(true), wide && styles.scoreWide]}>{match.scoreB}</Text>
-          </View>
+              <View style={styles.scores}>
+                <Text style={[styles.score(false), wide && styles.scoreWide]}>{match.scoreA}</Text>
+                <Text style={[styles.score(true), wide && styles.scoreWide]}>{match.scoreB}</Text>
+              </View>
+            </>
+          )}
         </View>
 
-        {tournament ? (
+        {tournament && !wide ? (
           <TournamentRow
             name={tournament.name}
             subtitle={match.round}
@@ -201,7 +268,21 @@ export function MatchDetailScreen() {
               <View style={[styles.card, wide && styles.momentumWide]}>
                 <Text style={styles.cardLabel}>{t("match.momentum")}</Text>
                 {match.points.length > 0 ? (
-                  <MomentumChart points={match.points} />
+                  <>
+                    <MomentumChart points={match.points} height={wide ? 110 : undefined} />
+                    {wide ? (
+                      <View style={styles.legend}>
+                        <View style={styles.legendDot(false)} />
+                        <Text style={styles.legendLabel}>
+                          {t("match.ahead", { team: homeName })}
+                        </Text>
+                        <View style={styles.legendDot(true)} />
+                        <Text style={styles.legendLabel}>
+                          {t("match.ahead", { team: awayName })}
+                        </Text>
+                      </View>
+                    ) : null}
+                  </>
                 ) : (
                   <Text style={styles.empty}>{t("match.noPoints")}</Text>
                 )}
@@ -221,6 +302,17 @@ export function MatchDetailScreen() {
                 </View>
               </View>
             </View>
+            {wide ? (
+              <View style={styles.statsRow}>
+                <StatTile value={String(match.points.length)} label={t("match.rallies")} />
+                <StatTile
+                  value={String(longestStreak(match.points))}
+                  label={t("match.longestStreak")}
+                />
+                <StatTile value={String(aces)} label={t("attackTypes.ace")} />
+                <StatTile value={String(ballOuts)} label={t("match.ballOut")} />
+              </View>
+            ) : null}
           </>
         ) : null}
 

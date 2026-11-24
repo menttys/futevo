@@ -28,14 +28,44 @@ export const styles = StyleSheet.create((theme) => ({
   listContentWide: {
     paddingHorizontal: 44,
   },
+  headerButton: {
+    paddingHorizontal: 20,
+  },
+  bodyWide: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 28,
+  },
+  main: {
+    flex: 1,
+    minWidth: 0,
+  },
+  side: {
+    width: 340,
+    gap: 14,
+    paddingTop: 14,
+  },
+  sideList: {
+    gap: 10,
+  },
+  weekCard: {
+    gap: 12,
+    padding: 16,
+    borderRadius: theme.radius.card,
+    backgroundColor: theme.colors.card,
+    boxShadow: theme.shadows.card,
+  },
+  weekTiles: {
+    flexDirection: "row",
+    gap: 10,
+  },
   grid: {
     flexDirection: "row",
     flexWrap: "wrap",
-    columnGap: 9,
+    justifyContent: "space-between",
   },
   cell: {
-    flexBasis: "48%",
-    flexGrow: 1,
+    width: "49.3%",
   },
   cellFull: {
     width: "100%",
