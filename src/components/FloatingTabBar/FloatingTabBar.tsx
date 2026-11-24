@@ -5,6 +5,7 @@ import { BottomTabBarHeightCallbackContext } from "@react-navigation/bottom-tabs
 import { useUnistyles } from "react-native-unistyles"
 
 import { FutevoMark } from "@/components/FutevoMark"
+import { SideMenu } from "@/components/SideMenu"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
@@ -24,7 +25,7 @@ const FULL_SCREEN_ROUTES = new Set<string>([
 
 // Yellow pill: Home · Matches · [centre ball = New match] · Players · Settings.
 // The match-flow stack sits in the middle of the route list, so the ball renders in its slot.
-export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBarProps) {
+export function FloatingTabBar({ state, descriptors, navigation, insets }: FloatingTabBarProps) {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const sideBar = useSideTabBar()
@@ -42,6 +43,8 @@ export function FloatingTabBar({ state, descriptors, navigation }: FloatingTabBa
   ) {
     return null
   }
+
+  if (sideBar) return <SideMenu state={state} descriptors={descriptors} navigation={navigation} insets={insets} />
 
   const onNewMatch = () => {
     navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })

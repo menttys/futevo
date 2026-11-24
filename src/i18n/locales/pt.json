@@ -29,7 +29,10 @@
     "matches": "Partidas",
     "players": "Jogadores",
     "settings": "Ajustes",
-    "newMatch": "Nova partida"
+    "newMatch": "Nova partida",
+    "collapse": "Recolher",
+    "openMenu": "Abrir menu ( [ )",
+    "collapseMenu": "Recolher menu ( [ )"
   },
   "screens": {
     "newMatch": "Nova partida",

@@ -19,6 +19,7 @@ import {
   PencilSimple as _PencilSimple,
   Plus as _Plus,
   ShareNetwork as _ShareNetwork,
+  SidebarSimple as _SidebarSimple,
   SignOut as _SignOut,
   SlidersHorizontal as _SlidersHorizontal,
   SquareSplitVertical as _SquareSplitVertical,
@@ -58,6 +59,7 @@ export const ChevronLeft = wrap(_CaretLeft)
 export const ChevronRight = wrap(_CaretRight)
 export const CourtMode = wrap(_SquareSplitVertical)
 export const Flag = wrap(_Flag)
+export const SidebarSimple = wrap(_SidebarSimple)
 export const GoogleLogo = wrap(_GoogleLogo)
 export const HandGrab = wrap(_HandGrabbing)
 export const LogOut = wrap(_SignOut)

@@ -10,11 +10,11 @@ export const IS_NATIVE = !IS_WEB
 export const DETACH_INACTIVE_SCREENS = IS_WEB
 
 // Below this viewport width the web tab bar moves to the bottom, like the native app.
-export const WEB_SIDE_BAR_MIN_WIDTH = 700
+export const WEB_SIDE_BAR_MIN_WIDTH = 1024
 
 // On wide web viewports content stops growing at this width and is centered in
 // the space beside the tab bar instead of stretching edge to edge.
-export const WEB_MAX_CONTENT_WIDTH = 1100
+export const WEB_MAX_CONTENT_WIDTH = 1120
 
 // Spread into a scroller's contentContainerStyle: the scene itself stays full width so the
 // browser scrollbar sits at the window edge, while the content is centered inside it.

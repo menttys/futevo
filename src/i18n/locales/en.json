@@ -29,7 +29,10 @@
     "matches": "Matches",
     "players": "Players",
     "settings": "Settings",
-    "newMatch": "New match"
+    "newMatch": "New match",
+    "collapse": "Collapse",
+    "openMenu": "Open menu ( [ )",
+    "collapseMenu": "Collapse menu ( [ )"
   },
   "screens": {
     "newMatch": "New match",

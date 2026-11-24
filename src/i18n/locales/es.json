@@ -29,7 +29,10 @@
     "matches": "Partidos",
     "players": "Jugadores",
     "settings": "Ajustes",
-    "newMatch": "Nuevo partido"
+    "newMatch": "Nuevo partido",
+    "collapse": "Contraer",
+    "openMenu": "Abrir menú ( [ )",
+    "collapseMenu": "Contraer menú ( [ )"
   },
   "screens": {
     "newMatch": "Nuevo partido",
