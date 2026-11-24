@@ -12,6 +12,7 @@ import { MomentumChart } from "@/components/MomentumChart"
 import { ScoreBoard } from "@/components/ScoreBoard"
 import { ScreenHeader } from "@/components/ScreenHeader"
 import { ZoneHeatGrid } from "@/components/ZoneHeatGrid"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { MatchesStackParamList } from "@/navigation/types"
 import { useMatchStore } from "@/store/matchState"
@@ -29,6 +30,7 @@ type MatchStatusRouteProp = RouteProp<MatchesStackParamList, "MatchStatus">
 // kept at the bottom so scoring never needs a trip back.
 export function MatchStatusScreen() {
   const { t } = useLanguage()
+  const tabBarInset = useTabBarInset()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<MatchStatusRouteProp>().params
   const players = usePlayerStore((s) => s.players)
@@ -97,7 +99,7 @@ export function MatchStatusScreen() {
         </View>
       </ScrollView>
 
-      <View style={styles.footer}>
+      <View style={[styles.footer, { paddingBottom: tabBarInset + 8 }]}>
         {(["A", "B"] as const).map((side) => (
           <Pressable
             key={side}

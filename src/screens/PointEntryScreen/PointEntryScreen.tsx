@@ -77,9 +77,10 @@ export function PointEntryScreen() {
       navigation.navigate("MatchDetail", { matchId: match.id })
       return
     }
-    // Live match directly below the sheet: just close the sheet to return to it.
+    // Live or status screen directly below the sheet: just close the sheet to return to it.
     const { routes, index } = navigation.getState()
-    if (routes[index - 1]?.name === "LiveMatch") {
+    const below = routes[index - 1]?.name
+    if (below === "LiveMatch" || below === "MatchStatus") {
       navigation.goBack()
       return
     }

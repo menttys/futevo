@@ -11,6 +11,7 @@ import { MatchStatusCard } from "@/components/MatchStatusCard"
 import { MeshBackground } from "@/components/MeshBackground"
 import { ScoreBoard } from "@/components/ScoreBoard"
 import { ScreenHeader } from "@/components/ScreenHeader"
+import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useMatches } from "@/hooks/useMatches"
 import { useLanguage } from "@/i18n"
 import { CourtMode, Flag, Undo } from "@/lib/icons"
@@ -30,6 +31,7 @@ const RECENT_POINTS = 6
 
 export function LiveMatchScreen() {
   const { theme } = useUnistyles()
+  const tabBarInset = useTabBarInset()
   const { t } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const { matchId } = useRoute<LiveMatchRouteProp>().params
@@ -91,7 +93,7 @@ export function LiveMatchScreen() {
         }
       />
 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
         <ScoreBoard
           homeName={homeName}
           awayName={awayName}
