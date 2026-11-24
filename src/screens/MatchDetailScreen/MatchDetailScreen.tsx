@@ -19,6 +19,7 @@ import { ScreenHeader } from "@/components/ScreenHeader"
 import { SegmentedControl } from "@/components/SegmentedControl"
 import { TournamentRow } from "@/components/TournamentRow"
 import { ZoneHeatGrid } from "@/components/ZoneHeatGrid"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { Share as ShareIcon, Trophy } from "@/lib/icons"
@@ -45,11 +46,14 @@ export function MatchDetailScreen() {
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const tabBarInset = useTabBarInset()
+  const wide = useSideTabBar()
   const navigation = useNavigation<NavigationProp>()
   const { matchId, from } = useRoute<MatchDetailRouteProp>().params
   const players = usePlayerStore((s) => s.players) ?? []
   const match = useMatchStore((s) => s.matches?.find((m) => m.id === matchId))
-  const tournament = useTournamentStore((s) => s.tournaments?.find((tr) => tr.id === match?.tournamentId))
+  const tournament = useTournamentStore((s) =>
+    s.tournaments?.find((tr) => tr.id === match?.tournamentId)
+  )
   const [tab, setTab] = useState<Tab>("summary")
 
   const tally = useMemo(() => {
@@ -79,21 +83,26 @@ export function MatchDetailScreen() {
 
   const teamAPlayers = playersById(players, match.teamA)
   const teamBPlayers = playersById(players, match.teamB)
-  const playerName = (id: string) => players.find((p) => p.id === id)?.name ?? t("common.unknownPlayer")
+  const playerName = (id: string) =>
+    players.find((p) => p.id === id)?.name ?? t("common.unknownPlayer")
   const homeName = sideLabel(match, tournament, "A", playerName)
   const awayName = sideLabel(match, tournament, "B", playerName)
   // When a side is shown by its club, the dupla goes on the line underneath.
   const hasClubs = (side: "A" | "B") => !!clubForSide(match, tournament, side)
   const dupla = (list: Player[]) => list.map((p) => firstName(p.name)).join(" · ")
   const minutes = matchMinutes(match)
-  const meta = [tournament?.name, match.round, minutes ? t("matches.minutes", { count: minutes }) : undefined]
+  const meta = [
+    tournament?.name,
+    match.round,
+    minutes ? t("matches.minutes", { count: minutes }) : undefined,
+  ]
     .filter(Boolean)
     .join(" · ")
 
   const onShare = () => {
-    Share.share({ message: `${homeName} ${match.scoreA}–${match.scoreB} ${awayName} · ${t("app.name")}` }).catch(
-      () => undefined
-    )
+    Share.share({
+      message: `${homeName} ${match.scoreA}–${match.scoreB} ${awayName} · ${t("app.name")}`,
+    }).catch(() => undefined)
   }
 
   return (
@@ -115,7 +124,13 @@ export function MatchDetailScreen() {
         }
       />
 
-      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: tabBarInset + 16 }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          wide && styles.contentWide,
+          { paddingBottom: tabBarInset + 16 },
+        ]}
+      >
         <View style={styles.result}>
           <FutevoMark size={170} rotate={14} color={theme.colors.dark} style={styles.watermark} />
           <View style={styles.metaRow}>
@@ -155,8 +170,8 @@ export function MatchDetailScreen() {
           </View>
 
           <View style={styles.scores}>
-            <Text style={styles.score(false)}>{match.scoreA}</Text>
-            <Text style={styles.score(true)}>{match.scoreB}</Text>
+            <Text style={[styles.score(false), wide && styles.scoreWide]}>{match.scoreA}</Text>
+            <Text style={[styles.score(true), wide && styles.scoreWide]}>{match.scoreB}</Text>
           </View>
         </View>
 
@@ -168,38 +183,42 @@ export function MatchDetailScreen() {
           />
         ) : null}
 
-        <SegmentedControl
-          options={[
-            { value: "summary", label: t("match.tabs.summary") },
-            { value: "players", label: t("match.tabs.players") },
-            { value: "log", label: t("match.tabs.pointLog") },
-          ]}
-          value={tab}
-          onChange={setTab}
-        />
+        <View style={wide ? styles.tabsWide : undefined}>
+          <SegmentedControl
+            options={[
+              { value: "summary", label: t("match.tabs.summary") },
+              { value: "players", label: t("match.tabs.players") },
+              { value: "log", label: t("match.tabs.pointLog") },
+            ]}
+            value={tab}
+            onChange={setTab}
+          />
+        </View>
 
         {tab === "summary" ? (
           <>
-            <View style={styles.card}>
-              <Text style={styles.cardLabel}>{t("match.momentum")}</Text>
-              {match.points.length > 0 ? (
-                <MomentumChart points={match.points} />
-              ) : (
-                <Text style={styles.empty}>{t("match.noPoints")}</Text>
-              )}
-            </View>
-            <View style={styles.pair}>
-              <View style={[styles.card, styles.half]}>
-                <Text style={styles.cardLabel}>{t("match.landingZones")}</Text>
-                <ZoneHeatGrid points={match.points} />
-              </View>
-              <View style={[styles.card, styles.half]}>
-                <Text style={styles.cardLabel}>{t("match.attackTypes")}</Text>
-                {tally.length > 0 ? (
-                  <AttackBars items={tally} />
+            <View style={wide ? styles.summaryWide : styles.summary}>
+              <View style={[styles.card, wide && styles.momentumWide]}>
+                <Text style={styles.cardLabel}>{t("match.momentum")}</Text>
+                {match.points.length > 0 ? (
+                  <MomentumChart points={match.points} />
                 ) : (
                   <Text style={styles.empty}>{t("match.noPoints")}</Text>
                 )}
+              </View>
+              <View style={wide ? styles.pairWide : styles.pair}>
+                <View style={[styles.card, styles.half]}>
+                  <Text style={styles.cardLabel}>{t("match.landingZones")}</Text>
+                  <ZoneHeatGrid points={match.points} />
+                </View>
+                <View style={[styles.card, styles.half]}>
+                  <Text style={styles.cardLabel}>{t("match.attackTypes")}</Text>
+                  {tally.length > 0 ? (
+                    <AttackBars items={tally} />
+                  ) : (
+                    <Text style={styles.empty}>{t("match.noPoints")}</Text>
+                  )}
+                </View>
               </View>
             </View>
           </>
@@ -223,4 +242,3 @@ export function MatchDetailScreen() {
     </View>
   )
 }
-

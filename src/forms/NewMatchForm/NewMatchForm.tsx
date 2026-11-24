@@ -8,6 +8,7 @@ import { FutevoMark } from "@/components/FutevoMark"
 import { PlayerAvatar } from "@/components/PlayerAvatar"
 import { SegmentedControl } from "@/components/SegmentedControl"
 import { DEFAULT_TARGET_SCORE, DEFAULT_WIN_BY } from "@/constants/App"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { ChevronDown, Plus, Trophy } from "@/lib/icons"
@@ -31,6 +32,7 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
   const { theme } = useUnistyles()
   const { t } = useLanguage()
   const tabBarInset = useTabBarInset()
+  const wide = useSideTabBar()
   // Index 0 = left side of the court, 1 = right side. Written by the player picker screen.
   const teamAIds = useNewMatchStore((s) => s.teamA)
   const teamBIds = useNewMatchStore((s) => s.teamB)
@@ -101,7 +103,7 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
     const ids = slotIds(side)
 
     return (
-      <View style={styles.teamCard(home)}>
+      <View style={[styles.teamCard(home), wide && styles.teamFlex]}>
         <FutevoMark
           size={120}
           rotate={16}
@@ -185,18 +187,23 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
 
   return (
     <View style={styles.root}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={[styles.content, wide && styles.contentWide]}
+        keyboardShouldPersistTaps="handled"
+      >
         {players.length === 0 ? (
           <Text style={styles.hint}>{t("newMatch.addPlayersFirst")}</Text>
         ) : null}
 
-        {renderTeam("A")}
-        <View style={styles.versus}>
-          <FutevoMark size={18} />
-          <Text style={styles.versusLabel}>{t("newMatch.vs")}</Text>
-          <FutevoMark size={18} rotate={72} />
+        <View style={wide ? styles.teamsWide : styles.teams}>
+          {renderTeam("A")}
+          <View style={[styles.versus, wide && styles.versusWide]}>
+            <FutevoMark size={18} />
+            <Text style={styles.versusLabel}>{t("newMatch.vs")}</Text>
+            <FutevoMark size={18} rotate={72} />
+          </View>
+          {renderTeam("B")}
         </View>
-        {renderTeam("B")}
 
         <View style={styles.rules}>
           <View style={styles.ruleTarget}>
@@ -309,12 +316,12 @@ export function NewMatchForm({ players, tournaments, onSubmit, onPickSlot }: New
         ) : null}
       </ScrollView>
 
-      <View style={styles.footer(tabBarInset)}>
+      <View style={[styles.footer(tabBarInset), wide && styles.footerWide]}>
         <AppButton
           label={t("newMatch.start")}
           disabled={!canSubmit}
           onPress={handleSubmit}
-          style={styles.start}
+          style={wide ? styles.startWide : styles.start}
         />
       </View>
     </View>

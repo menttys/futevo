@@ -12,12 +12,41 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingBottom: 16,
     gap: 8,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+    gap: 16,
+  },
+  teams: {
+    gap: 8,
+  },
+  teamsWide: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: 16,
+  },
+  versusWide: {
+    flexDirection: "column",
+    alignSelf: "center",
+    marginVertical: 0,
+    gap: 8,
+  },
+  footerWide: {
+    alignItems: "flex-end",
+    paddingHorizontal: 44,
+  },
+  startWide: {
+    minHeight: 52,
+    minWidth: 260,
+  },
   hint: {
     fontFamily: theme.fonts.regular,
     fontSize: 13,
     color: theme.colors.textMuted,
   },
   // Home is the blue-black card, Away the yellow one.
+  teamFlex: {
+    flex: 1,
+  },
   teamCard: (home: boolean) => ({
     gap: 10,
     padding: 16,

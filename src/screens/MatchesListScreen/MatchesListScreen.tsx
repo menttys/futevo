@@ -7,6 +7,7 @@ import { FlashList } from "@shopify/flash-list"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 
 import type { Match, Tournament } from "@/@types/futevo"
+import { AppButton } from "@/components/AppButton"
 import { Chip } from "@/components/Chip"
 import { EmptyState } from "@/components/EmptyState"
 import { LiveMatchCard } from "@/components/LiveMatchCard"
@@ -16,6 +17,7 @@ import { ScreenHeader } from "@/components/ScreenHeader"
 import { SearchField } from "@/components/SearchField"
 import { SectionLabel } from "@/components/SectionHeader"
 import { TournamentRow } from "@/components/TournamentRow"
+import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import { MatchesRoutes, TabRoutes } from "@/navigation/routes"
@@ -43,6 +45,7 @@ const EMPTY_TOURNAMENTS: Tournament[] = []
 export function MatchesListScreen() {
   const insets = useSafeAreaInsets()
   const tabBarInset = useTabBarInset()
+  const wide = useSideTabBar()
   const { t, currentLanguage } = useLanguage()
   const navigation = useNavigation<NavigationProp>()
   const matches = useMatchStore((s) => s.matches) ?? EMPTY_MATCHES
@@ -97,7 +100,8 @@ export function MatchesListScreen() {
       }
     }
     // Live matches pin to the top of the timeline.
-    const pinned = (e: Entry) => (e.row.type === "match" && e.row.match.status === "in_progress" ? 1 : 0)
+    const pinned = (e: Entry) =>
+      e.row.type === "match" && e.row.match.status === "in_progress" ? 1 : 0
     entries.sort((a, b) => pinned(b) - pinned(a) || b.at.localeCompare(a.at))
 
     const out: Row[] = []
@@ -111,7 +115,11 @@ export function MatchesListScreen() {
           key: `day-${day}`,
           label: pinned(e)
             ? t("common.today")
-            : dayLabel(e.at, { today: t("common.today"), yesterday: t("common.yesterday") }, currentLanguage),
+            : dayLabel(
+                e.at,
+                { today: t("common.today"), yesterday: t("common.yesterday") },
+                currentLanguage
+              ),
         })
       }
       out.push(e.row)
@@ -121,10 +129,14 @@ export function MatchesListScreen() {
 
   const openMatch = useCallback(
     (match: Match) => {
-      const screen = match.status === "in_progress" ? MatchesRoutes.LIVE_MATCH : MatchesRoutes.MATCH_DETAIL
+      const screen =
+        match.status === "in_progress" ? MatchesRoutes.LIVE_MATCH : MatchesRoutes.MATCH_DETAIL
       navigation.navigate(TabRoutes.MATCH_FLOW, {
         screen,
-        params: { matchId: match.id, ...(screen === MatchesRoutes.MATCH_DETAIL ? { from: "Matches" as const } : {}) },
+        params: {
+          matchId: match.id,
+          ...(screen === MatchesRoutes.MATCH_DETAIL ? { from: "Matches" as const } : {}),
+        },
       })
     },
     [navigation]
@@ -141,7 +153,10 @@ export function MatchesListScreen() {
           <View style={styles.item}>
             <TournamentRow
               name={tr.name}
-              subtitle={t("matches.tournamentSubtitle", { duplas: tr.entries.length, matches: count })}
+              subtitle={t("matches.tournamentSubtitle", {
+                duplas: tr.entries.length,
+                matches: count,
+              })}
               onPress={() =>
                 navigation.navigate(TabRoutes.MATCH_FLOW, {
                   screen: MatchesRoutes.TOURNAMENT_DETAIL,
@@ -175,7 +190,8 @@ export function MatchesListScreen() {
       }
 
       const minutes = matchMinutes(m)
-      const detail = tournament?.name ?? (minutes ? t("matches.minutes", { count: minutes }) : undefined)
+      const detail =
+        tournament?.name ?? (minutes ? t("matches.minutes", { count: minutes }) : undefined)
       return (
         <View style={styles.item}>
           <MatchRow
@@ -194,35 +210,87 @@ export function MatchesListScreen() {
     [matches, navigation, openMatch, playerName, tournamentOf, t, currentLanguage]
   )
 
+  const onNewMatch = () =>
+    navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
+
+  // Desktop: day groups, with finished matches in two columns and live matches and tournaments full width.
+  const groups = useMemo(() => {
+    const out: { key: string; label: string; items: Row[] }[] = []
+    for (const r of rows) {
+      if (r.type === "day") out.push({ key: r.key, label: r.label, items: [] })
+      else out[out.length - 1]?.items.push(r)
+    }
+    return out
+  }, [rows])
+
   const isSearching = query.trim().length > 0 || filter !== "all"
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
       <MeshBackground />
-      <View style={styles.header}>
-        <ScreenHeader variant="large" title={t("matches.title")} style={styles.title} />
-        <SearchField
-          value={query}
-          onChangeText={setQuery}
-          placeholder={t("matches.searchPlaceholder")}
-          clearLabel={t("common.clear")}
+      <View style={[styles.header, wide && styles.headerWide]}>
+        <ScreenHeader
+          variant="large"
+          title={t("matches.title")}
+          style={styles.title}
+          right={wide ? <AppButton label={t("tabs.newMatch")} onPress={onNewMatch} /> : undefined}
         />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-          {FILTERS.map((f) => (
-            <Chip key={f} label={t(`matches.filters.${f}`)} selected={filter === f} onPress={() => setFilter(f)} />
-          ))}
-        </ScrollView>
+        {wide ? (
+          <View style={styles.filtersWide}>
+            <View style={styles.searchWide}>
+              <SearchField
+                value={query}
+                onChangeText={setQuery}
+                placeholder={t("matches.searchPlaceholder")}
+                clearLabel={t("common.clear")}
+              />
+            </View>
+            <View style={styles.chips}>
+              {FILTERS.map((f) => (
+                <Chip
+                  key={f}
+                  label={t(`matches.filters.${f}`)}
+                  selected={filter === f}
+                  onPress={() => setFilter(f)}
+                />
+              ))}
+            </View>
+          </View>
+        ) : (
+          <>
+            <SearchField
+              value={query}
+              onChangeText={setQuery}
+              placeholder={t("matches.searchPlaceholder")}
+              clearLabel={t("common.clear")}
+            />
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.chips}
+            >
+              {FILTERS.map((f) => (
+                <Chip
+                  key={f}
+                  label={t(`matches.filters.${f}`)}
+                  selected={filter === f}
+                  onPress={() => setFilter(f)}
+                />
+              ))}
+            </ScrollView>
+          </>
+        )}
       </View>
 
-      <View style={styles.listWrapper}>
-        <FlashList
-          data={rows}
-          keyExtractor={(item) => item.key}
-          getItemType={(item) => (item.type === "match" && item.match.status === "in_progress" ? "live" : item.type)}
-          renderItem={renderItem}
-          contentContainerStyle={{ ...styles.listContent, paddingBottom: tabBarInset + 16 }}
-          keyboardShouldPersistTaps="handled"
-          ListEmptyComponent={
+      {wide ? (
+        <ScrollView
+          contentContainerStyle={[
+            styles.listContent,
+            styles.listContentWide,
+            { paddingBottom: 32 },
+          ]}
+        >
+          {groups.length === 0 ? (
             <EmptyState
               title={isSearching ? t("matches.noResultsTitle") : t("matches.emptyTitle")}
               subtitle={isSearching ? t("matches.noResultsSubtitle") : t("matches.emptySubtitle")}
@@ -230,12 +298,59 @@ export function MatchesListScreen() {
               onAction={
                 isSearching
                   ? undefined
-                  : () => navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
+                  : () =>
+                      navigation.navigate(TabRoutes.MATCH_FLOW, { screen: MatchesRoutes.NEW_MATCH })
               }
             />
-          }
-        />
-      </View>
+          ) : (
+            groups.map((g) => (
+              <View key={g.key}>
+                <SectionLabel title={g.label} style={styles.dayLabel} />
+                <View style={styles.grid}>
+                  {g.items.map((item) => {
+                    const full =
+                      item.type === "tournament" ||
+                      (item.type === "match" && item.match.status === "in_progress")
+                    return (
+                      <View key={item.key} style={full ? styles.cellFull : styles.cell}>
+                        {renderItem({ item })}
+                      </View>
+                    )
+                  })}
+                </View>
+              </View>
+            ))
+          )}
+        </ScrollView>
+      ) : (
+        <View style={styles.listWrapper}>
+          <FlashList
+            data={rows}
+            keyExtractor={(item) => item.key}
+            getItemType={(item) =>
+              item.type === "match" && item.match.status === "in_progress" ? "live" : item.type
+            }
+            renderItem={renderItem}
+            contentContainerStyle={{ ...styles.listContent, paddingBottom: tabBarInset + 16 }}
+            keyboardShouldPersistTaps="handled"
+            ListEmptyComponent={
+              <EmptyState
+                title={isSearching ? t("matches.noResultsTitle") : t("matches.emptyTitle")}
+                subtitle={isSearching ? t("matches.noResultsSubtitle") : t("matches.emptySubtitle")}
+                actionLabel={isSearching ? undefined : t("tabs.newMatch")}
+                onAction={
+                  isSearching
+                    ? undefined
+                    : () =>
+                        navigation.navigate(TabRoutes.MATCH_FLOW, {
+                          screen: MatchesRoutes.NEW_MATCH,
+                        })
+                }
+              />
+            }
+          />
+        </View>
+      )}
     </View>
   )
 }

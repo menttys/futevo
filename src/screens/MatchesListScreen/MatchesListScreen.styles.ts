@@ -12,11 +12,40 @@ export const styles = StyleSheet.create((theme) => ({
     paddingHorizontal: theme.gutter,
     gap: 14,
   },
+  headerWide: {
+    paddingHorizontal: 44,
+    paddingTop: 30,
+    gap: 20,
+  },
+  filtersWide: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  searchWide: {
+    width: 420,
+  },
+  listContentWide: {
+    paddingHorizontal: 44,
+  },
+  grid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    columnGap: 9,
+  },
+  cell: {
+    flexBasis: "48%",
+    flexGrow: 1,
+  },
+  cellFull: {
+    width: "100%",
+  },
   title: {
     paddingHorizontal: 0,
     paddingBottom: 0,
   },
   chips: {
+    flexDirection: "row",
     gap: 8,
   },
   listWrapper: {

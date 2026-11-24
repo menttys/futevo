@@ -21,6 +21,33 @@ export const styles = StyleSheet.create((theme, rt) => ({
     paddingHorizontal: theme.gutter,
     gap: 12,
   },
+  contentWide: {
+    paddingHorizontal: 44,
+    gap: 20,
+  },
+  scoreWide: {
+    fontSize: 65,
+    lineHeight: 72,
+  },
+  tabsWide: {
+    width: 460,
+  },
+  summary: {
+    gap: 12,
+  },
+  summaryWide: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    gap: 16,
+  },
+  momentumWide: {
+    flex: 2,
+  },
+  pairWide: {
+    flex: 2,
+    flexDirection: "row",
+    gap: 16,
+  },
   // Result card: brand yellow, cropped mark, the score as supergraphic.
   result: {
     backgroundColor: theme.colors.primary,
