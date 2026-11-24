@@ -223,6 +223,7 @@
     "pointLogEntry": "#{{number}} · Team {{side}} · {{where}}",
     "ballOut": "Ball out",
     "zone": "Zone {{zone}}",
+    "shortcutsHint": "Keyboard: A home · L away · Z undo",
     "tapToScore": "Tap to score",
     "tabs": {
       "players": "Players",

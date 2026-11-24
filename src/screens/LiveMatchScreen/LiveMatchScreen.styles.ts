@@ -92,4 +92,35 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 12,
     color: theme.colors.text,
   },
+  row: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    gap: 20,
+  },
+  colMain: {
+    flex: 1,
+    gap: 12,
+  },
+  colSide: {
+    width: 380,
+    gap: 12,
+  },
+  pointRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  pointButtonWide: {
+    flex: 1,
+    height: 132,
+  },
+  hint: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 12,
+    color: theme.colors.textMuted,
+  },
+  chipsWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
 }))
