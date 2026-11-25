@@ -14,7 +14,7 @@ import { getLegalDocument } from "@/constants/legal"
 import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
-import { ChevronLeft, ChevronRight, Warning } from "@/lib/icons"
+import { ChevronLeft, ChevronRight } from "@/lib/icons"
 import { RootRoutes, TabRoutes } from "@/navigation/routes"
 import type { RootStackParamList } from "@/navigation/types/navigation"
 import { useUserStore } from "@/store/userState"
@@ -23,7 +23,6 @@ import type { LegalPageProps } from "./LegalPage.d"
 import { styles } from "./LegalPage.styles"
 
 const LANGUAGE_ORDER: LanguageCode[] = ["en", "es", "pt"]
-const PLACEHOLDER = /(\[[^\]]+\])/
 const pad = (n: number) => String(n).padStart(2, "0")
 
 const OTHER: Record<LegalKind, LegalKind> = { terms: "privacy", privacy: "terms" }
@@ -32,28 +31,11 @@ const ROUTE: Record<LegalKind, RootRoutes.TERMS | RootRoutes.PRIVACY> = {
   privacy: RootRoutes.PRIVACY,
 }
 
-// [Bracketed] placeholders stay highlighted until they are filled in before launch.
-function Rich({ text }: { text: string }) {
-  return (
-    <>
-      {text.split(PLACEHOLDER).map((part, i) =>
-        PLACEHOLDER.test(part) ? (
-          <Text key={i} style={styles.placeholder}>
-            {part}
-          </Text>
-        ) : (
-          part
-        ),
-      )}
-    </>
-  )
-}
-
 function Block({ block }: { block: LegalBlock }) {
   if (block.type === "p") {
     return (
       <Text style={styles.paragraph}>
-        <Rich text={block.text} />
+        {block.text}
       </Text>
     )
   }
@@ -63,7 +45,7 @@ function Block({ block }: { block: LegalBlock }) {
         <View key={item} style={styles.listItem}>
           <Text style={styles.bullet}>•</Text>
           <Text style={[styles.paragraph, styles.listText]}>
-            <Rich text={item} />
+            {item}
           </Text>
         </View>
       ))}
@@ -190,11 +172,6 @@ export function LegalPage({ kind }: LegalPageProps) {
                 {doc.title}
               </Text>
               <Text style={styles.intro}>{doc.intro}</Text>
-
-              <View style={styles.notice}>
-                <Warning size={18} color={theme.colors.text} />
-                <Text style={styles.noticeText}>{t("legal.draftNotice")}</Text>
-              </View>
 
               {doc.sections.map((section, i) => (
                 <View

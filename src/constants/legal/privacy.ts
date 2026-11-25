@@ -14,7 +14,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "The data controller is [Operator legal name], [address], [tax ID / NIF]. Contact: futeve-contact@furlany.dev. [If you appoint a Data Protection Officer, add their contact here.]",
+            text: "The data controller is the Futevo developer. Contact: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -29,7 +29,6 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
               "Match data: scores, each point (who scored, landing zone, attack type), times, sets, tournaments and the statistics calculated from them.",
               "Settings: language, default scoring rules, menu and display preferences.",
               "Technical data: device and browser type, app version, IP address, time stamps and error logs, created when you use the service.",
-              "[Optional, only if enabled: usage analytics and crash reports. Remove this line if not used.]",
             ],
           },
           {
@@ -98,7 +97,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
             items: [
               "Account, players and matches: while your account is active.",
               "After you delete your account: removed within 30 days, and from backups within 90 days.",
-              "Technical logs: up to [90] days, unless needed to investigate a security incident.",
+              "Technical logs: up to 90 days, unless needed to investigate a security incident.",
               "Data we must keep by law: for the period the law requires.",
             ],
           },
@@ -140,7 +139,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "The website only uses storage that is strictly necessary: to keep you signed in, remember your settings (such as language and whether the menu is open) and keep scores safe while offline. We do not use advertising or tracking cookies. [If analytics are added, ask for consent first and describe them here.]",
+            text: "The website only uses storage that is strictly necessary: to keep you signed in, remember your settings (such as language and whether the menu is open) and keep scores safe while offline. We do not use advertising or tracking cookies.",
           },
         ],
       },
@@ -158,7 +157,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "[Operator legal name], [address]. Privacy questions: futeve-contact@furlany.dev.",
+            text: "Privacy questions: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -175,7 +174,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "El responsable del tratamiento es [Nombre legal del titular], [dirección], [NIF]. Contacto: futeve-contact@furlany.dev. [Si nombras un Delegado de Protección de Datos, añade aquí su contacto.]",
+            text: "El responsable del tratamiento es el desarrollador de Futevo. Contacto: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -190,7 +189,6 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
               "Datos de partidos: resultados, cada punto (quién anotó, zona de caída, tipo de ataque), horas, sets, torneos y las estadísticas calculadas a partir de ellos.",
               "Ajustes: idioma, reglas de puntuación por defecto, preferencias de menú y de visualización.",
               "Datos técnicos: tipo de dispositivo y de navegador, versión de la app, dirección IP, marcas de tiempo y registros de errores, generados al usar el servicio.",
-              "[Opcional, solo si está activado: analíticas de uso e informes de fallos. Elimina esta línea si no se usan.]",
             ],
           },
           {
@@ -259,7 +257,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
             items: [
               "Cuenta, jugadores y partidos: mientras tu cuenta esté activa.",
               "Tras eliminar tu cuenta: se borran en 30 días, y de las copias de seguridad en 90 días.",
-              "Registros técnicos: hasta [90] días, salvo que se necesiten para investigar un incidente de seguridad.",
+              "Registros técnicos: hasta 90 días, salvo que se necesiten para investigar un incidente de seguridad.",
               "Datos que debemos conservar por ley: durante el plazo que la ley exija.",
             ],
           },
@@ -301,7 +299,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "El sitio web solo usa almacenamiento estrictamente necesario: para mantener tu sesión iniciada, recordar tus ajustes (como el idioma y si el menú está abierto) y proteger los marcadores sin conexión. No usamos cookies publicitarias ni de seguimiento. [Si se añaden analíticas, pide consentimiento antes y descríbelas aquí.]",
+            text: "El sitio web solo usa almacenamiento estrictamente necesario: para mantener tu sesión iniciada, recordar tus ajustes (como el idioma y si el menú está abierto) y proteger los marcadores sin conexión. No usamos cookies publicitarias ni de seguimiento.",
           },
         ],
       },
@@ -319,7 +317,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "[Nombre legal del titular], [dirección]. Consultas de privacidad: futeve-contact@furlany.dev.",
+            text: "Consultas de privacidad: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -336,7 +334,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "O controlador dos dados é [Nome legal do operador], [endereço], [NIF]. Contato: futeve-contact@furlany.dev. [Se você nomear um Encarregado de Proteção de Dados, adicione aqui o contato dele.]",
+            text: "O controlador dos dados é o desenvolvedor do Futevo. Contato: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -351,7 +349,6 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
               "Dados de partidas: placares, cada ponto (quem marcou, zona de queda, tipo de ataque), horários, sets, torneios e as estatísticas calculadas a partir deles.",
               "Configurações: idioma, regras de pontuação padrão, preferências de menu e de exibição.",
               "Dados técnicos: tipo de dispositivo e de navegador, versão do app, endereço IP, registros de data e hora e logs de erro, gerados quando você usa o serviço.",
-              "[Opcional, somente se ativado: análises de uso e relatórios de falhas. Remova esta linha se não forem usados.]",
             ],
           },
           {
@@ -420,7 +417,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
             items: [
               "Conta, jogadores e partidas: enquanto sua conta estiver ativa.",
               "Depois que você apagar a conta: removidos em até 30 dias, e dos backups em até 90 dias.",
-              "Logs técnicos: até [90] dias, a menos que sejam necessários para investigar um incidente de segurança.",
+              "Logs técnicos: até 90 dias, a menos que sejam necessários para investigar um incidente de segurança.",
               "Dados que somos obrigados a guardar por lei: pelo prazo que a lei exigir.",
             ],
           },
@@ -462,7 +459,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "O site usa apenas o armazenamento estritamente necessário: para manter você conectado, lembrar suas configurações (como o idioma e se o menu está aberto) e manter os placares seguros quando estiver offline. Não usamos cookies de publicidade nem de rastreamento. [Se forem adicionadas análises, peça consentimento antes e descreva-as aqui.]",
+            text: "O site usa apenas o armazenamento estritamente necessário: para manter você conectado, lembrar suas configurações (como o idioma e se o menu está aberto) e manter os placares seguros quando estiver offline. Não usamos cookies de publicidade nem de rastreamento.",
           },
         ],
       },
@@ -480,7 +477,7 @@ export const PRIVACY: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "[Nome legal do operador], [endereço]. Dúvidas de privacidade: futeve-contact@furlany.dev.",
+            text: "Dúvidas de privacidade: futeve-contact@furlany.dev.",
           },
         ],
       },

@@ -155,21 +155,6 @@ export const styles = StyleSheet.create((theme) => ({
     lineHeight: 27,
     color: theme.colors.text,
   },
-  notice: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 12,
-    padding: 14,
-    borderRadius: theme.radius.md,
-    backgroundColor: theme.colors.softYellow,
-  },
-  noticeText: {
-    flex: 1,
-    fontFamily: theme.fonts.regular,
-    fontSize: 13,
-    lineHeight: 19,
-    color: theme.colors.text,
-  },
   section: {
     marginTop: 14,
     gap: 10,
@@ -196,9 +181,6 @@ export const styles = StyleSheet.create((theme) => ({
     fontSize: 15.5,
     lineHeight: 25.5,
     color: theme.colors.text,
-  },
-  placeholder: {
-    backgroundColor: theme.colors.softYellow,
   },
   list: {
     gap: 8,

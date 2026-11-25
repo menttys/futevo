@@ -14,7 +14,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "Futevo is provided by [Operator legal name], [address], [tax ID / NIF] (“Futevo”, “we”, “us”). You can contact us at futeve-contact@furlany.dev.",
+            text: "Futevo is provided by its developer (“Futevo”, “we”, “us”). You can contact us at futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -167,7 +167,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
       {
         title: "Contact",
         blocks: [
-          { type: "p", text: "[Operator legal name], [address]. Email: futeve-contact@furlany.dev." },
+          { type: "p", text: "Email: futeve-contact@furlany.dev." },
         ],
       },
     ],
@@ -183,7 +183,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "Futevo lo ofrece [Nombre legal del titular], [dirección], [NIF] («Futevo», «nosotros»). Puedes contactarnos en futeve-contact@furlany.dev.",
+            text: "Futevo lo ofrece su desarrollador («Futevo», «nosotros»). Puedes contactarnos en futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -341,7 +341,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "[Nombre legal del titular], [dirección]. Correo: futeve-contact@furlany.dev.",
+            text: "Correo: futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -358,7 +358,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "O Futevo é oferecido por [Nome legal do operador], [endereço], [NIF] («Futevo», «nós»). Você pode falar conosco em futeve-contact@furlany.dev.",
+            text: "O Futevo é oferecido pelo seu desenvolvedor («Futevo», «nós»). Você pode falar conosco em futeve-contact@furlany.dev.",
           },
         ],
       },
@@ -516,7 +516,7 @@ export const TERMS: Record<LanguageCode, LegalDocument> = {
         blocks: [
           {
             type: "p",
-            text: "[Nome legal do operador], [endereço]. E-mail: futeve-contact@furlany.dev.",
+            text: "E-mail: futeve-contact@furlany.dev.",
           },
         ],
       },
