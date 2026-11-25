@@ -27,6 +27,7 @@ import {
   Trophy as _Trophy,
   User as _User,
   Users as _Users,
+  Warning as _Warning,
   WifiSlash as _WifiSlash,
   X as _X,
 } from "phosphor-react-native"
@@ -72,5 +73,6 @@ export const Trophy = wrap(_Trophy)
 export const Undo = wrap(_ArrowUUpLeft)
 export const RotateCcw = Undo
 export const User = wrap(_User)
+export const Warning = wrap(_Warning)
 export const WifiSlash = wrap(_WifiSlash)
 export const X = wrap(_X)

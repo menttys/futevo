@@ -84,6 +84,16 @@ export const styles = StyleSheet.create((theme, rt) => ({
     fontSize: 12.5,
     color: theme.colors.text,
   },
+  legal: {
+    fontFamily: theme.fonts.regular,
+    fontSize: 12.5,
+    lineHeight: 18,
+    color: theme.colors.text,
+  },
+  legalLink: {
+    fontFamily: theme.fonts.semibold,
+    textDecorationLine: "underline",
+  },
   version: {
     fontFamily: theme.fonts.regular,
     fontSize: 12,

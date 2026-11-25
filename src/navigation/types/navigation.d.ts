@@ -33,5 +33,7 @@ export type TabParamList = {
 
 export type RootStackParamList = {
   Login: undefined
+  Terms: undefined
+  Privacy: undefined
   Main: NavigatorScreenParams<TabParamList>
 }

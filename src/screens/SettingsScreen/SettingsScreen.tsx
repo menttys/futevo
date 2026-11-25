@@ -1,6 +1,8 @@
 import React from "react"
-import { ScrollView, Switch, Text, View } from "react-native"
+import { Pressable, ScrollView, Switch, Text, View } from "react-native"
 
+import { useNavigation } from "@react-navigation/native"
+import type { StackNavigationProp } from "@react-navigation/stack"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import { useUnistyles } from "react-native-unistyles"
 
@@ -17,13 +19,19 @@ import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useTabBarInset } from "@/hooks/useTabBarInset"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
-import { Check, LogOut, Trash2, WifiSlash } from "@/lib/icons"
+import { Check, ChevronRight, LogOut, Trash2, WifiSlash } from "@/lib/icons"
+import { RootRoutes } from "@/navigation/routes"
+import type { RootStackParamList } from "@/navigation/types/navigation"
 import { useSettingsStore } from "@/store/settingsState"
 import { useUserStore } from "@/store/userState"
 import { confirmAction } from "@/utils/confirmAction"
 
 import { styles } from "./SettingsScreen.styles"
 
+const LEGAL_LINKS = [
+  { route: RootRoutes.TERMS, key: "legal.terms" },
+  { route: RootRoutes.PRIVACY, key: "legal.privacy" },
+] as const
 const LANGUAGE_ORDER: LanguageCode[] = ["en", "es", "pt"]
 // Brand watermark footer: one mark spun 18° at a time, tone-on-tone with the background.
 const TAPE = Array.from({ length: 10 }, (_, i) => i * 18)
@@ -42,6 +50,28 @@ export function SettingsScreen() {
   const setDefaultWinBy = useSettingsStore((s) => s.setDefaultWinBy)
   const setKeyboardShortcuts = useSettingsStore((s) => s.setKeyboardShortcuts)
   const wide = useSideTabBar()
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+
+  const legalCard = (
+    <View>
+      <Text style={styles.label}>{t("settings.legal")}</Text>
+      <View style={styles.card}>
+        {LEGAL_LINKS.map((item, i) => (
+          <React.Fragment key={item.route}>
+            {i > 0 ? <View style={styles.divider} /> : null}
+            <Pressable
+              accessibilityRole="link"
+              onPress={() => navigation.navigate(item.route)}
+              style={styles.row}
+            >
+              <Text style={[styles.rowTitle, styles.rowText]}>{t(item.key)}</Text>
+              <ChevronRight size={18} color={theme.colors.text} />
+            </Pressable>
+          </React.Fragment>
+        ))}
+      </View>
+    </View>
+  )
 
   const handleDeleteAccount = () => {
     if (!user) return
@@ -198,6 +228,7 @@ export function SettingsScreen() {
                   </View>
                 </View>
               </View>
+              {legalCard}
               <View
                 style={styles.tape}
                 accessibilityElementsHidden
@@ -267,6 +298,8 @@ export function SettingsScreen() {
                 </View>
               </View>
             </View>
+
+            {legalCard}
 
             <AppButton
               label={t("settings.signOut")}

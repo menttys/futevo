@@ -58,7 +58,9 @@
     "signIn": "Entrar",
     "continueWithGoogle": "Continuar com o Google",
     "tagline": "Marque cada ponto.\nAcompanhe cada jogo.",
-    "version": "v{{version}} · Beta"
+    "version": "v{{version}} · Beta",
+    "agreePrefix": "Ao continuar você concorda com os ",
+    "agreeAnd": " e a "
   },
   "splash": {
     "tagline": "Cada ponto conta."
@@ -334,7 +336,8 @@
     "deleteAccount": "Excluir conta",
     "deleteAccountTitle": "Excluir conta?",
     "deleteAccountMessage": "Isto exclui permanentemente sua conta e todos os seus jogadores, partidas e torneios. Não pode ser desfeito.",
-    "deleteAccountConfirm": "Excluir conta"
+    "deleteAccountConfirm": "Excluir conta",
+    "legal": "Legal"
   },
   "gamified": {
     "courtMode": "Modo quadra",
@@ -363,5 +366,16 @@
     "chipMoveTitle": "{{name}} → ataque da zona {{zone}}",
     "chipMoveSubtitle": "Solte para marcar de onde saiu o ataque",
     "hintMove": "Solte para mover o jogador aqui · solte do outro lado da rede para a queda"
+  },
+  "legal": {
+    "legal": "Legal",
+    "lastUpdated": "Última atualização: {{date}}",
+    "onThisPage": "Nesta página",
+    "draftNotice": "Modelo de rascunho. Preencha os dados destacados e peça a revisão de um advogado antes de publicar. Foi escrito para um operador sediado na UE/Espanha que usa o Firebase.",
+    "terms": "Termos de uso",
+    "privacy": "Política de privacidade",
+    "backToApp": "Voltar ao Futevo",
+    "copyright": "© {{year}} Futevo",
+    "available": "Disponível em"
   }
 }

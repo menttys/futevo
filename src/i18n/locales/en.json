@@ -58,7 +58,9 @@
     "signIn": "Sign in",
     "continueWithGoogle": "Continue with Google",
     "tagline": "Score every point.\nTrack every game.",
-    "version": "v{{version}} · Beta"
+    "version": "v{{version}} · Beta",
+    "agreePrefix": "By continuing you agree to the ",
+    "agreeAnd": " and "
   },
   "splash": {
     "tagline": "Every point counts."
@@ -334,7 +336,8 @@
     "deleteAccount": "Delete account",
     "deleteAccountTitle": "Delete account?",
     "deleteAccountMessage": "This permanently deletes your account and all your players, matches and tournaments. This can't be undone.",
-    "deleteAccountConfirm": "Delete account"
+    "deleteAccountConfirm": "Delete account",
+    "legal": "Legal"
   },
   "gamified": {
     "courtMode": "Court mode",
@@ -363,5 +366,16 @@
     "chipMoveTitle": "{{name}} → attack from zone {{zone}}",
     "chipMoveSubtitle": "Release to set where the attack started",
     "hintMove": "Release to move the player here · drop across the net for the landing"
+  },
+  "legal": {
+    "legal": "Legal",
+    "lastUpdated": "Last updated {{date}}",
+    "onThisPage": "On this page",
+    "draftNotice": "Draft template. Fill in the highlighted details and have it reviewed by a lawyer before publishing. It is written for an EU/Spain-based operator using Firebase.",
+    "terms": "Terms of service",
+    "privacy": "Privacy policy",
+    "backToApp": "Back to Futevo",
+    "copyright": "© {{year}} Futevo",
+    "available": "Available in"
   }
 }

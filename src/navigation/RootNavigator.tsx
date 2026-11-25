@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react"
 
 import { createStackNavigator } from "@react-navigation/stack"
 
-import { DETACH_INACTIVE_SCREENS } from "@/constants/Platform"
+import { DETACH_INACTIVE_SCREENS, IS_WEB } from "@/constants/Platform"
 import useFirebase, { subscribeToAuth } from "@/hooks/useFirebase"
 import { LoginScreen } from "@/screens/LoginScreen"
+import { PrivacyScreen } from "@/screens/PrivacyScreen"
 import { SplashScreen } from "@/screens/SplashScreen"
+import { TermsScreen } from "@/screens/TermsScreen"
 import { useUserStore } from "@/store/userState"
 import { theme } from "@/styles/theme"
 
@@ -39,6 +41,8 @@ export function RootNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
+        // "float" keeps the stack from blocking page-body scrolling on web (see SettingsStack).
+        headerMode: IS_WEB ? "float" : undefined,
         cardStyle: { backgroundColor: theme.colors.background },
       }}
       detachInactiveScreens={DETACH_INACTIVE_SCREENS}
@@ -48,6 +52,8 @@ export function RootNavigator() {
       ) : (
         <Stack.Screen name={RootRoutes.LOGIN} component={LoginScreen} />
       )}
+      <Stack.Screen name={RootRoutes.TERMS} component={TermsScreen} />
+      <Stack.Screen name={RootRoutes.PRIVACY} component={PrivacyScreen} />
     </Stack.Navigator>
   )
 }

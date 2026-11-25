@@ -109,3 +109,14 @@ export type AuthUser = {
   email: string | null
   photoURL: string | null
 }
+
+// Legal pages (Terms of service, Privacy policy). Text lives in src/constants/legal.
+export type LegalBlock = { type: "p"; text: string } | { type: "ul"; items: string[] }
+export type LegalSection = { title: string; blocks: LegalBlock[] }
+export type LegalDocument = {
+  title: string
+  updated: string
+  intro: string
+  sections: LegalSection[]
+}
+export type LegalKind = "terms" | "privacy"

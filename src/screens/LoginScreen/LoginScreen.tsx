@@ -1,6 +1,8 @@
 import React from "react"
 import { Pressable, Text, View } from "react-native"
 
+import { useNavigation } from "@react-navigation/native"
+import type { StackNavigationProp } from "@react-navigation/stack"
 import Constants from "expo-constants"
 import { useUnistyles } from "react-native-unistyles"
 
@@ -10,6 +12,8 @@ import { useSideTabBar } from "@/hooks/useSideTabBar"
 import { useLanguage } from "@/i18n"
 import type { LanguageCode } from "@/i18n/i18n"
 import { ChevronRight, GoogleLogo } from "@/lib/icons"
+import { RootRoutes } from "@/navigation/routes"
+import type { RootStackParamList } from "@/navigation/types/navigation"
 
 import { styles } from "./LoginScreen.styles"
 
@@ -21,6 +25,29 @@ export const LoginScreen = () => {
   const { theme } = useUnistyles()
   const { t, currentLanguage, changeLanguage, languages } = useLanguage()
   const wide = useSideTabBar()
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+
+  const legalLine = (
+    <Text style={styles.legal}>
+      {t("auth.agreePrefix")}
+      <Text
+        accessibilityRole="link"
+        style={styles.legalLink}
+        onPress={() => navigation.navigate(RootRoutes.TERMS)}
+      >
+        {t("legal.terms")}
+      </Text>
+      {t("auth.agreeAnd")}
+      <Text
+        accessibilityRole="link"
+        style={styles.legalLink}
+        onPress={() => navigation.navigate(RootRoutes.PRIVACY)}
+      >
+        {t("legal.privacy")}
+      </Text>
+      .
+    </Text>
+  )
 
   const googleButton = (
     <Pressable
@@ -67,6 +94,7 @@ export const LoginScreen = () => {
           <View style={styles.wideForm}>
             <Text style={styles.wideTitle}>{t("auth.signIn")}</Text>
             {googleButton}
+            {legalLine}
             <Text style={styles.version}>{t("auth.version", { version: VERSION })}</Text>
           </View>
         </View>
@@ -86,6 +114,7 @@ export const LoginScreen = () => {
 
       <View style={styles.bottom}>
         {googleButton}
+        {legalLine}
 
         <View style={styles.footer}>
           {languageSwitch}

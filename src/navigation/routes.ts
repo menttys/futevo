@@ -1,6 +1,8 @@
 export enum RootRoutes {
   MAIN = "Main",
   LOGIN = "Login",
+  TERMS = "Terms",
+  PRIVACY = "Privacy",
 }
 
 export enum TabRoutes {

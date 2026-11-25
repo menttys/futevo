@@ -8,6 +8,8 @@ export const linking: LinkingOptions<RootStackParamList> = {
   config: {
     screens: {
       [RootRoutes.LOGIN]: "login",
+      [RootRoutes.TERMS]: "terms",
+      [RootRoutes.PRIVACY]: "privacy",
       [RootRoutes.MAIN]: {
         path: "",
         screens: {
