@@ -1,0 +1,46 @@
+rules_version = '2';
+
+// Every document in player / match / tournament carries a `userId` field and the
+// app only ever queries with where("userId", "==", uid). These rules enforce that
+// each signed-in user can only read and write their own documents.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner() {
+      return isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // On create/update the incoming document must also belong to the caller,
+    // so nobody can write a doc into (or hand a doc over to) another user.
+    function willOwn() {
+      return isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    match /player/{id} {
+      allow read, delete: if isOwner();
+      allow create: if willOwn();
+      allow update: if isOwner() && willOwn();
+    }
+
+    match /match/{id} {
+      allow read, delete: if isOwner();
+      allow create: if willOwn();
+      allow update: if isOwner() && willOwn();
+    }
+
+    match /tournament/{id} {
+      allow read, delete: if isOwner();
+      allow create: if willOwn();
+      allow update: if isOwner() && willOwn();
+    }
+
+    // Everything else is closed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
