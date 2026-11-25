@@ -1,19 +1,15 @@
 import * as ImagePicker from "expo-image-picker"
 
-// Firebase Storage isn't configured in this project, so the photo is stored on the
-// player document itself: a small, square, compressed data URI keeps it durable on
-// web (blob: URIs die with the tab) and well below Firestore's 1 MiB document limit.
+// Returns a local URI (file:// on native, blob: on web) for a square, compressed
+// photo, or null if the user cancelled. It is uploaded to Firebase Storage by
+// usePlayers().savePlayer — the download URL is what ends up on the player doc.
 export async function pickPlayerPhoto(): Promise<string | null> {
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ["images"],
     allowsEditing: true,
     aspect: [1, 1],
-    quality: 0.3,
-    base64: true,
+    quality: 0.5,
   })
   if (result.canceled) return null
-  const asset = result.assets[0]
-  if (!asset) return null
-  if (asset.base64) return `data:${asset.mimeType ?? "image/jpeg"};base64,${asset.base64}`
-  return asset.uri
+  return result.assets[0]?.uri ?? null
 }
