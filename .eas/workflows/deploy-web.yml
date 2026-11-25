@@ -1,0 +1,11 @@
+name: Deploy web
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    name: Deploy to production
+    type: deploy
+    params:
+      prod: true

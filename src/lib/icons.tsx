@@ -1,36 +1,33 @@
 import React from "react"
 import { View } from "react-native"
 
-import {
-  ArrowUUpLeft as _ArrowUUpLeft,
-  Camera as _Camera,
-  CaretDown as _CaretDown,
-  CaretLeft as _CaretLeft,
-  CaretRight as _CaretRight,
-  Check as _Check,
-  Flag as _Flag,
-  GoogleLogo as _GoogleLogo,
-  HandGrabbing as _HandGrabbing,
-  House as _House,
-  type Icon,
-  type IconProps,
-  ListBullets as _ListBullets,
-  MagnifyingGlass as _MagnifyingGlass,
-  PencilSimple as _PencilSimple,
-  Plus as _Plus,
-  ShareNetwork as _ShareNetwork,
-  SidebarSimple as _SidebarSimple,
-  SignOut as _SignOut,
-  SlidersHorizontal as _SlidersHorizontal,
-  SquareSplitVertical as _SquareSplitVertical,
-  Trash as _Trash,
-  Trophy as _Trophy,
-  User as _User,
-  Users as _Users,
-  Warning as _Warning,
-  WifiSlash as _WifiSlash,
-  X as _X,
-} from "phosphor-react-native"
+import type { Icon, IconProps } from "phosphor-react-native"
+import { ArrowUUpLeft as _ArrowUUpLeft } from "phosphor-react-native/src/icons/ArrowUUpLeft"
+import { Camera as _Camera } from "phosphor-react-native/src/icons/Camera"
+import { CaretDown as _CaretDown } from "phosphor-react-native/src/icons/CaretDown"
+import { CaretLeft as _CaretLeft } from "phosphor-react-native/src/icons/CaretLeft"
+import { CaretRight as _CaretRight } from "phosphor-react-native/src/icons/CaretRight"
+import { Check as _Check } from "phosphor-react-native/src/icons/Check"
+import { Flag as _Flag } from "phosphor-react-native/src/icons/Flag"
+import { GoogleLogo as _GoogleLogo } from "phosphor-react-native/src/icons/GoogleLogo"
+import { HandGrabbing as _HandGrabbing } from "phosphor-react-native/src/icons/HandGrabbing"
+import { House as _House } from "phosphor-react-native/src/icons/House"
+import { ListBullets as _ListBullets } from "phosphor-react-native/src/icons/ListBullets"
+import { MagnifyingGlass as _MagnifyingGlass } from "phosphor-react-native/src/icons/MagnifyingGlass"
+import { PencilSimple as _PencilSimple } from "phosphor-react-native/src/icons/PencilSimple"
+import { Plus as _Plus } from "phosphor-react-native/src/icons/Plus"
+import { ShareNetwork as _ShareNetwork } from "phosphor-react-native/src/icons/ShareNetwork"
+import { SidebarSimple as _SidebarSimple } from "phosphor-react-native/src/icons/SidebarSimple"
+import { SignOut as _SignOut } from "phosphor-react-native/src/icons/SignOut"
+import { SlidersHorizontal as _SlidersHorizontal } from "phosphor-react-native/src/icons/SlidersHorizontal"
+import { SquareSplitVertical as _SquareSplitVertical } from "phosphor-react-native/src/icons/SquareSplitVertical"
+import { Trash as _Trash } from "phosphor-react-native/src/icons/Trash"
+import { Trophy as _Trophy } from "phosphor-react-native/src/icons/Trophy"
+import { User as _User } from "phosphor-react-native/src/icons/User"
+import { Users as _Users } from "phosphor-react-native/src/icons/Users"
+import { Warning as _Warning } from "phosphor-react-native/src/icons/Warning"
+import { WifiSlash as _WifiSlash } from "phosphor-react-native/src/icons/WifiSlash"
+import { X as _X } from "phosphor-react-native/src/icons/X"
 
 // Phosphor · Regular. Active tab icons switch to `weight="fill"` at the call site.
 export type AppIcon = Icon
